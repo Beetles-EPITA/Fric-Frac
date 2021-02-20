@@ -1,0 +1,30 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Photon.Pun;
+
+public class Laucher : MonoBehaviourPunCallbacks
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        Debug.Log("Connecting to Server...");
+        PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public override void OnConnectedToMaster()
+    {
+        PhotonNetwork.JoinLobby();
+    }
+
+    public override void OnJoinedLobby()
+    {
+        Debug.Log("Joined Lobby");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
