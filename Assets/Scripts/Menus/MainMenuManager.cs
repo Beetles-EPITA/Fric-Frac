@@ -57,6 +57,7 @@ namespace Menus
         
         public void QuitGame()
         {
+            OpenMenu("QuitMenu");
             Application.Quit();
         }
         

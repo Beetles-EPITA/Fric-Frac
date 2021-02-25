@@ -15,8 +15,8 @@ namespace Menus
         public void SetUp(RoomInfo roomInfo)
         {
             _roomInfo = roomInfo;
-            serverName.text = _roomInfo.Name;
-            playersNumber.text = _roomInfo.PlayerCount + "\nPLAYERS";
+            serverName.text = roomInfo.Name;
+            playersNumber.text = roomInfo.PlayerCount + "\nPLAYERS";
         }
 
         public void OnClick()
