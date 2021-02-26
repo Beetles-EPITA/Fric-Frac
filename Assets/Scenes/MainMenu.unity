@@ -3946,7 +3946,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 2063727003}
           m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
-          m_IntArgument: 1
+          m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
