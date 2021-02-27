@@ -6,7 +6,6 @@ using UnityEngine.UI;
 namespace Menus
 {
     
-    // https://youtu.be/zPZK7C5_BQo?t=988
     public class MainMenuManager : MonoBehaviour
     {
         public static MainMenuManager Instance;
