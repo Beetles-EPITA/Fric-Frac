@@ -90,6 +90,10 @@ namespace Menus
             button.interactable = inputField.text != "";
         }
 
-        
+
+        public void Volume(Slider slider)
+        {
+            AudioListener.volume = slider.value;
+        }
     }
 }
