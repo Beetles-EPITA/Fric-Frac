@@ -23,7 +23,7 @@ namespace Menus
         private void Start()
         {
             version.text = "Version " + Application.version;
-            
+            Cursor.visible = true;
         }
 
         public void OpenMenu(Menu menu)
