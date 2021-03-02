@@ -1,6 +1,8 @@
 using System;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Menus
@@ -89,6 +91,9 @@ namespace Menus
             button.interactable = inputField.text != "";
         }
 
-        
+        public void OpenSoloScene()
+        {
+            SceneManager.LoadScene("Solo");
+        }
     }
 }
