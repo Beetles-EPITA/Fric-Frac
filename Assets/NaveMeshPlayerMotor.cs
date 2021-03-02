@@ -11,7 +11,7 @@ public class NaveMeshPlayerMotor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if (!agent.hasPath)
         {
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
@@ -20,6 +20,7 @@ public class NaveMeshPlayerMotor : MonoBehaviour
             {
                 agent.SetDestination(hit.point);
             }
+
         }
     }
 }
