@@ -19,6 +19,7 @@ namespace Manager
         {
             if (PV.IsMine)
             {
+                Cursor.visible = false;
                 CreateController();
             }
         }

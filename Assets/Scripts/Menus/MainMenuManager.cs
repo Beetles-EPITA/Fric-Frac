@@ -6,7 +6,6 @@ using UnityEngine.UI;
 namespace Menus
 {
     
-    // https://youtu.be/zPZK7C5_BQo?t=988
     public class MainMenuManager : MonoBehaviour
     {
         public static MainMenuManager Instance;
@@ -24,7 +23,7 @@ namespace Menus
         private void Start()
         {
             version.text = "Version " + Application.version;
-            
+            Cursor.visible = true;
         }
 
         public void OpenMenu(Menu menu)
