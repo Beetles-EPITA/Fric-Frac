@@ -26,7 +26,7 @@ namespace Manager
         private void CreateController()
         {
             Debug.Log("Instantiated Player Controller");
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerController"), RandomPosition(),
+            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerController"), new Vector3(177, 0, -315), 
                 Quaternion.identity);
         }
 
