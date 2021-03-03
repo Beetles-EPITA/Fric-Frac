@@ -1,6 +1,8 @@
 using System;
+using JetBrains.Annotations;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
@@ -89,6 +91,11 @@ namespace Menus
         {
             Button button = (Button) inputField.GetComponentInChildren(typeof(Button));
             button.interactable = inputField.text != "";
+        }
+
+        public void OpenSoloScene()
+        {
+            SceneManager.LoadScene("Solo");
         }
         
     }
