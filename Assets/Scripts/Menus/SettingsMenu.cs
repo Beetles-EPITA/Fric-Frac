@@ -28,11 +28,13 @@ namespace Menus
 
         void Start()
         {
+            SetupDropdownResolution();
+            
             InitResolutionAndScreenMode();
             InitQuality();
             InitVolume();
 
-            SetupDropdownResolution();
+            
         }
 
         private void InitVolume()
