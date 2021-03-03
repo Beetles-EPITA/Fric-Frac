@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
-    public void Volume (Slider slider)
+    public void Volume(Slider slider)
     {
         AudioListener.volume = slider.value;
     }
