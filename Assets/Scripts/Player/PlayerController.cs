@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviourPunCallbacks
 {
     [SerializeField] private GameObject cameraHolder;
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpFoce, smoothTime;
@@ -28,6 +30,18 @@ public class PlayerController : MonoBehaviour
         Look();
         Move();
         Jump();
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Destroy(RoomManager.Instance.gameObject);
+            SceneManager.LoadScene("MainMenu");
+        }
+    }
+    
+    public override void OnLeftRoom()
+    {
+        print("left");
+        Destroy(RoomManager.Instance.gameObject);
+        SceneManager.LoadScene("MainMenu");
     }
 
     private void Start()
@@ -133,4 +147,5 @@ public class PlayerController : MonoBehaviour
         if (!_photonView.IsMine) return;
         _rigidbody.MovePosition(_rigidbody.position + transform.TransformDirection(_moveAmount) * Time.fixedDeltaTime);
     }
+
 }

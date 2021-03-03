@@ -1,4 +1,8 @@
+using System.Security.Cryptography;
+using Menus;
+using Photon.Pun;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Solo
 {
@@ -25,11 +29,16 @@ namespace Solo
             Look();
             Move();
             Jump();
+            if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                Destroy(RoomManager.Instance.gameObject);
+                SceneManager.LoadScene("MainMenu");
+            }
         }
 
         private void Start()
         {
-
+            Cursor.visible = false;
         }
 
 

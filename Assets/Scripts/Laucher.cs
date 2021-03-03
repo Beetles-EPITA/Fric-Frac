@@ -30,12 +30,10 @@ public class Laucher : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
-        if (!PhotonNetwork.IsConnected)
-        {
-            Debug.Log("Connecting to Server...");
-            PhotonNetwork.ConnectUsingSettings();
-        }
-        
+        if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+        if (PhotonNetwork.IsConnected) return;
+        Debug.Log("Connecting to Server...");
+        PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
@@ -115,7 +113,6 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        SceneManager.LoadScene("MainMenu");
         MainMenuManager.Instance.OpenMenu("Main");
     }
 

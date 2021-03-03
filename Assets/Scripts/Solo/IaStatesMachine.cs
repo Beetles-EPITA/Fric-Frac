@@ -17,7 +17,6 @@ public class IaStatesMachine : MonoBehaviour
         Vector3 a = ia.transform.position;
 
         Vector3 b = player.transform.position;
-        print(Vector3.Distance(a, b));
         return Vector3.Distance(a, b) < distanceMin;
     }
 
