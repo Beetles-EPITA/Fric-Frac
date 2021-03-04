@@ -6,7 +6,7 @@ using Random = System.Random;
 
 namespace Manager
 {
-    public class PlayerManager : MonoBehaviour
+    public class PlayerManager : MonoBehaviourPunCallbacks
     {
         private PhotonView PV;
 

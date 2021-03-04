@@ -5,6 +5,7 @@ using System.IO;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Random = System.Random;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
@@ -13,10 +14,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         if (Instance != null)
-        {
-            Destroy(gameObject);
-            return;
+        { 
+            Destroy(Instance.gameObject);
         }
+        gameObject.AddComponent<PhotonView>();
+        photonView.ViewID = new Random().Next(999) + 1000;
         DontDestroyOnLoad(gameObject);
         Instance = this;
     }

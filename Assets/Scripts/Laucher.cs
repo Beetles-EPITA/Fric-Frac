@@ -21,18 +21,25 @@ public class Laucher : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject playerListItemPrefab;
     [SerializeField] private Scrollbar scrollBarLoading;
     [SerializeField] private GameObject startGameButton;
+    
+    [SerializeField] private GameObject prefabRoomManager;
 
+    private Dictionary<string, RoomInfo> _roomInfos;
+    
     private void Awake()
     {
         Instance = this;
+        _roomInfos = new Dictionary<string, RoomInfo>();
     }
 
     // Start is called before the first frame update
     void Start()
     {
-        if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
-        if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
-        if (PhotonNetwork.IsConnected) return;
+        if (PhotonNetwork.IsConnected)
+        {
+            if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+            return;
+        }
         Debug.Log("Connecting to Server...");
         PhotonNetwork.ConnectUsingSettings();
     }
@@ -47,6 +54,13 @@ public class Laucher : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined Lobby");
         PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
+        if (RoomManager.Instance == null)
+        {
+            Instantiate(prefabRoomManager);
+            Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
+            Text text = menu.GetComponentInChildren<Text>();
+            text.text = "The room owner has left the game";
+        }
     }
 
     public void CreateRoom(Text roomName)
@@ -118,14 +132,23 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
+        foreach(RoomInfo roomInfo in roomList)
+        {
+            _roomInfos.Remove(roomInfo.Name);
+            if (!roomInfo.RemovedFromList) _roomInfos.Add(roomInfo.Name, roomInfo);
+        }
+
         foreach (Transform transform in roomListContent)
         {
             Destroy(transform.gameObject);
         }
-        foreach (RoomInfo roomInfo in roomList)
+        
+        foreach (RoomInfo roomInfo in _roomInfos.Values)
         {
-            if(roomInfo.RemovedFromList)
-                continue;
+            if (roomInfo.RemovedFromList)
+            {
+                return;
+            }
             GameObject button = Instantiate(roomListItemPrefab, roomListContent);
             button.GetComponent<RoomListItem>().SetUp(roomInfo);
         }
