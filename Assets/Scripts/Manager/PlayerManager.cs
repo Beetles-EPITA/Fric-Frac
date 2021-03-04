@@ -27,14 +27,14 @@ namespace Manager
         private void CreateController()
         {
             Debug.Log("Instantiated Player Controller");
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerController"), new Vector3(137, 19.5f, -325), 
+            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerController"), RandomPosition(), 
                 Quaternion.identity);
         }
 
         private Vector3 RandomPosition()
         {
             Random random = new Random();
-            return new Vector3(random.Next(30) - 15, 0, random.Next(30) - 15);
+            return new Vector3(random.Next(20) + 127, 18, random.Next(20) - 315);
         }
     }
 }
