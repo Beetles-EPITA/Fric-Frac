@@ -69,7 +69,6 @@ public class Laucher : MonoBehaviourPunCallbacks
     public void StartGame()
     {
         PhotonNetwork.LoadLevel("Multiplayer");
-        
     }
 
     public override void OnJoinedRoom()
