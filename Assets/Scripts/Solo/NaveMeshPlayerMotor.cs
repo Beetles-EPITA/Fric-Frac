@@ -12,13 +12,27 @@ public class NaveMeshPlayerMotor : MonoBehaviour
     [SerializeField]
     public Component player;
 
+    //Animation :
+    private Animator anim;
+    
     // Update is called once per frame
     void Update()
     {
+        anim = GetComponent<Animator>();
         
-        if (IaStatesMachine.Distance(agent, player, 225f) && !IaStatesMachine.IsObjectBetween(agent, player))
+        if (IaStatesMachine.Distance(agent, player, 25f) && !IaStatesMachine.IsObjectBetween(agent, player))
         {
             agent.SetDestination(player.transform.localPosition);
         }
+
+        if (agent.hasPath)
+        {
+            anim.SetFloat("Speed", 3);
+        }
+        else
+        {
+            anim.SetFloat("Speed", 0);
+        }
+
     }
 }

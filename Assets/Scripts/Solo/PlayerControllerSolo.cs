@@ -1,4 +1,5 @@
 using System.Security.Cryptography;
+using System;
 using Menus;
 using Photon.Pun;
 using UnityEngine;
@@ -18,7 +19,10 @@ namespace Solo
         private Vector3 _smoothMoveVelocity;
         private Vector3 _moveAmount;
 
-
+        //Animation :
+        private Animator anim;
+        private int jumpHash = Animator.StringToHash("Jump");
+        
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
@@ -38,6 +42,7 @@ namespace Solo
 
         private void Start()
         {
+            anim = GetComponent<Animator>();
             Cursor.visible = false;
         }
 
@@ -53,6 +58,8 @@ namespace Solo
             _moveAmount = Vector3.SmoothDamp(_moveAmount,
                 moveDirection * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref _smoothMoveVelocity,
                 smoothTime);
+            
+            anim.SetFloat("Speed", Math.Max(Math.Abs(_moveAmount.x),(Math.Abs(_moveAmount.z))));
         }
 
         /**
@@ -76,6 +83,7 @@ namespace Solo
             if (Input.GetKeyDown(KeyCode.Space) && _grounded)
             {
                 _rigidbody.AddForce(transform.up * jumpFoce);
+                anim.SetTrigger(jumpHash);
             }
         }
 

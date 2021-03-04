@@ -88,8 +88,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space) && _grounded)
         {
-            anim.SetTrigger(jumpHash);
             _rigidbody.AddForce(transform.up * jumpFoce);
+            anim.SetTrigger(jumpHash);
         }
     }
     
