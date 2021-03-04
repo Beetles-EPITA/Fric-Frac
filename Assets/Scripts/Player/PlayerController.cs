@@ -17,6 +17,10 @@ public class PlayerController : MonoBehaviourPunCallbacks
     private Vector3 _moveAmount;
 
     private PhotonView _photonView;
+    
+    //Animation :
+    private Animator anim;
+    private int jumpHash = Animator.StringToHash("Jump");
 
     private void Awake()
     {
@@ -46,6 +50,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        anim = GetComponent<Animator>();
+        
         if (!_photonView.IsMine)
         {
             Destroy(GetComponentInChildren<Camera>().gameObject);
@@ -65,6 +71,8 @@ public class PlayerController : MonoBehaviourPunCallbacks
         _moveAmount = Vector3.SmoothDamp(_moveAmount,
             moveDirection * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref _smoothMoveVelocity,
             smoothTime);
+
+        anim.SetFloat("Speed", Math.Max(Math.Abs(_moveAmount.x),(Math.Abs(_moveAmount.z))));
     }
     
     /**
@@ -87,6 +95,7 @@ public class PlayerController : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyDown(KeyCode.Space) && _grounded)
         {
+            anim.SetTrigger(jumpHash);
             _rigidbody.AddForce(transform.up * jumpFoce);
         }
     }
