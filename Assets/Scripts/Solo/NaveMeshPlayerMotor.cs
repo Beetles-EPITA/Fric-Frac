@@ -14,14 +14,13 @@ public class NaveMeshPlayerMotor : MonoBehaviour
 
     //Animation :
     private Animator anim;
-    private float speed;
     
     // Update is called once per frame
     void Update()
     {
         anim = GetComponent<Animator>();
         
-        if (IaStatesMachine.Distance(agent, player, 225f) && !IaStatesMachine.IsObjectBetween(agent, player))
+        if (IaStatesMachine.Distance(agent, player, 25f) && !IaStatesMachine.IsObjectBetween(agent, player))
         {
             agent.SetDestination(player.transform.localPosition);
         }
