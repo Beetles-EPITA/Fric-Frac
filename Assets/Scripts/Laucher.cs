@@ -30,6 +30,7 @@ public class Laucher : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
     void Start()
     {
+        if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
         if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
         if (PhotonNetwork.IsConnected) return;
         Debug.Log("Connecting to Server...");

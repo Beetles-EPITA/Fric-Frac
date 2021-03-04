@@ -31,7 +31,6 @@ namespace Solo
             Jump();
             if (Input.GetKeyUp(KeyCode.Escape))
             {
-                if(RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
                 SceneManager.LoadScene("MainMenu");
             }
         }
