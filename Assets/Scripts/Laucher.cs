@@ -83,6 +83,8 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
         PhotonNetwork.LoadLevel("Multiplayer");
     }
 
@@ -119,6 +121,13 @@ public class Laucher : MonoBehaviourPunCallbacks
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
+        Text text = menu.GetComponentInChildren<Text>();
+        text.text = "Cannot connect to the server : " + message;
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
         Text text = menu.GetComponentInChildren<Text>();
