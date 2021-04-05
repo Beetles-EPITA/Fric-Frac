@@ -4,22 +4,18 @@ using System.Collections.Generic;
 using System.IO;
 using Photon.Pun;
 using UnityEngine;
+using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using Random = System.Random;
 
 public class RoomManager : MonoBehaviourPunCallbacks
 {
+    [SerializeField] private PlayableDirector _director;
+    
     public static RoomManager Instance;
 
     private void Awake()
     {
-        if (Instance != null)
-        { 
-            Destroy(Instance.gameObject);
-        }
-        gameObject.AddComponent<PhotonView>();
-        photonView.ViewID = new Random().Next(999) + 1000;
-        DontDestroyOnLoad(gameObject);
         Instance = this;
     }
 
@@ -36,6 +32,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        _director.Play();
+        StartCoroutine(WaitAnimation(scene));
+    }
+
+    IEnumerator WaitAnimation(Scene scene)
+    {
+        yield return new WaitForSeconds((int) _director.duration + 1);
+        CreatePlayer(scene);
+    }
+
+    private void CreatePlayer(Scene scene)
     {
         if (scene.name.Equals("Multiplayer"))
         {

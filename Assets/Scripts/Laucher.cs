@@ -54,13 +54,6 @@ public class Laucher : MonoBehaviourPunCallbacks
     {
         Debug.Log("Joined Lobby");
         PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
-        if (RoomManager.Instance == null)
-        {
-            Instantiate(prefabRoomManager);
-            Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
-            Text text = menu.GetComponentInChildren<Text>();
-            text.text = "The room owner has left the game";
-        }
     }
 
     public void CreateRoom(Text roomName)
