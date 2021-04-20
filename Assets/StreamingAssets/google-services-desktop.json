@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1098713990839",
+    "project_id": "fric-frac",
+    "storage_bucket": "fric-frac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1098713990839:android:f55389b194063feb206f32",
+        "android_client_info": {
+          "package_name": "fr.beetles.fric_frac"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1098713990839-j69m5dsvj3vpt948as3pvp3qrqbf980a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDbNOThF06aOEPjBSTRHEiC4kOR3CrMnMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1098713990839-j69m5dsvj3vpt948as3pvp3qrqbf980a.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1098713990839-qrn554sjkcj6f2f75p6brjb4rpsqpu21.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "fr.beetles.fric-frac"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

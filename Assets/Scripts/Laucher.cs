@@ -38,10 +38,7 @@ public class Laucher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
-            return;
         }
-        Debug.Log("Connecting to Server...");
-        PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
@@ -53,7 +50,8 @@ public class Laucher : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined Lobby");
-        PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
+        PhotonNetwork.NickName = Auth.USERNAME;
+        MainMenuManager.Instance.OpenMenu("Main");
     }
 
     public void CreateRoom(Text roomName)
