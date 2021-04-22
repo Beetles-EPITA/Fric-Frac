@@ -2,6 +2,7 @@
   "project_info": {
     "project_number": "1098713990839",
     "project_id": "fric-frac",
+    "firebase_url" : "https://fric-frac-default-rtdb.europe-west1.firebasedatabase.app/",
     "storage_bucket": "fric-frac.appspot.com"
   },
   "client": [
