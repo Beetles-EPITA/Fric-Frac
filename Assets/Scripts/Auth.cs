@@ -16,6 +16,8 @@ public class Auth : MonoBehaviour
     [SerializeField] private InputField password;
     [SerializeField] private Text error;
     
+    [SerializeField] private Text welcomeMessage;
+    
     private static string _username = null;
     public static string USERNAME => _username;
 
@@ -44,6 +46,7 @@ public class Auth : MonoBehaviour
     { 
         Task<FirebaseUser> registerTask = FirebaseAuth.DefaultInstance.SignInWithEmailAndPasswordAsync(email, password);
         yield return new WaitUntil(() => registerTask.IsCompleted);
+        this.password.text = string.Empty;
         if (registerTask.Exception != null)
             error.text = registerTask.Exception.GetBaseException().Message;
         else if (!registerTask.Result.IsEmailVerified)
@@ -53,6 +56,7 @@ public class Auth : MonoBehaviour
         }
         else
         {
+            ResetField();
             MainMenuManager.Instance.OpenMenu("Loading");
             
             if (string.IsNullOrEmpty(registerTask.Result.DisplayName))
@@ -62,6 +66,7 @@ public class Auth : MonoBehaviour
             }
             else _username = registerTask.Result.DisplayName;
 
+            welcomeMessage.text = $"Welcome,\n{_username}";
             PlayerPrefs.SetString("TokenFirebase", email + "|" + password);
             
             Connect();
@@ -81,6 +86,7 @@ public class Auth : MonoBehaviour
             if (registerTask.Exception == null)
             {
                 _username = registerTask.Result.DisplayName;
+                welcomeMessage.text = $"Welcome,\n{_username}";
                 Connect();
                 yield break;
             }
@@ -89,10 +95,36 @@ public class Auth : MonoBehaviour
         PlayerPrefs.SetString("TokenFirebase", null);
     }
 
+    private void ResetField()
+    {
+        email.text = string.Empty;
+        password.text = string.Empty;
+        error.text = string.Empty;
+    }
+
     void Connect()
     {
         Debug.Log("Connecting to Server...");
         PhotonNetwork.ConnectUsingSettings();
+    }
+
+    public void Logout()
+    {
+        PlayerPrefs.SetString("TokenFirebase", null);
+        FirebaseAuth.DefaultInstance.SignOut();
+        PhotonNetwork.Disconnect();
+        MainMenuManager.Instance.OpenMenu("LoginMenu");
+        welcomeMessage.text = string.Empty;
+    }
+
+    public void CreateAccount()
+    {
+        Application.OpenURL("https://fric-frac.fr/signup");
+    }
+    
+    public void ForgotPassword()
+    {
+        Application.OpenURL("https://fric-frac.fr/password_reset");
     }
 
 }
