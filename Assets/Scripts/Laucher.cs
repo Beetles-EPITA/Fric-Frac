@@ -38,10 +38,7 @@ public class Laucher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
-            return;
         }
-        Debug.Log("Connecting to Server...");
-        PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
@@ -53,14 +50,8 @@ public class Laucher : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined Lobby");
-        PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
-        if (RoomManager.Instance == null)
-        {
-            Instantiate(prefabRoomManager);
-            Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
-            Text text = menu.GetComponentInChildren<Text>();
-            text.text = "The room owner has left the game";
-        }
+        PhotonNetwork.NickName = Auth.USERNAME;
+        MainMenuManager.Instance.OpenMenu("Main");
     }
 
     public void CreateRoom(Text roomName)
@@ -83,6 +74,8 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
         PhotonNetwork.LoadLevel("Multiplayer");
     }
 
@@ -119,6 +112,13 @@ public class Laucher : MonoBehaviourPunCallbacks
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
+    {
+        Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
+        Text text = menu.GetComponentInChildren<Text>();
+        text.text = "Cannot connect to the server : " + message;
+    }
+
+    public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
         Text text = menu.GetComponentInChildren<Text>();

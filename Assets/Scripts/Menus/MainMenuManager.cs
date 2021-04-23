@@ -14,14 +14,13 @@ namespace Menus
     {
         public static MainMenuManager Instance;
         private Menu[] menus;
-        private Text version;
+        [SerializeField] private Text version;
         
         
         private void Awake()
         {
             Instance = this;
             menus = GetComponentsInChildren<Menu>(true);
-            version = (Text) GetComponentInChildren(typeof(Text));
         }
         
         private void Start()
