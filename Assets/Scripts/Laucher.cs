@@ -19,7 +19,6 @@ public class Laucher : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject roomListItemPrefab;
     [SerializeField] private Transform playerListContent;
     [SerializeField] private GameObject playerListItemPrefab;
-    [SerializeField] private Scrollbar scrollBarLoading;
     [SerializeField] private GameObject startGameButton;
     
     [SerializeField] private GameObject prefabRoomManager;
@@ -57,7 +56,6 @@ public class Laucher : MonoBehaviourPunCallbacks
     public void CreateRoom(Text roomName)
     {
         MainMenuManager.Instance.OpenMenu("Loading");
-        scrollBarLoading.size = 0.5F;
         PhotonNetwork.CreateRoom(roomName.text);
     }
 
@@ -100,15 +98,6 @@ public class Laucher : MonoBehaviourPunCallbacks
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-    }
-
-    IEnumerator ProgessBarLoading(AsyncOperation operation)
-    {
-        while (!operation.isDone)
-        {
-            scrollBarLoading.size = 0.1F + operation.progress * 0.9F;
-            yield return null;
-        }
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)
