@@ -16,6 +16,8 @@ public class PlayerController : MonoBehaviour
     private Vector3 _smoothMoveVelocity;
     private Vector3 _moveAmount;
 
+    [SerializeField] private AudioSource _audioSource;
+
     private PhotonView _photonView;
     
     //Animation :
