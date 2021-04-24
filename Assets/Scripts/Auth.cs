@@ -25,7 +25,10 @@ public class Auth : MonoBehaviour
     void Start()
     {
         if (PhotonNetwork.IsConnected)
+        {
             MainMenuManager.Instance.OpenMenu("Main");
+            welcomeMessage.text = $"Welcome,\n{_username}";
+        }
         else if (PlayerPrefs.HasKey("TokenFirebase"))
             StartCoroutine(TrytoLogin(PlayerPrefs.GetString("TokenFirebase")));
         else
