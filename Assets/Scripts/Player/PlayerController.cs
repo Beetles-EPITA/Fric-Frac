@@ -16,9 +16,23 @@ public class PlayerController : MonoBehaviour
     private Vector3 _smoothMoveVelocity;
     private Vector3 _moveAmount;
 
-    [SerializeField] private AudioSource _audioSource;
-
     private PhotonView _photonView;
+    
+    //Sound:
+    [SerializeField] private AudioSource _audioSource;
+    private soundState audioState = soundState.standBy;
+    private enum soundState
+    {
+        standBy,
+        walk,
+        run,
+        jump
+    }
+
+    [SerializeField] private AudioClip standByClip;
+    [SerializeField] private AudioClip walkClip;
+    [SerializeField] private AudioClip runClip;
+    [SerializeField] private AudioClip JumpClip;
     
     //Animation :
     private Animator anim;
@@ -36,6 +50,7 @@ public class PlayerController : MonoBehaviour
         Look();
         Move();
         Jump();
+        SoundManager();
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
@@ -52,7 +67,6 @@ public class PlayerController : MonoBehaviour
             Destroy(cameraHolder);
             Destroy(_rigidbody);
         }
-            
     }
 
 
@@ -92,6 +106,46 @@ public class PlayerController : MonoBehaviour
         {
             _rigidbody.AddForce(transform.up * jumpFoce);
             anim.SetTrigger(jumpHash);
+        }
+        audioState = soundState.jump;
+    }
+
+    private void SoundManager()
+    {
+        soundState oldSoundState = audioState;
+        if (anim.speed == 0)
+        {
+            audioState = soundState.standBy;
+        }
+        if (anim.speed != 0 && anim.speed < 3.1)
+        {
+            audioState = soundState.walk;
+        }
+        if (anim.speed >= 3.1)
+        {
+            audioState = soundState.run;
+        }
+
+        if (oldSoundState != audioState)
+        {
+            _audioSource.Stop();
+            switch (audioState)
+            {
+                case soundState.standBy:
+                    //play stanby
+                    break;
+                case soundState.walk:
+                    //play walk
+                    break;
+                case soundState.run:
+                    //play run
+                    break;
+                case soundState.jump:
+                    //play jump
+                    break;
+                default:
+                    throw new Exception("sound manager goes brrr");
+            }
         }
     }
     

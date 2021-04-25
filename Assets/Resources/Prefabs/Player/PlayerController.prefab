@@ -473,6 +473,10 @@ MonoBehaviour:
   jumpFoce: 250
   smoothTime: 0.15
   _audioSource: {fileID: 3715960687521777903}
+  standByClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
+  walkClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
+  runClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
+  JumpClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
 --- !u!1 &8415060154464590967
 GameObject:
   m_ObjectHideFlags: 0
