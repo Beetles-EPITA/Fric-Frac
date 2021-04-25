@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour
     
     //Sound:
     [SerializeField] private AudioSource _audioSource;
-    private soundState audioState = soundState.standBy;
+    private soundState audioState;
     private enum soundState
     {
         standBy,
@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
+        audioState = soundState.standBy;
     }
 
     private void Update()
@@ -107,41 +108,51 @@ public class PlayerController : MonoBehaviour
             _rigidbody.AddForce(transform.up * jumpFoce);
             anim.SetTrigger(jumpHash);
         }
-        audioState = soundState.jump;
     }
 
     private void SoundManager()
     {
         soundState oldSoundState = audioState;
-        if (anim.speed == 0)
+        if (_moveAmount.magnitude <= 0.1)
         {
             audioState = soundState.standBy;
         }
-        if (anim.speed != 0 && anim.speed < 3.1)
+        if (_moveAmount.magnitude >=0.2 && anim.speed < 3.1)
         {
             audioState = soundState.walk;
         }
-        if (anim.speed >= 3.1)
+        if (_moveAmount.magnitude >= 3.1)
         {
             audioState = soundState.run;
         }
 
+        if (!_grounded) //working
+        {
+            audioState = soundState.jump;
+        }
+
         if (oldSoundState != audioState)
         {
+            print(audioState.ToString());
+
             _audioSource.Stop();
             switch (audioState)
             {
                 case soundState.standBy:
-                    //play stanby
+                    _audioSource.clip = standByClip;
+                    _audioSource.Play();
                     break;
                 case soundState.walk:
-                    //play walk
+                    _audioSource.clip = walkClip;
+                    _audioSource.Play();;
                     break;
                 case soundState.run:
-                    //play run
+                    _audioSource.clip = runClip;
+                    _audioSource.Play();
                     break;
                 case soundState.jump:
-                    //play jump
+                    _audioSource.clip = JumpClip;
+                    _audioSource.Play();
                     break;
                 default:
                     throw new Exception("sound manager goes brrr");
