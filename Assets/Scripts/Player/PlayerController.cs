@@ -139,7 +139,7 @@ public class PlayerController : MonoBehaviour
             switch (audioState)
             {
                 case soundState.standBy:
-                    _audioSource.clip = standByClip;
+                    //_audioSource.clip = standByClip;
                     _audioSource.Play();
                     break;
                 case soundState.walk:
@@ -156,6 +156,13 @@ public class PlayerController : MonoBehaviour
                     break;
                 default:
                     throw new Exception("sound manager goes brrr");
+            }
+        }
+        else
+        {
+            if (!_audioSource.isPlaying && audioState != soundState.jump && audioState != soundState.standBy)
+            {
+                _audioSource.Play();
             }
         }
     }
