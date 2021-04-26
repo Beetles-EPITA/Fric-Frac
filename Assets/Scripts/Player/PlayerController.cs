@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Menus;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -34,11 +35,16 @@ public class PlayerController : MonoBehaviour
         Look();
         Move();
         Jump();
+
+        TabList();
+        
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
             SceneManager.LoadScene("MainMenu");
         }
+
+        
     }
 
     private void Start()
@@ -150,4 +156,20 @@ public class PlayerController : MonoBehaviour
         _rigidbody.MovePosition(_rigidbody.position + transform.TransformDirection(_moveAmount) * Time.fixedDeltaTime);
     }
 
+
+    /**
+     * TabList
+     */
+
+    private void TabList()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            TabMenu.InstanceMenu.Open();
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            TabMenu.InstanceMenu.Close();
+        }
+    }
 }

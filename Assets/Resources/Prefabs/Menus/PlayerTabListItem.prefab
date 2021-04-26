@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4127761731668789733}
   - component: {fileID: 155857736075321856}
   m_Layer: 5
-  m_Name: PlayerListItem
+  m_Name: PlayerTabListItem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,8 +37,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 310, y: 259}
-  m_SizeDelta: {x: 600, y: 90}
+  m_AnchoredPosition: {x: 184.68726, y: 275.12927}
+  m_SizeDelta: {x: 349.3745, y: 57.7413}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2807280522145950362
 CanvasRenderer:
@@ -103,7 +103,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.7830189, g: 0.7830189, b: 0.7830189, a: 1}
     m_PressedColor: {r: 0.3773585, g: 0.3773585, b: 0.3773585, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0, g: 0, b: 0, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -117,7 +117,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 3674340352187621960}
   m_OnClick:
     m_PersistentCalls:
@@ -230,12 +230,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 45
+  m_fontSize: 23.2
   m_fontSizeBase: 49
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 45
+  m_fontSizeMax: 23.2
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512

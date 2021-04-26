@@ -73,9 +73,25 @@ public class Laucher : MonoBehaviourPunCallbacks
         MainMenuManager.Instance.OpenMenu("Loading");
     }
 
+    [PunRPC]
+    private void OpenLoading()
+    {
+        MainMenuManager.Instance.OpenMenu("Loading");
+    }
+
     public void StartGame()
     {
+        photonView.RPC("OpenLoading", RpcTarget.All);
+        
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        
         Room room = PhotonNetwork.CurrentRoom;
+        StartGame(room);
+    }
+
+    private void StartGame(Room room)
+    {
         int placeThief = room.Players.Count / 2 + (room.Players.Count % 2 == 0 ? 0 : 1);
         int placeResident = room.Players.Count / 2;
         foreach (KeyValuePair<int, Player> player in room.Players)
@@ -108,10 +124,9 @@ public class Laucher : MonoBehaviourPunCallbacks
 
                 }
             }
+            player.Value.SetCustomProperties(hashtable);
         }
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
-        
+
         PhotonNetwork.LoadLevel("Multiplayer");
     }
 
@@ -121,16 +136,6 @@ public class Laucher : MonoBehaviourPunCallbacks
         Resident
     }
     
-    private static List<Player> GetPlayersInTeam(Team team, Room room)
-    {
-        List<Player> returnList = new List<Player>();
-        foreach (KeyValuePair<int,Player> player in room.Players)
-        {
-            if(player.Value.CustomProperties["team"] == (object) team) returnList.Add(player.Value);
-        }
-        return returnList;
-    }
-
     public override void OnJoinedRoom()
     {
         Menu menu = MainMenuManager.Instance.OpenMenu("LobbyMenu");
