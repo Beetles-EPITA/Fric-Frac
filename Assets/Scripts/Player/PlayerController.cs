@@ -18,6 +18,22 @@ public class PlayerController : MonoBehaviour
 
     private PhotonView _photonView;
     
+    //Sound:
+    [SerializeField] private AudioSource _audioSource;
+    private soundState audioState;
+    private enum soundState
+    {
+        standBy,
+        walk,
+        run,
+        jump
+    }
+
+    [SerializeField] private AudioClip standByClip;
+    [SerializeField] private AudioClip walkClip;
+    [SerializeField] private AudioClip runClip;
+    [SerializeField] private AudioClip JumpClip;
+    
     //Animation :
     private Animator anim;
     private int jumpHash = Animator.StringToHash("Jump");
@@ -26,6 +42,7 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
+        audioState = soundState.standBy;
     }
 
     private void Update()
@@ -34,6 +51,7 @@ public class PlayerController : MonoBehaviour
         Look();
         Move();
         Jump();
+        SoundManager();
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
@@ -50,7 +68,6 @@ public class PlayerController : MonoBehaviour
             Destroy(cameraHolder);
             Destroy(_rigidbody);
         }
-            
     }
 
 
@@ -90,6 +107,61 @@ public class PlayerController : MonoBehaviour
         {
             _rigidbody.AddForce(transform.up * jumpFoce);
             anim.SetTrigger(jumpHash);
+        }
+    }
+
+    private void SoundManager()
+    {
+        soundState oldSoundState = audioState;
+        if (_moveAmount.magnitude <= 0.1)
+        {
+            audioState = soundState.standBy;
+        }
+        if (_moveAmount.magnitude >=0.2 && anim.speed < 3.1)
+        {
+            audioState = soundState.walk;
+        }
+        if (_moveAmount.magnitude >= 3.1)
+        {
+            audioState = soundState.run;
+        }
+
+        if (!_grounded) //working
+        {
+            audioState = soundState.jump;
+        }
+
+        if (oldSoundState != audioState)
+        {
+            _audioSource.Stop();
+            switch (audioState)
+            {
+                case soundState.standBy:
+                    //_audioSource.clip = standByClip;
+                    //_audioSource.Play();
+                    break;
+                case soundState.walk:
+                    _audioSource.clip = walkClip;
+                    _audioSource.Play();;
+                    break;
+                case soundState.run:
+                    _audioSource.clip = runClip;
+                    _audioSource.Play();
+                    break;
+                case soundState.jump:
+                    _audioSource.clip = JumpClip;
+                    _audioSource.Play();
+                    break;
+                default:
+                    throw new Exception("sound manager goes brrr");
+            }
+        }
+        else
+        {
+            if (!_audioSource.isPlaying && audioState != soundState.jump && audioState != soundState.standBy)
+            {
+                _audioSource.Play();
+            }
         }
     }
     
