@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Menus;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -34,7 +35,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        Camera.SetupCurrent(annimationCamera);
         _director.Play();
         StartCoroutine(WaitAnimation(scene));
     }
@@ -50,6 +50,27 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (scene.name.Equals("Multiplayer"))
         {
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
+        }
+    }
+
+    private void Update()
+    {
+        TabList();
+    }
+    
+    /**
+     * Tab Menu
+     */
+    
+    private void TabList()
+    {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            TabMenu.InstanceMenu.Open();
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            TabMenu.InstanceMenu.Close();
         }
     }
 }

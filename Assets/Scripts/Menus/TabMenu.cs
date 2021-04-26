@@ -33,7 +33,7 @@ namespace Menus
         {
             InstanceMenu.Close();
             serverName.text = "Server: " + PhotonNetwork.CurrentRoom.Name;
-            Update();
+            UpdateTab();
         }
 
         private void Update()
@@ -54,13 +54,16 @@ namespace Menus
             }
             foreach (KeyValuePair<int, Player> player in PhotonNetwork.CurrentRoom.Players)
             {
-                if (player.Value.CustomProperties["team"].Equals(Laucher.Team.Resident))
+                if ((int) player.Value.CustomProperties["team"] == (int) Laucher.Team.Resident)
                 {
                     Instantiate(playerListItemPrefab, resident).GetComponent<PlayerListItem>().SetUp(player.Value);
                 }
-                else if (player.Value.CustomProperties["team"].Equals(Laucher.Team.Thief))
+                else if ((int) player.Value.CustomProperties["team"] == (int) Laucher.Team.Thief)
                 {
                     Instantiate(playerListItemPrefab, thief).GetComponent<PlayerListItem>().SetUp(player.Value);
+                }else
+                {
+                    print(player.Value.CustomProperties["team"]);
                 }
             }
         }

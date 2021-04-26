@@ -90,6 +90,8 @@ public class Laucher : MonoBehaviourPunCallbacks
         StartGame(room);
     }
 
+    private int lastPlayerId = -1;
+    
     private void StartGame(Room room)
     {
         int placeThief = room.Players.Count / 2 + (room.Players.Count % 2 == 0 ? 0 : 1);
@@ -116,18 +118,23 @@ public class Laucher : MonoBehaviourPunCallbacks
                 if (placeResident > 0)
                 {
                     hashtable["team"] = Team.Resident;
-                    placeThief--;
+                    placeResident--;
                 }
                 else
                 {
                     hashtable["team"] = Team.Thief;
-
+                    placeThief--;
                 }
             }
             player.Value.SetCustomProperties(hashtable);
+            if(placeThief == 0 && placeResident == 0) lastPlayerId = player.Key;
         }
+    }
 
-        PhotonNetwork.LoadLevel("Multiplayer");
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        if(targetPlayer.ActorNumber == lastPlayerId && changedProps.ContainsKey("team"))
+            PhotonNetwork.LoadLevel("Multiplayer");
     }
 
     public enum Team

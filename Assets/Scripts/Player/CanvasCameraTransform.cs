@@ -5,16 +5,12 @@ using UnityEngine;
 
 public class CanvasCameraTransform : MonoBehaviour
 {
-    private Transform cameraTransform;
-
-    private void Start()
-    {
-        cameraTransform = Camera.current.transform;
-    }
 
     private void LateUpdate()
     {
+        if (Camera.current == null) return;
+        Transform cameraTransform = Camera.current.transform;
         transform.LookAt(transform.position 
-                                   + cameraTransform.rotation * Vector3.forward, cameraTransform.rotation * Vector3.up);
+                         + cameraTransform.rotation * Vector3.forward, cameraTransform.rotation * Vector3.up);
     }
 }

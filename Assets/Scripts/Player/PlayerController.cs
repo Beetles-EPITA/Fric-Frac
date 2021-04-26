@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
-        if (_photonView.IsMine) Camera.SetupCurrent(GetComponentInChildren<Camera>());
     }
 
     private void Update()
@@ -37,7 +36,7 @@ public class PlayerController : MonoBehaviour
         Move();
         Jump();
 
-        TabList();
+        //TabList();
         
         if (Input.GetKeyUp(KeyCode.Escape))
         {
@@ -55,7 +54,10 @@ public class PlayerController : MonoBehaviour
         if (!_photonView.IsMine)
         {
             Destroy(cameraHolder);
-            Destroy(_rigidbody);
+        }
+        else
+        {
+            Camera.SetupCurrent(cameraHolder.GetComponent<Camera>());
         }
             
     }
@@ -155,22 +157,5 @@ public class PlayerController : MonoBehaviour
     {
         if (!_photonView.IsMine) return;
         _rigidbody.MovePosition(_rigidbody.position + transform.TransformDirection(_moveAmount) * Time.fixedDeltaTime);
-    }
-
-
-    /**
-     * TabList
-     */
-
-    private void TabList()
-    {
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            TabMenu.InstanceMenu.Open();
-        }
-        if (Input.GetKeyUp(KeyCode.Tab))
-        {
-            TabMenu.InstanceMenu.Close();
-        }
     }
 }
