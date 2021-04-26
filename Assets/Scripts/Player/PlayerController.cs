@@ -133,14 +133,12 @@ public class PlayerController : MonoBehaviour
 
         if (oldSoundState != audioState)
         {
-            print(audioState.ToString());
-
             _audioSource.Stop();
             switch (audioState)
             {
                 case soundState.standBy:
                     //_audioSource.clip = standByClip;
-                    _audioSource.Play();
+                    //_audioSource.Play();
                     break;
                 case soundState.walk:
                     _audioSource.clip = walkClip;

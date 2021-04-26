@@ -475,8 +475,8 @@ MonoBehaviour:
   _audioSource: {fileID: 64003899865091959}
   standByClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
   walkClip: {fileID: 8300000, guid: 8c05e37b841eb5c48b91b8c77e41ccfc, type: 3}
-  runClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
-  JumpClip: {fileID: 8300000, guid: e3d854bb89097b148b71ff92ed2ead1f, type: 3}
+  runClip: {fileID: 8300000, guid: 8c05e37b841eb5c48b91b8c77e41ccfc, type: 3}
+  JumpClip: {fileID: 8300000, guid: 92efdd13acf89d2458e7a8b1fd29c02a, type: 3}
 --- !u!1 &8507608169798852096
 GameObject:
   m_ObjectHideFlags: 0
