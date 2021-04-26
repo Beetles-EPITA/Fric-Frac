@@ -56,6 +56,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private void Update()
     {
         TabList();
+        Pause();
     }
     
     /**
@@ -71,6 +72,19 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyUp(KeyCode.Tab))
         {
             TabMenu.InstanceMenu.Close();
+        }
+    }
+
+    /**
+     * Pause Menu
+     */
+
+    private void Pause()
+    {
+        if (Input.GetKeyUp(KeyCode.Escape))
+        {
+            Menus.Pause.isPause = !Menus.Pause.isPause;
+            Menus.Pause.Instance.gameObject.SetActive(Menus.Pause.isPause);
         }
     }
 }
