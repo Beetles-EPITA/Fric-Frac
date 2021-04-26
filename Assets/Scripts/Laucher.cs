@@ -1,13 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using ExitGames.Client.Photon.StructWrapping;
 using Menus;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
 
 public class Laucher : MonoBehaviourPunCallbacks
@@ -56,7 +59,7 @@ public class Laucher : MonoBehaviourPunCallbacks
     public void CreateRoom(Text roomName)
     {
         MainMenuManager.Instance.OpenMenu("Loading");
-        PhotonNetwork.CreateRoom(roomName.text);
+        PhotonNetwork.CreateRoom(roomName.text, new RoomOptions {MaxPlayers = 8});
     }
 
     public void JoinRoom(RoomInfo roomInfo)
@@ -72,9 +75,47 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
+        Room room = PhotonNetwork.CurrentRoom;
+        int placeThief = room.Players.Count / 2 + (room.Players.Count % 2 == 0 ? 0 : 1);
+        int placeResident = room.Players.Count / 2;
+        foreach (KeyValuePair<int, Player> player in room.Players)
+        {
+            int random = new System.Random().Next(Enum.GetValues(typeof(Team)).Length);
+            if (placeThief > 0)
+            {
+
+            } else if (placeResident > 0)
+            {
+                
+            }
+
+            Hashtable hashtable = player.Value.CustomProperties;
+            
+            hashtable["team"] = Team.Thief;
+            
+        }
+        
+        
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
+        
         PhotonNetwork.LoadLevel("Multiplayer");
+    }
+
+    public enum Team
+    {
+        Thief,
+        Resident
+    }
+    
+    private static List<Player> GetPlayersInTeam(Team team, Room room)
+    {
+        List<Player> returnList = new List<Player>();
+        foreach (KeyValuePair<int,Player> player in room.Players)
+        {
+            if(player.Value.CustomProperties["team"] == (object) team) returnList.Add(player.Value);
+        }
+        return returnList;
     }
 
     public override void OnJoinedRoom()
@@ -147,7 +188,6 @@ public class Laucher : MonoBehaviourPunCallbacks
     {
         Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
     }
-    
-    
-    
+
+
 }
