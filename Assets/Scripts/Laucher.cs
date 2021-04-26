@@ -81,21 +81,34 @@ public class Laucher : MonoBehaviourPunCallbacks
         foreach (KeyValuePair<int, Player> player in room.Players)
         {
             int random = new System.Random().Next(Enum.GetValues(typeof(Team)).Length);
-            if (placeThief > 0)
-            {
-
-            } else if (placeResident > 0)
-            {
-                
-            }
-
             Hashtable hashtable = player.Value.CustomProperties;
-            
-            hashtable["team"] = Team.Thief;
-            
+            if (random == 0)
+            {
+                if (placeThief > 0)
+                {
+                    hashtable["team"] = Team.Thief;
+                    placeThief--;
+                }
+                else
+                {
+                    hashtable["team"] = Team.Resident;
+                    placeResident--;
+                }
+            }
+            else
+            {
+                if (placeResident > 0)
+                {
+                    hashtable["team"] = Team.Resident;
+                    placeThief--;
+                }
+                else
+                {
+                    hashtable["team"] = Team.Thief;
+
+                }
+            }
         }
-        
-        
         PhotonNetwork.CurrentRoom.IsOpen = false;
         PhotonNetwork.CurrentRoom.IsVisible = false;
         
