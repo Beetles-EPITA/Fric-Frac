@@ -15908,7 +15908,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 783550104}
-  m_LocalRotation: {x: 0.04200477, y: -0.9576229, z: 0.18738136, w: 0.21466774}
+  m_LocalRotation: {x: 0.04200478, y: -0.9576229, z: 0.18738134, w: 0.2146678}
   m_LocalPosition: {x: 37.80855, y: 31.779568, z: 118.05535}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -22452,6 +22452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _director: {fileID: 783550106}
+  annimationCamera: {fileID: 783550109}
 --- !u!4 &1079493244
 Transform:
   m_ObjectHideFlags: 0
@@ -41774,7 +41775,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2061872389}
-  m_LocalRotation: {x: 0.04200477, y: -0.9576229, z: 0.18738136, w: 0.21466774}
+  m_LocalRotation: {x: 0.04200478, y: -0.9576229, z: 0.18738134, w: 0.2146678}
   m_LocalPosition: {x: 74.05386, y: 55.350574, z: 148.8778}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:

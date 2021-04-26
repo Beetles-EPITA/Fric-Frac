@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
+        if (_photonView.IsMine) Camera.SetupCurrent(GetComponentInChildren<Camera>());
     }
 
     private void Update()

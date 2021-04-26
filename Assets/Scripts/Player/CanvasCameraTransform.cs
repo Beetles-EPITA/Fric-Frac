@@ -9,7 +9,7 @@ public class CanvasCameraTransform : MonoBehaviour
 
     private void Start()
     {
-        cameraTransform = Camera.main.transform;
+        cameraTransform = Camera.current.transform;
     }
 
     private void LateUpdate()

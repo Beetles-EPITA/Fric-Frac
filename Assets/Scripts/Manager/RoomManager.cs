@@ -11,6 +11,7 @@ using Random = System.Random;
 public class RoomManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private PlayableDirector _director;
+    [SerializeField] private Camera annimationCamera;
     
     public static RoomManager Instance;
 
@@ -33,6 +34,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        Camera.SetupCurrent(annimationCamera);
         _director.Play();
         StartCoroutine(WaitAnimation(scene));
     }
