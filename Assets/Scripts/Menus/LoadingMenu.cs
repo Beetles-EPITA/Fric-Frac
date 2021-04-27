@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,10 +18,17 @@ namespace Menus
         private float _startTime;
         private float _messageTime;
 
-        void Start()
+        void Awake()
         {
             _startTime = Time.time;
-            _messageTime = 0;
+            _messageTime = Time.time;
+        }
+
+        private void Start()
+        {
+            int random = new System.Random().Next(messages.Length);
+            loadingText.text = messages[random];
+            _messageTime = Time.time;
         }
 
         // Update is called once per frame

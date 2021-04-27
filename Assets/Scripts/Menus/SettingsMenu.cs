@@ -40,14 +40,28 @@ namespace Menus
         private void InitVolume()
         {
             float volume = PlayerPrefs.HasKey("volume.master") ? PlayerPrefs.GetFloat("volume.master") : 0f;
-            audiomixer.SetFloat("volume", volume);
+            if (volume <= -40f)
+            {
+                audiomixer.SetFloat("volume", -80f);
+            }
+            else
+            {
+                audiomixer.SetFloat("volume", volume);
+            }
             volumeSlider.value = volume;
         }
     
         public void SetVolume(float volume)
         {
             PlayerPrefs.SetFloat("volume.master", volume);
-            audiomixer.SetFloat("volume", volume);
+            if (volume <= -40f)
+            {
+                audiomixer.SetFloat("volume", -80f);
+            }
+            else
+            {
+                audiomixer.SetFloat("volume", volume);
+            }
         }
 
         private void InitResolutionAndScreenMode()

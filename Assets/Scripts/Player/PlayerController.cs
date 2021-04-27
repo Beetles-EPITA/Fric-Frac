@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Menus;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -48,15 +49,16 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         if (!_photonView.IsMine) return;
+        if (Pause.isPause)
+        {
+            anim.SetFloat("Speed", 0);
+            _moveAmount = Vector3.zero;
+            return;
+        }
         Look();
         Move();
         Jump();
         SoundManager();
-        if (Input.GetKeyUp(KeyCode.Escape))
-        {
-            if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
-            SceneManager.LoadScene("MainMenu");
-        }
     }
 
     private void Start()
@@ -66,8 +68,12 @@ public class PlayerController : MonoBehaviour
         if (!_photonView.IsMine)
         {
             Destroy(cameraHolder);
-            Destroy(_rigidbody);
         }
+        else
+        {
+            Camera.SetupCurrent(cameraHolder.GetComponent<Camera>());
+        }
+            
     }
 
 
@@ -219,7 +225,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         if (!_photonView.IsMine) return;
+        if (Pause.isPause) return;
         _rigidbody.MovePosition(_rigidbody.position + transform.TransformDirection(_moveAmount) * Time.fixedDeltaTime);
     }
-
 }
