@@ -1,13 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using ExitGames.Client.Photon;
 using ExitGames.Client.Photon.StructWrapping;
 using Menus;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = UnityEngine.Random;
 
 public class Laucher : MonoBehaviourPunCallbacks
@@ -19,7 +22,6 @@ public class Laucher : MonoBehaviourPunCallbacks
     [SerializeField] private GameObject roomListItemPrefab;
     [SerializeField] private Transform playerListContent;
     [SerializeField] private GameObject playerListItemPrefab;
-    [SerializeField] private Scrollbar scrollBarLoading;
     [SerializeField] private GameObject startGameButton;
     
     [SerializeField] private GameObject prefabRoomManager;
@@ -38,10 +40,7 @@ public class Laucher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
-            return;
         }
-        Debug.Log("Connecting to Server...");
-        PhotonNetwork.ConnectUsingSettings();
     }
 
     public override void OnConnectedToMaster()
@@ -53,21 +52,14 @@ public class Laucher : MonoBehaviourPunCallbacks
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined Lobby");
-        PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
-        if (RoomManager.Instance == null)
-        {
-            Instantiate(prefabRoomManager);
-            Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
-            Text text = menu.GetComponentInChildren<Text>();
-            text.text = "The room owner has left the game";
-        }
+        PhotonNetwork.NickName = Auth.USERNAME;
+        MainMenuManager.Instance.OpenMenu("Main");
     }
 
     public void CreateRoom(Text roomName)
     {
         MainMenuManager.Instance.OpenMenu("Loading");
-        scrollBarLoading.size = 0.5F;
-        PhotonNetwork.CreateRoom(roomName.text);
+        PhotonNetwork.CreateRoom(roomName.text, new RoomOptions {MaxPlayers = 8});
     }
 
     public void JoinRoom(RoomInfo roomInfo)
@@ -81,11 +73,76 @@ public class Laucher : MonoBehaviourPunCallbacks
         MainMenuManager.Instance.OpenMenu("Loading");
     }
 
-    public void StartGame()
+    [PunRPC]
+    private void OpenLoading()
     {
-        PhotonNetwork.LoadLevel("Multiplayer");
+        MainMenuManager.Instance.OpenMenu("Loading");
     }
 
+    public void StartGame()
+    {
+        photonView.RPC("OpenLoading", RpcTarget.All);
+        
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        
+        Room room = PhotonNetwork.CurrentRoom;
+        StartGame(room);
+    }
+
+    private int lastPlayerId = -1;
+    
+    private void StartGame(Room room)
+    {
+        int placeThief = room.Players.Count / 2 + (room.Players.Count % 2 == 0 ? 0 : 1);
+        int placeResident = room.Players.Count / 2;
+        foreach (KeyValuePair<int, Player> player in room.Players)
+        {
+            int random = new System.Random().Next(Enum.GetValues(typeof(Team)).Length);
+            Hashtable hashtable = player.Value.CustomProperties;
+            if (random == 0)
+            {
+                if (placeThief > 0)
+                {
+                    hashtable["team"] = Team.Thief;
+                    placeThief--;
+                }
+                else
+                {
+                    hashtable["team"] = Team.Resident;
+                    placeResident--;
+                }
+            }
+            else
+            {
+                if (placeResident > 0)
+                {
+                    hashtable["team"] = Team.Resident;
+                    placeResident--;
+                }
+                else
+                {
+                    hashtable["team"] = Team.Thief;
+                    placeThief--;
+                }
+            }
+            player.Value.SetCustomProperties(hashtable);
+            if(placeThief == 0 && placeResident == 0) lastPlayerId = player.Key;
+        }
+    }
+
+    public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
+    {
+        if(targetPlayer.ActorNumber == lastPlayerId && changedProps.ContainsKey("team"))
+            PhotonNetwork.LoadLevel("Multiplayer");
+    }
+
+    public enum Team
+    {
+        Thief,
+        Resident
+    }
+    
     public override void OnJoinedRoom()
     {
         Menu menu = MainMenuManager.Instance.OpenMenu("LobbyMenu");
@@ -109,16 +166,14 @@ public class Laucher : MonoBehaviourPunCallbacks
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 
-    IEnumerator ProgessBarLoading(AsyncOperation operation)
+    public override void OnCreateRoomFailed(short returnCode, string message)
     {
-        while (!operation.isDone)
-        {
-            scrollBarLoading.size = 0.1F + operation.progress * 0.9F;
-            yield return null;
-        }
+        Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
+        Text text = menu.GetComponentInChildren<Text>();
+        text.text = "Cannot connect to the server : " + message;
     }
 
-    public override void OnCreateRoomFailed(short returnCode, string message)
+    public override void OnJoinRoomFailed(short returnCode, string message)
     {
         Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
         Text text = menu.GetComponentInChildren<Text>();
@@ -158,7 +213,6 @@ public class Laucher : MonoBehaviourPunCallbacks
     {
         Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
     }
-    
-    
-    
+
+
 }
