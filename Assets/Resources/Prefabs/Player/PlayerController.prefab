@@ -472,7 +472,6 @@ MonoBehaviour:
   walkSpeed: 3
   jumpFoce: 250
   smoothTime: 0.15
-<<<<<<< HEAD
   _audioSource: {fileID: 64003899865091959}
   standByClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
   walkClip: {fileID: 8300000, guid: 8c05e37b841eb5c48b91b8c77e41ccfc, type: 3}
@@ -606,8 +605,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-=======
->>>>>>> MappingV2
 --- !u!1001 &3790200499082929647
 PrefabInstance:
   m_ObjectHideFlags: 0
