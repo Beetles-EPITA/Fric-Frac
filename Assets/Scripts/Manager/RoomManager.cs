@@ -83,8 +83,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (Input.GetKeyUp(KeyCode.Escape))
         {
-            Menus.Pause.isPause = !Menus.Pause.isPause;
-            Menus.Pause.Instance.gameObject.SetActive(Menus.Pause.isPause);
+            Menus.Pause.Instance.setPause(!Menus.Pause.isPause);
         }
     }
 }
