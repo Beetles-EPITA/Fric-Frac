@@ -10,7 +10,8 @@ public class NaveMeshPlayerMotor : MonoBehaviour
 {
     [SerializeField]
     public NavMeshAgent agent;
-
+    public Camera agentCamera;
+    
     [SerializeField]
     public Component player;
     
@@ -34,7 +35,7 @@ public class NaveMeshPlayerMotor : MonoBehaviour
             print("Agent lost at:" + agent.transform.position.x + ", " + agent.transform.position.y + ", " + agent.transform.position.z);
         }
         
-        if ((Distance(agent, player, minDistanceCloseToHear) || CanSeeThePlayer(agent, player, minDistanceCloseToSee)) && !IsObjectBetween(agent, player))
+        if ((Distance(agent, player, minDistanceCloseToHear) || CanSeeThePlayer(agent, agentCamera,player, minDistanceCloseToSee)) && !IsObjectBetween(agent, player))
         {
             agent.SetDestination(player.transform.localPosition);
         }

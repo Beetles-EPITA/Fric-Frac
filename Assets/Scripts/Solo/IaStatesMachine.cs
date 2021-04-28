@@ -21,8 +21,12 @@ public class IaStatesMachine : MonoBehaviour
         return Vector3.Distance(a, b) < distanceMin;
     }
 
-    public static bool CanSeeThePlayer(NavMeshAgent ia, Component player, float distanceMin)
+    public static bool CanSeeThePlayer(NavMeshAgent ia,Camera iaCamera , Component player, float distanceMin)
     {
+        Renderer render = player.GetComponentInChildren<SkinnedMeshRenderer>();
+        if (render.isVisible) Debug.Log("Visible");
+        else Debug.Log("Not visible");
+        Vector3 iaView = ia.GetComponent<Transform>().forward;
         return false;
     }
 
