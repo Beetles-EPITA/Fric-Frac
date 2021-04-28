@@ -15,15 +15,11 @@ namespace Menus
 
         private static AudioMixer _audioMixerStatic;
         
-        public Slider volumeSlider;
         public TMP_Dropdown resolutionDropdown;
         public TMP_Dropdown qualityDropdown;
         public Toggle fullScreenToggle;
 
         Resolution[] _resolutions;
-
-    
-
 
         private void Awake()
         {
@@ -109,7 +105,7 @@ namespace Menus
             int currentResolutionIndex = 0;
             for (int i = 0; i < _resolutions.Length; i++)
             {
-                string option = _resolutions[i].width + " x " + _resolutions[i].height;
+                string option = _resolutions[i].width + " x " + _resolutions[i].height + " " + _resolutions[i].refreshRate + "fps";
                 options.Add(option);
 
                 if (_resolutions[i].width == Screen.currentResolution.width && _resolutions[i].height == Screen.currentResolution.height)

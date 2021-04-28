@@ -6,8 +6,7 @@ namespace Menus
 {
     public class Pause : MonoBehaviour
     {
-
-        [SerializeField] private Menu optionsMenu;
+        
         [SerializeField] private Menu settingsMenu;
         
         public static bool isPause;
@@ -31,7 +30,6 @@ namespace Menus
             if (!isPause)
             {
                 gameObject.SetActive(false);
-                optionsMenu.gameObject.SetActive(false);
                 settingsMenu.gameObject.SetActive(false);
             }
             else

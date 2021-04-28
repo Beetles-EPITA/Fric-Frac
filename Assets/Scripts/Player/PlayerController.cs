@@ -244,10 +244,15 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.E))
         {
+            if (!Inventory.Instance.inInventory && Pause.isPause) return;
             if(!Inventory.Instance.inInventory)
                 Inventory.Instance.Open(this);
             else 
                 Inventory.Instance.Close();
+        }
+        if (Input.GetKeyUp(KeyCode.Escape) && Inventory.Instance.inInventory)
+        {
+            Inventory.Instance.Close();
         }
     }
 
