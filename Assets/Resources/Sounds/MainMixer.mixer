@@ -63,8 +63,12 @@ AudioMixerController:
   m_EnableSuspend: 1
   m_UpdateMode: 0
   m_ExposedParameters:
+  - guid: 0c86ec08bff2de74d83ed16c8d4a9746
+    name: volume.game
   - guid: 27034df01e8d2b64a805146f49b3faf3
-    name: volume
+    name: volume.master
+  - guid: 0e5b45e9f3cbf4849bdd174fc5c37e9f
+    name: volume.music
   m_AudioMixerGroupViews:
   - guids:
     - ac0dc02e63e802341a2c3a44d6ac4e42
@@ -119,7 +123,8 @@ AudioMixerSnapshotController:
   m_SnapshotID: 85ddeb9b32f1dd14a8dc86f4e647b5a3
   m_FloatValues:
     27034df01e8d2b64a805146f49b3faf3: -80
-    0e5b45e9f3cbf4849bdd174fc5c37e9f: -0.02577656
+    0c86ec08bff2de74d83ed16c8d4a9746: -19.928473
+    0e5b45e9f3cbf4849bdd174fc5c37e9f: -19.928473
     e68bb78ff8741954e888432125688b2d: 1
   m_TransitionOverrides: {}
 --- !u!243 &2322380596157008822

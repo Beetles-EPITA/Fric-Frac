@@ -9,8 +9,12 @@ namespace Menus
     public class SettingsMenu : MonoBehaviour
     {
 
-        public AudioMixer audiomixer;
-    
+        [SerializeField] private VerticalLayoutGroup volumeLayout;
+        [SerializeField] private GameObject prefabVolume;
+        [SerializeField] private AudioMixer audioMixer;
+
+        private static AudioMixer _audioMixerStatic;
+        
         public Slider volumeSlider;
         public TMP_Dropdown resolutionDropdown;
         public TMP_Dropdown qualityDropdown;
@@ -24,6 +28,7 @@ namespace Menus
         private void Awake()
         {
             _resolutions = Screen.resolutions;
+            _audioMixerStatic = audioMixer;
         }
 
         void Start()
@@ -39,29 +44,28 @@ namespace Menus
 
         private void InitVolume()
         {
-            float volume = PlayerPrefs.HasKey("volume.master") ? PlayerPrefs.GetFloat("volume.master") : 0f;
-            if (volume <= -40f)
+            AudioMixerGroup[] groups = audioMixer.FindMatchingGroups("");
+            for (var i = 0; i < groups.Length; i++)
             {
-                audiomixer.SetFloat("volume", -80f);
+                AudioMixerGroup mixer = groups[i];
+                string sourcePath = "volume." + mixer.name.ToLower();
+                float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -10f;
+                mixer.audioMixer.SetFloat(sourcePath, volume);
+                GameObject volumeObject = Instantiate(prefabVolume, volumeLayout.transform);
+                volumeObject.GetComponent<VolumeSlider>().path = sourcePath;
+                volumeObject.GetComponentInChildren<Text>().text = mixer.name;
+                volumeObject.GetComponentInChildren<Slider>().value = volume;
             }
-            else
-            {
-                audiomixer.SetFloat("volume", volume);
-            }
-            volumeSlider.value = volume;
         }
-    
-        public void SetVolume(float volume)
+        
+        public static void SetVolume(float volume, string path)
         {
-            PlayerPrefs.SetFloat("volume.master", volume);
             if (volume <= -40f)
             {
-                audiomixer.SetFloat("volume", -80f);
+                volume = -80f;
             }
-            else
-            {
-                audiomixer.SetFloat("volume", volume);
-            }
+            _audioMixerStatic.SetFloat(path, volume);
+            PlayerPrefs.SetFloat(path, volume);
         }
 
         private void InitResolutionAndScreenMode()
