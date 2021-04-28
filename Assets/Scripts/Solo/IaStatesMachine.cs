@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class IaStatesMachine : MonoBehaviour
 {
@@ -18,6 +19,11 @@ public class IaStatesMachine : MonoBehaviour
 
         Vector3 b = player.transform.position;
         return Vector3.Distance(a, b) < distanceMin;
+    }
+
+    public static bool CanSeeThePlayer(NavMeshAgent ia, Component player, float distanceMin)
+    {
+        return false;
     }
 
     public static bool IsObjectBetween(Component ia, Component player)
