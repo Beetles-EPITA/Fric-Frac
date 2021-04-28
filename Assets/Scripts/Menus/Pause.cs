@@ -25,11 +25,6 @@ namespace Menus
             gameObject.SetActive(false);
         }
 
-        private void Update()
-        {
-            Cursor.visible = isPause;
-        }
-
         public void setPause(bool pause)
         {
             isPause = pause;

@@ -81,6 +81,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void Pause()
     {
+        Cursor.visible = Menus.Pause.isPause;
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             Menus.Pause.Instance.setPause(!Menus.Pause.isPause);
