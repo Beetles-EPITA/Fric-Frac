@@ -1,9 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Presets;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 [ExecuteAlways]
 public class LightingManager : MonoBehaviour

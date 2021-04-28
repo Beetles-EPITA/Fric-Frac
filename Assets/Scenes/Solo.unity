@@ -173,6 +173,12 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &65755072 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2987231449574980042, guid: 75cada1e191d88141989c7f81369ffac,
+    type: 3}
+  m_PrefabInstance: {fileID: 1672984674}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &881304462 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 4f66a7d1bdc9ff34395bb9fe7a25654c,
@@ -195,7 +201,7 @@ MonoBehaviour:
   agentCamera: {fileID: 1590217838}
   player: {fileID: 1868982043}
   minDistanceCloseToHear: 5
-  minDistanceCloseToSee: 15
+  minDistanceCloseToSee: 10
 --- !u!195 &881304464
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -715,7 +721,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1590217835}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -758,6 +764,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1862426679, guid: 75cada1e191d88141989c7f81369ffac, type: 3}
+      propertyPath: m_TagString
+      value: MainCamera
+      objectReference: {fileID: 0}
     - target: {fileID: 2465932069347162301, guid: 75cada1e191d88141989c7f81369ffac,
         type: 3}
       propertyPath: m_Enabled
@@ -771,7 +781,7 @@ PrefabInstance:
     - target: {fileID: 3680503267431137796, guid: 75cada1e191d88141989c7f81369ffac,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3680503267431137796, guid: 75cada1e191d88141989c7f81369ffac,
         type: 3}
@@ -870,9 +880,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8065759370158879929, guid: 75cada1e191d88141989c7f81369ffac,
         type: 3}
+      propertyPath: cameraHolder
+      value: 
+      objectReference: {fileID: 65755072}
+    - target: {fileID: 8065759370158879929, guid: 75cada1e191d88141989c7f81369ffac,
+        type: 3}
       propertyPath: mouseSensitivity
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 8065759370158879929, guid: 75cada1e191d88141989c7f81369ffac,
+        type: 3}
+      propertyPath: playercameraHolder
+      value: 
+      objectReference: {fileID: 65755072}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75cada1e191d88141989c7f81369ffac, type: 3}
 --- !u!1 &1762679121
@@ -980,7 +1000,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 4f66a7d1bdc9ff34395bb9fe7a25654c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 4f66a7d1bdc9ff34395bb9fe7a25654c,
         type: 3}

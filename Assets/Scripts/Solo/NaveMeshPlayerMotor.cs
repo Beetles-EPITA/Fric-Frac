@@ -1,6 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.AI;
 using static IaStatesMachine;
@@ -38,6 +36,7 @@ public class NaveMeshPlayerMotor : MonoBehaviour
         if ((Distance(agent, player, minDistanceCloseToHear) || CanSeeThePlayer(agent, agentCamera,player, minDistanceCloseToSee)) && !IsObjectBetween(agent, player))
         {
             agent.SetDestination(player.transform.localPosition);
+            print("Tracking");
         }
         else
         {
@@ -47,8 +46,8 @@ public class NaveMeshPlayerMotor : MonoBehaviour
                 v.x *= (r.Next(1) == 1 ? 1 : -1);
                 v.z *= (r.Next(1) == 1 ? 1 : -1);
                 agent.SetDestination(v);
-                print(v.x + ", " + v.y + ", " +  v.z);
             }
+            print("lost");
             
         }
 
