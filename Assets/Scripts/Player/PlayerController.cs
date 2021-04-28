@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        SoundManager();
         if (!_photonView.IsMine) return;
         if (Pause.isPause)
         {
@@ -58,7 +59,6 @@ public class PlayerController : MonoBehaviour
         Look();
         Move();
         Jump();
-        SoundManager();
     }
 
     private void Start()
