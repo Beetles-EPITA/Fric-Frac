@@ -25,7 +25,7 @@ namespace Menus
         
         private void Start()
         {
-            version.text = "Version " + Application.version;
+            version.text = Application.version;
             Cursor.visible = true;
         }
 
