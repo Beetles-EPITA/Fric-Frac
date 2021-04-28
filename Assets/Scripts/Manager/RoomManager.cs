@@ -13,6 +13,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private PlayableDirector _director;
     [SerializeField] private Camera annimationCamera;
+    [SerializeField] private AudioSource greenCar;
     
     public static RoomManager Instance;
 
@@ -37,13 +38,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        _director.Play();
         StartCoroutine(WaitAnimation(scene));
     }
 
     IEnumerator WaitAnimation(Scene scene)
     {
-        yield return new WaitForSeconds((int) _director.duration + 1);
+        _director.Play();
+        yield return new WaitForSeconds(1);
+        greenCar.Play();
+        annimationCamera.GetComponent<AudioSource>().Play();
+        yield return new WaitForSeconds((int) _director.duration + 2);
         if(!skipped) CreatePlayer(scene);
         skipped = true;
     }
@@ -52,6 +56,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (scene.name.Equals("Multiplayer"))
         {
+            annimationCamera.GetComponent<AudioListener>().enabled = false;
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
         }
     }
@@ -97,6 +102,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (!skipped && Input.GetKeyDown(KeyCode.F6))
         {
             skipped = true;
+            annimationCamera.GetComponent<AudioSource>().Stop();
+            greenCar.Stop();
             CreatePlayer(SceneManager.GetActiveScene());
         }
     }
