@@ -194,8 +194,8 @@ MonoBehaviour:
   agent: {fileID: 881304464}
   agentCamera: {fileID: 1590217838}
   player: {fileID: 1868982043}
-  minDistanceCloseToHear: 10
-  minDistanceCloseToSee: 20
+  minDistanceCloseToHear: 5
+  minDistanceCloseToSee: 15
 --- !u!195 &881304464
 NavMeshAgent:
   m_ObjectHideFlags: 0

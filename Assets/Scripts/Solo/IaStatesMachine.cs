@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -23,11 +24,7 @@ public class IaStatesMachine : MonoBehaviour
 
     public static bool CanSeeThePlayer(NavMeshAgent ia,Camera iaCamera , Component player, float distanceMin)
     {
-        Renderer render = player.GetComponentInChildren<SkinnedMeshRenderer>();
-        if (render.isVisible) Debug.Log("Visible");
-        else Debug.Log("Not visible");
-        Vector3 iaView = ia.GetComponent<Transform>().forward;
-        return false;
+        return IsTargetVisible(iaCamera, player.gameObject) && Distance(ia, player, distanceMin);
     }
 
     public static bool IsObjectBetween(Component ia, Component player)
@@ -41,5 +38,17 @@ public class IaStatesMachine : MonoBehaviour
         }
 
         return false;
+    }
+
+    static bool IsTargetVisible(Camera c,GameObject go)
+    {
+        var planes = GeometryUtility.CalculateFrustumPlanes(c);
+        var point = go.transform.position;
+        foreach (var plane in planes)
+        {
+            if (plane.GetDistanceToPoint(point) < 0)
+                return false;
+        }
+        return true;
     }
 }
