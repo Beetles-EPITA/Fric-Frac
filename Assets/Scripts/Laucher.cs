@@ -23,8 +23,6 @@ public class Laucher : MonoBehaviourPunCallbacks
     [SerializeField] private Transform playerListContent;
     [SerializeField] private GameObject playerListItemPrefab;
     [SerializeField] private GameObject startGameButton;
-    
-    [SerializeField] private GameObject prefabRoomManager;
 
     private Dictionary<string, RoomInfo> _roomInfos;
     
@@ -126,6 +124,7 @@ public class Laucher : MonoBehaviourPunCallbacks
                     placeThief--;
                 }
             }
+
             player.Value.SetCustomProperties(hashtable);
             if(placeThief == 0 && placeResident == 0) lastPlayerId = player.Key;
         }
