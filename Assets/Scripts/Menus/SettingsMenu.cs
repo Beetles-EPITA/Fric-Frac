@@ -44,10 +44,8 @@ namespace Menus
 
         private void InitVolume()
         {
-            AudioMixerGroup[] groups = audioMixer.FindMatchingGroups("");
-            for (var i = 0; i < groups.Length; i++)
+            foreach (var mixer in audioMixer.FindMatchingGroups(""))
             {
-                AudioMixerGroup mixer = groups[i];
                 string sourcePath = "volume." + mixer.name.ToLower();
                 float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -10f;
                 mixer.audioMixer.SetFloat(sourcePath, volume);
