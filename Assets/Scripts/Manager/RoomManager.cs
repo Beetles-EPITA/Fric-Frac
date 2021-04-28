@@ -16,6 +16,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     
     public static RoomManager Instance;
 
+    private bool skipped;
+
     private void Awake()
     {
         Instance = this;
@@ -42,7 +44,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     IEnumerator WaitAnimation(Scene scene)
     {
         yield return new WaitForSeconds((int) _director.duration + 1);
-        CreatePlayer(scene);
+        if(!skipped) CreatePlayer(scene);
+        skipped = true;
     }
 
     private void CreatePlayer(Scene scene)
@@ -55,6 +58,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void Update()
     {
+        Skip();
         TabList();
         Pause();
     }
@@ -85,6 +89,15 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             Menus.Pause.Instance.setPause(!Menus.Pause.isPause);
+        }
+    }
+
+    private void Skip()
+    {
+        if (!skipped && Input.GetKeyDown(KeyCode.F6))
+        {
+            skipped = true;
+            CreatePlayer(SceneManager.GetActiveScene());
         }
     }
 }
