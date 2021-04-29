@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Menus;
 using Photon.Pun;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject cameraHolder;
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpFoce, smoothTime;
 
+    [SerializeField] private Item lamp;
+    
     private Rigidbody _rigidbody;
 
     private float _verticalLookRotation;
@@ -18,7 +21,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _moveAmount;
 
     private PhotonView _photonView;
-    
+
     //Sound:
     [SerializeField] private AudioSource _audioSource;
     private soundState audioState;
@@ -39,6 +42,8 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
     private int jumpHash = Animator.StringToHash("Jump");
 
+    public List<Item> Items = new List<Item>();
+    
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
@@ -48,7 +53,9 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        SoundManager();
         if (!_photonView.IsMine) return;
+        ToggleInventory();
         if (Pause.isPause)
         {
             anim.SetFloat("Speed", 0);
@@ -58,7 +65,6 @@ public class PlayerController : MonoBehaviour
         Look();
         Move();
         Jump();
-        SoundManager();
     }
 
     private void Start()
@@ -72,6 +78,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Camera.SetupCurrent(cameraHolder.GetComponent<Camera>());
+            Items.Add(lamp);
         }
             
     }
@@ -88,7 +95,21 @@ public class PlayerController : MonoBehaviour
             moveDirection * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref _smoothMoveVelocity,
             smoothTime);
 
-        anim.SetFloat("Speed", Math.Max(Math.Abs(_moveAmount.x),(Math.Abs(_moveAmount.z))));
+        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                anim.SetFloat("Speed", sprintSpeed);
+            }
+            else
+            {
+                anim.SetFloat("Speed", walkSpeed);
+            }
+        }
+        else
+        {
+            anim.SetFloat("Speed", 0);
+        }
     }
     
     /**
@@ -228,4 +249,25 @@ public class PlayerController : MonoBehaviour
         if (Pause.isPause) return;
         _rigidbody.MovePosition(_rigidbody.position + transform.TransformDirection(_moveAmount) * Time.fixedDeltaTime);
     }
+
+    /**
+     * Inventory
+     */
+
+    private void ToggleInventory()
+    {
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            if (!Inventory.Instance.inInventory && Pause.isPause) return;
+            if(!Inventory.Instance.inInventory)
+                Inventory.Instance.Open(this);
+            else 
+                Inventory.Instance.Close();
+        }
+        if (Input.GetKeyUp(KeyCode.Escape) && Inventory.Instance.inInventory)
+        {
+            Inventory.Instance.Close();
+        }
+    }
+
 }

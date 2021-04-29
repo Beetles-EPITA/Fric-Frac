@@ -56,7 +56,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.51
-  far clip plane: 1000
+  far clip plane: 1500
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -472,11 +472,13 @@ MonoBehaviour:
   walkSpeed: 3
   jumpFoce: 250
   smoothTime: 0.15
+  lamp: {fileID: 7635691328426067411, guid: d3a06cc8c5a88a743be53ca82e0fc806, type: 3}
   _audioSource: {fileID: 64003899865091959}
   standByClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
   walkClip: {fileID: 8300000, guid: 8c05e37b841eb5c48b91b8c77e41ccfc, type: 3}
   runClip: {fileID: 8300000, guid: 8c05e37b841eb5c48b91b8c77e41ccfc, type: 3}
   JumpClip: {fileID: 8300000, guid: 92efdd13acf89d2458e7a8b1fd29c02a, type: 3}
+  Items: []
 --- !u!1 &8507608169798852096
 GameObject:
   m_ObjectHideFlags: 0
@@ -517,7 +519,7 @@ AudioSource:
   m_GameObject: {fileID: 8507608169798852096}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 24300002, guid: 567991b1c6130694394b46ee75c3a8a4,
+  OutputAudioMixerGroup: {fileID: 2322380596157008822, guid: 567991b1c6130694394b46ee75c3a8a4,
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0

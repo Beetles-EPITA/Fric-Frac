@@ -13,8 +13,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private PlayableDirector _director;
     [SerializeField] private Camera annimationCamera;
+    [SerializeField] private AudioSource greenCar;
     
     public static RoomManager Instance;
+
+    private bool skipped;
 
     private void Awake()
     {
@@ -35,26 +38,32 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        _director.Play();
         StartCoroutine(WaitAnimation(scene));
     }
 
     IEnumerator WaitAnimation(Scene scene)
     {
-        yield return new WaitForSeconds((int) _director.duration + 1);
-        CreatePlayer(scene);
+        _director.Play();
+        yield return new WaitForSeconds(1);
+        greenCar.Play();
+        annimationCamera.GetComponent<AudioSource>().Play();
+        yield return new WaitForSeconds((int) _director.duration + 2);
+        if(!skipped) CreatePlayer(scene);
+        skipped = true;
     }
 
     private void CreatePlayer(Scene scene)
     {
         if (scene.name.Equals("Multiplayer"))
         {
+            annimationCamera.GetComponent<AudioListener>().enabled = false;
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
         }
     }
 
     private void Update()
     {
+        Skip();
         TabList();
         Pause();
     }
@@ -81,9 +90,21 @@ public class RoomManager : MonoBehaviourPunCallbacks
 
     private void Pause()
     {
+        Cursor.visible = Menus.Pause.isPause;
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             Menus.Pause.Instance.setPause(!Menus.Pause.isPause);
+        }
+    }
+
+    private void Skip()
+    {
+        if (!skipped && Input.GetKeyDown(KeyCode.F6))
+        {
+            skipped = true;
+            annimationCamera.GetComponent<AudioSource>().Stop();
+            greenCar.Stop();
+            CreatePlayer(SceneManager.GetActiveScene());
         }
     }
 }

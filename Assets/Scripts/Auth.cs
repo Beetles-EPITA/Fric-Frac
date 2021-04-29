@@ -128,7 +128,7 @@ public class Auth : MonoBehaviour
     
     public void ForgotPassword()
     {
-        Application.OpenURL("https://fric-frac.fr/password_reset");
+        Application.OpenURL("https://fric-frac.fr/reset");
     }
 
 }

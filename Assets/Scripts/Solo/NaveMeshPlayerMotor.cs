@@ -1,16 +1,24 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.AI;
+using static IaStatesMachine;
+using Random = System.Random;
 
 public class NaveMeshPlayerMotor : MonoBehaviour
 {
     [SerializeField]
     public NavMeshAgent agent;
+    public Camera agentCamera;
     
     [SerializeField]
     public Component player;
+    
+    [SerializeField]
+    public float minDistanceCloseToHear;
+    [SerializeField]
+    public float minDistanceCloseToSee;
+    
+    Random r = new Random();
 
     //Animation :
     private Animator anim;
@@ -19,10 +27,28 @@ public class NaveMeshPlayerMotor : MonoBehaviour
     void Update()
     {
         anim = GetComponent<Animator>();
+
+        if (!agent.isOnNavMesh)
+        {
+            print("Agent lost at:" + agent.transform.position.x + ", " + agent.transform.position.y + ", " + agent.transform.position.z);
+        }
         
-        if (IaStatesMachine.Distance(agent, player, 25f) && !IaStatesMachine.IsObjectBetween(agent, player))
+        if ((Distance(agent, player, minDistanceCloseToHear) || CanSeeThePlayer(agent, agentCamera,player, minDistanceCloseToSee)) && !IsObjectBetween(agent, player))
         {
             agent.SetDestination(player.transform.localPosition);
+            print("Tracking");
+        }
+        else
+        {
+            if (!agent.hasPath)
+            {
+                Vector3 v = new Vector3(r.Next(22), 0 , r.Next(22));
+                v.x *= (r.Next(1) == 1 ? 1 : -1);
+                v.z *= (r.Next(1) == 1 ? 1 : -1);
+                agent.SetDestination(v);
+            }
+            print("lost");
+            
         }
 
         if (agent.hasPath)
@@ -33,6 +59,5 @@ public class NaveMeshPlayerMotor : MonoBehaviour
         {
             anim.SetFloat("Speed", 0);
         }
-
     }
 }

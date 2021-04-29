@@ -9,7 +9,7 @@ namespace Solo
 {
     public class PlayerControllerSolo : MonoBehaviour
     {
-        [SerializeField] private GameObject cameraHolder;
+        [SerializeField] private GameObject playercameraHolder;
         [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpFoce, smoothTime;
 
         private Rigidbody _rigidbody;
@@ -38,6 +38,7 @@ namespace Solo
                 if (RoomManager.Instance != null) Destroy(RoomManager.Instance.gameObject);
                 SceneManager.LoadScene("MainMenu");
             }
+            Camera.SetupCurrent(playercameraHolder.GetComponentInChildren<Camera>());
         }
 
         private void Start()
@@ -71,7 +72,7 @@ namespace Solo
 
             _verticalLookRotation += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
             _verticalLookRotation = Mathf.Clamp(_verticalLookRotation, -90f, 90f);
-            cameraHolder.transform.localEulerAngles = Vector3.left * _verticalLookRotation;
+            playercameraHolder.transform.localEulerAngles = Vector3.left * _verticalLookRotation;
         }
 
         /**
