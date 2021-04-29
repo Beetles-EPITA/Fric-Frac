@@ -95,7 +95,21 @@ public class PlayerController : MonoBehaviour
             moveDirection * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref _smoothMoveVelocity,
             smoothTime);
 
-        anim.SetFloat("Speed", Math.Max(Math.Abs(_moveAmount.x),(Math.Abs(_moveAmount.z))));
+        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        {
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                anim.SetFloat("Speed", sprintSpeed);
+            }
+            else
+            {
+                anim.SetFloat("Speed", walkSpeed);
+            }
+        }
+        else
+        {
+            anim.SetFloat("Speed", 0);
+        }
     }
     
     /**
