@@ -25,6 +25,7 @@ public class Auth : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        InitDiscordRPC();
         if (PhotonNetwork.IsConnected)
         {
             MainMenuManager.Instance.OpenMenu("Main");
@@ -121,6 +122,23 @@ public class Auth : MonoBehaviour
         welcomeMessage.text = string.Empty;
     }
 
+    public void InitDiscordRPC()
+    {
+        var handlers = new DiscordRpc.EventHandlers();
+        DiscordRpc.Initialize("844697540087382026", ref handlers, true, string.Empty);
+        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence();
+        presence.largeImageKey = "icon";
+        presence.largeImageText = Application.version;
+        presence.state = "In Menu";
+        presence.startTimestamp = 0;
+        DiscordRpc.UpdatePresence(presence);
+    }
+
+    public void ReadyCallback()
+    {
+        
+    }
+    
     public void CreateAccount()
     {
         Application.OpenURL("https://fric-frac.fr/signup");
@@ -130,5 +148,4 @@ public class Auth : MonoBehaviour
     {
         Application.OpenURL("https://fric-frac.fr/reset");
     }
-
 }
