@@ -122,23 +122,17 @@ public class Auth : MonoBehaviour
         welcomeMessage.text = string.Empty;
     }
 
-    public void InitDiscordRPC()
+    private void InitDiscordRPC()
     {
         var handlers = new DiscordRpc.EventHandlers();
         DiscordRpc.Initialize("844697540087382026", ref handlers, true, string.Empty);
-        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence();
-        presence.largeImageKey = "icon";
-        presence.largeImageText = Application.version;
-        presence.state = "In Menu";
-        presence.startTimestamp = 0;
+        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence
+        {
+            largeImageKey = "icon", largeImageText = Application.version, details = "In Menu"
+        };
         DiscordRpc.UpdatePresence(presence);
     }
 
-    public void ReadyCallback()
-    {
-        
-    }
-    
     public void CreateAccount()
     {
         Application.OpenURL("https://fric-frac.fr/signup");

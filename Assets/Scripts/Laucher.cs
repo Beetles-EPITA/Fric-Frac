@@ -158,6 +158,16 @@ public class Laucher : MonoBehaviourPunCallbacks
         }
         
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        
+        //UPDATE RPC
+        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence
+        {
+            largeImageKey = "icon", largeImageText = Application.version, details = "In Waiting Room", 
+            state = PhotonNetwork.CurrentRoom.Name + " server", 
+            partySize = PhotonNetwork.CurrentRoom.PlayerCount,
+            partyMax = PhotonNetwork.CurrentRoom.MaxPlayers
+        };
+        DiscordRpc.UpdatePresence(presence);
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
@@ -182,6 +192,13 @@ public class Laucher : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         MainMenuManager.Instance.OpenMenu("Main");
+        
+        //UPDATE RPC
+        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence
+        {
+            largeImageKey = "icon", largeImageText = Application.version, details = "In Menu"
+        };
+        DiscordRpc.UpdatePresence(presence);
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)

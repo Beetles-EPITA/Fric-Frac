@@ -28,6 +28,22 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         base.OnEnable();
         SceneManager.sceneLoaded += OnSceneLoaded;
+        
+        //UPDATE RPC
+        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence
+        {
+            largeImageKey = "icon", largeImageText = Application.version, details = "In Game", 
+            state = PhotonNetwork.CurrentRoom.Name + " server", 
+            partySize = PhotonNetwork.CurrentRoom.PlayerCount,
+            partyMax = PhotonNetwork.CurrentRoom.MaxPlayers,
+            startTimestamp = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds()
+        };
+        DiscordRpc.UpdatePresence(presence);
+    }
+    
+    private void OnApplicationQuit()
+    {
+        DiscordRpc.ClearPresence();
     }
 
     public override void OnDisable()
