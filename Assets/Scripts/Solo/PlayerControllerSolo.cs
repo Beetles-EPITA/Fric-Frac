@@ -45,9 +45,23 @@ namespace Solo
         {
             anim = GetComponent<Animator>();
             Cursor.visible = false;
+            
+            //UPDATE RPC
+            DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence
+            {
+                largeImageKey = "icon", largeImageText = Application.version, details = "In Game", 
+                state = "Solo",
+                startTimestamp = ((DateTimeOffset)DateTime.Now).ToUnixTimeSeconds()
+            };
+            DiscordRpc.UpdatePresence(presence);
         }
 
 
+        private void OnApplicationQuit()
+        {
+            DiscordRpc.ClearPresence();
+        }
+        
         /**
      * Move
      */

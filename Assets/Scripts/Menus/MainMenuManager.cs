@@ -62,8 +62,13 @@ namespace Menus
             OpenMenu("QuitMenu");
             Application.Quit();
         }
-        
-        
+
+        private void OnApplicationQuit()
+        {
+            DiscordRpc.ClearPresence();
+        }
+
+
         /**
          * Input Manager
          */
