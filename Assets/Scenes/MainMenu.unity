@@ -2571,13 +2571,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1178763694}
-        m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
+      - m_Target: {fileID: 1178763699}
+        m_TargetAssemblyTypeName: Menus.SettingsMenu, Assembly-CSharp
+        m_MethodName: ToggleMute
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 677965529}
-          m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5252,7 +5252,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1443491770
 RectTransform:
   m_ObjectHideFlags: 0
@@ -6340,9 +6340,9 @@ RectTransform:
   m_Father: {fileID: 1839548886}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 56, y: -398.37}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 1031, y: 149.63}
   m_SizeDelta: {x: 1485.8679, y: 138.4686}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1620266262

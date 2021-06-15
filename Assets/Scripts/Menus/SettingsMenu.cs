@@ -50,10 +50,14 @@ namespace Menus
 
         private void InitVolume()
         {
+            for (int i = 0; i < volumeLayout.GetComponentsInChildren<VolumeSlider>().Length; i++)
+            {
+                Destroy(volumeLayout.GetComponentsInChildren<VolumeSlider>()[i].gameObject);
+            }
             foreach (var mixer in audioMixer.FindMatchingGroups(""))
             {
                 string sourcePath = "volume." + mixer.name.ToLower();
-                float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -10f;
+                float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -20f;
                 mixer.audioMixer.SetFloat(sourcePath, volume);
                 GameObject volumeObject = Instantiate(prefabVolume, volumeLayout.transform);
                 volumeObject.GetComponent<VolumeSlider>().path = sourcePath;
@@ -65,18 +69,18 @@ namespace Menus
         private void InitMute()
         {
             string sourcePath = "volume.master";
-            float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -10f;
+            float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -20f;
             if (volume <= -80f)
                 muteImageButton.sprite = volumeOffSprite;
         }
 
-        private static void ToggleMute()
+        public void ToggleMute()
         {
             string sourcePath = "volume.master";
-            float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -10f;
+            float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -20f;
             if (volume <= -80f)
             {
-                volume = -10f;
+                volume = -20f;
                 Instance.muteImageButton.sprite = Instance.volumeOnSprite;
             }
             else
@@ -86,9 +90,10 @@ namespace Menus
             }
             _audioMixerStatic.SetFloat(sourcePath, volume);
             PlayerPrefs.SetFloat(sourcePath, volume);
+            InitVolume();
         }
 
-        public static void SetVolume(float volume, string path)
+        public void SetVolume(float volume, string path)
         {
             if (volume <= -40f)
             {
@@ -96,7 +101,7 @@ namespace Menus
             }
             _audioMixerStatic.SetFloat(path, volume);
             PlayerPrefs.SetFloat(path, volume);
-            Instance.InitMute();
+            InitMute();
         }
 
         private void InitResolutionAndScreenMode()
