@@ -276,20 +276,15 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            
-        
-
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-
+            Debug.DrawRay(cameraHolder.transform.position, cameraHolder.transform.forward);
+            
             if (Physics.Raycast(ray, out hit))
             {
+                print("hit");
                 GameObject target = hit.transform.gameObject;
-                if (target != null && target.GetComponent<ItemContent>() != null)
-                {
-
-                    Items.Add(target.GetComponent<ItemContent>().item);
-                }
+                Destroy(target);
                 
             }
         }    
