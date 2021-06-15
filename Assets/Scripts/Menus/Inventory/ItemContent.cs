@@ -15,15 +15,14 @@ namespace Menus
             this.item = item;
         }
 
-        public void TooltipShow()
+        public void TooltipShow(BaseEventData data)
         {
             Tooltip.Instance.Show(this);
         }
 
-        public void TooltipHide()
+        public void TooltipHide(BaseEventData data)
         {
-            Tooltip.Instance.Hide();
+            StartCoroutine(Tooltip.Instance.Hide());
         }
-
     }
 }
