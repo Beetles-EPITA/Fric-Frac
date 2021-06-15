@@ -80,7 +80,6 @@ public class PlayerController : MonoBehaviour
         else
         {
             Camera.SetupCurrent(cameraHolder.GetComponent<Camera>());
-            Items.Add(lamp);
         }
             
     }
@@ -274,7 +273,7 @@ public class PlayerController : MonoBehaviour
     
     private void PickItem()
     {
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(1) && !Pause.isPause)
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
@@ -282,9 +281,14 @@ public class PlayerController : MonoBehaviour
             
             if (Physics.Raycast(ray, out hit))
             {
-                print("hit");
+                
                 GameObject target = hit.transform.gameObject;
-                Destroy(target);
+                
+                if(target != null && target.GetComponentInParent<Item>() != null)
+                {
+                    Items.Add(target.GetComponentInParent<Item>());
+                    Destroy(target.GetComponentInParent<Item>().gameObject);
+                }
                 
             }
         }    
