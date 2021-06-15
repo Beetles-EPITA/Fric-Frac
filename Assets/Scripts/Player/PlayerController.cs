@@ -5,6 +5,7 @@ using Menus;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -56,6 +57,7 @@ public class PlayerController : MonoBehaviour
         SoundManager();
         if (!_photonView.IsMine) return;
         ToggleInventory();
+        PickItem();
         if (Pause.isPause)
         {
             anim.SetFloat("Speed", 0);
@@ -269,5 +271,29 @@ public class PlayerController : MonoBehaviour
             Inventory.Instance.Close();
         }
     }
+    
+    private void PickItem()
+    {
+        if (Input.GetMouseButtonDown(1))
+        {
+            
+        
 
+            RaycastHit hit;
+            Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                GameObject target = hit.transform.gameObject;
+                if (target != null && target.GetComponent<ItemContent>() != null)
+                {
+
+                    Items.Add(target.GetComponent<ItemContent>().item);
+                }
+                
+            }
+        }    
+        //Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
+        //Debug.DrawRay(cameraHolder.transform.position, cameraHolder.transform.forward, Color.red);
+    }
 }
