@@ -7,6 +7,7 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = System.Random;
 
 public class RoomManager : MonoBehaviourPunCallbacks
@@ -14,7 +15,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private PlayableDirector _director;
     [SerializeField] private Camera annimationCamera;
     [SerializeField] private AudioSource greenCar;
-    
+    [SerializeField] private Image crosshair;
+
     public static RoomManager Instance;
 
     private bool skipped;
@@ -73,6 +75,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (scene.name.Equals("Multiplayer"))
         {
             annimationCamera.GetComponent<AudioListener>().enabled = false;
+            crosshair.gameObject.SetActive(true);
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
         }
     }
