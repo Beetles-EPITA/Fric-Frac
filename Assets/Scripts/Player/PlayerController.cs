@@ -287,12 +287,10 @@ public class PlayerController : MonoBehaviour
                 if(target != null && target.GetComponentInParent<Item>() != null)
                 {
                     Items.Add(target.GetComponentInParent<Item>());
-                    Destroy(target.GetComponentInParent<Item>().gameObject);
+                    PhotonNetwork.Destroy(target.GetComponentInParent<Item>().gameObject);
                 }
                 
             }
-        }    
-        //Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-        //Debug.DrawRay(cameraHolder.transform.position, cameraHolder.transform.forward, Color.red);
+        }
     }
 }
