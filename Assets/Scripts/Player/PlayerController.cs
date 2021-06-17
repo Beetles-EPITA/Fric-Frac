@@ -270,10 +270,12 @@ public class PlayerController : MonoBehaviour
             Inventory.Instance.Close();
         }
     }
+
+    private Outline lastObject;
     
     private void PickItem()
     {
-        if (Input.GetMouseButtonDown(1) && !Pause.isPause)
+        if ((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
@@ -286,8 +288,27 @@ public class PlayerController : MonoBehaviour
                 
                 if(target != null && target.GetComponentInParent<Item>() != null)
                 {
-                    Items.Add(target.GetComponentInParent<Item>());
-                    PhotonNetwork.Destroy(target.GetComponentInParent<Item>().gameObject);
+                    
+                    if (Input.GetMouseButtonDown(1) && !Pause.isPause)
+                    {
+                        Items.Add(target.GetComponentInParent<Item>());
+                        RoomManager.Instance.photonView.RPC("RemoveItem", RpcTarget.All, target.GetComponentInParent<Item>().itemName, true);
+                        PhotonNetwork.Destroy(target.GetComponentInParent<Item>().gameObject);
+                    }
+                    else
+                    {
+                        if (lastObject != null)
+                        {
+                            lastObject = target.GetComponent<Outline>();
+                            lastObject.enabled = false;
+                        }
+                        Outline outline = target.GetComponent<Outline>();
+                        if (outline != null)
+                        {
+                            outline.enabled = true;
+                            lastObject = outline; 
+                        }
+                    }
                 }
                 
             }

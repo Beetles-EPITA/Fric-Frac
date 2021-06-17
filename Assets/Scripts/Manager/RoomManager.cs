@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Menus;
 using Photon.Pun;
 using UnityEngine;
@@ -18,10 +19,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private Image crosshair;
 
     [SerializeField] private GameObject[] prefabsItems;
-    [SerializeField] private Vector3[] randomPositions;
+    [SerializeField] private Transform AllPositons;
+    private List<Transform> randomPositions;
     
     
-    public Dictionary<Item, int> ItemsFind = new Dictionary<Item, int>();
+    public Dictionary<string, int> ItemsFind = new Dictionary<string, int>();
     
     public static RoomManager Instance;
 
@@ -30,6 +32,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
+        randomPositions = AllPositons.GetComponentsInChildren<Transform>().ToList();
     }
 
     public override void OnEnable()
@@ -83,6 +86,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             annimationCamera.GetComponent<AudioListener>().enabled = false;
             crosshair.gameObject.SetActive(true);
+            if((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
+                ItemListMenu.Instance.gameObject.SetActive(true);
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
         }
     }
@@ -140,37 +145,41 @@ public class RoomManager : MonoBehaviourPunCallbacks
         {
             for (int i = 0; i < (PhotonNetwork.CurrentRoom.Players.Count + 1) / 2; i++)
             {
-                for (int j = 0; j < new Random().Next(3, 7); j++)
+                for (int j = 0; j < new Random().Next(3, 6); j++)
                 {
                     int random = new Random().Next(prefabsItems.Length);
-                    int randPos = new Random().Next(randomPositions.Length);
+                    int randPos = new Random().Next(randomPositions.Count);
                     Item item = prefabsItems[random].GetComponent<Item>();
-                    PhotonNetwork.Instantiate(Path.Combine("Objects", "Items", prefabsItems[random].name), randomPositions[randPos],
+                    PhotonNetwork.Instantiate(Path.Combine("Objects", "Items", prefabsItems[random].name), randomPositions[randPos].position,
                         Quaternion.identity);
-                    photonView.RPC("AddItem", RpcTarget.All, item); 
+                    photonView.RPC("AddItem", RpcTarget.All, item.itemName, false);
+                    randomPositions.RemoveAt(randPos);
                 }
             }
+            ItemListMenu.Instance.CreateList(ItemsFind);
         }
     }
 
     [PunRPC]
-    private void AddItem(Item item)
+    private void AddItem(string itemName, bool update)
     {
-        if (ItemsFind.ContainsKey(item))
-            ItemsFind[item] += 1;
+        if (ItemsFind.ContainsKey(itemName))
+            ItemsFind[itemName] += 1;
         else
-            ItemsFind.Add(item, 1);
+            ItemsFind.Add(itemName, 1);
+        if(update) ItemListMenu.Instance.UpdateList(ItemsFind);
     }
 
     [PunRPC]
-    private void RemoveItem(Item item)
+    private void RemoveItem(string itemName, bool update)
     {
-        if (ItemsFind.ContainsKey(item))
+        if (ItemsFind.ContainsKey(itemName))
         {
-            if (ItemsFind[item] <= 1)
-                ItemsFind.Remove(item);
+            if (ItemsFind[itemName] <= 1)
+                ItemsFind.Remove(itemName);
             else
-                ItemsFind[item] -= 1;
+                ItemsFind[itemName] -= 1;
+            if(update) ItemListMenu.Instance.UpdateList(ItemsFind);
         }
     }
 }
