@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -12,7 +13,12 @@ namespace Menus
         [SerializeField] private VerticalLayoutGroup volumeLayout;
         [SerializeField] private GameObject prefabVolume;
         [SerializeField] private AudioMixer audioMixer;
+        [SerializeField] private Image muteImageButton;
 
+        [SerializeField] private Sprite volumeOnSprite;
+        [SerializeField] private Sprite volumeOffSprite;
+        
+        
         private static AudioMixer _audioMixerStatic;
         
         public TMP_Dropdown resolutionDropdown;
@@ -21,10 +27,13 @@ namespace Menus
 
         Resolution[] _resolutions;
 
+        public static SettingsMenu Instance;
+
         private void Awake()
         {
             _resolutions = Screen.resolutions;
             _audioMixerStatic = audioMixer;
+            Instance = this;
         }
 
         void Start()
@@ -34,16 +43,21 @@ namespace Menus
             InitResolutionAndScreenMode();
             InitQuality();
             InitVolume();
+            InitMute();
 
-            
+
         }
 
         private void InitVolume()
         {
+            for (int i = 0; i < volumeLayout.GetComponentsInChildren<VolumeSlider>().Length; i++)
+            {
+                Destroy(volumeLayout.GetComponentsInChildren<VolumeSlider>()[i].gameObject);
+            }
             foreach (var mixer in audioMixer.FindMatchingGroups(""))
             {
                 string sourcePath = "volume." + mixer.name.ToLower();
-                float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -10f;
+                float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -20f;
                 mixer.audioMixer.SetFloat(sourcePath, volume);
                 GameObject volumeObject = Instantiate(prefabVolume, volumeLayout.transform);
                 volumeObject.GetComponent<VolumeSlider>().path = sourcePath;
@@ -51,8 +65,35 @@ namespace Menus
                 volumeObject.GetComponentInChildren<Slider>().value = volume;
             }
         }
-        
-        public static void SetVolume(float volume, string path)
+
+        private void InitMute()
+        {
+            string sourcePath = "volume.master";
+            float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -20f;
+            if (volume <= -80f)
+                muteImageButton.sprite = volumeOffSprite;
+        }
+
+        public void ToggleMute()
+        {
+            string sourcePath = "volume.master";
+            float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -20f;
+            if (volume <= -80f)
+            {
+                volume = -20f;
+                Instance.muteImageButton.sprite = Instance.volumeOnSprite;
+            }
+            else
+            {
+                volume = -80f;
+                Instance.muteImageButton.sprite = Instance.volumeOffSprite;
+            }
+            _audioMixerStatic.SetFloat(sourcePath, volume);
+            PlayerPrefs.SetFloat(sourcePath, volume);
+            InitVolume();
+        }
+
+        public void SetVolume(float volume, string path)
         {
             if (volume <= -40f)
             {
@@ -60,6 +101,7 @@ namespace Menus
             }
             _audioMixerStatic.SetFloat(path, volume);
             PlayerPrefs.SetFloat(path, volume);
+            InitMute();
         }
 
         private void InitResolutionAndScreenMode()

@@ -7,7 +7,7 @@ namespace Menus
         public string path;
         public void SetVolume(float volume)
         {
-            SettingsMenu.SetVolume(volume, path);
+            SettingsMenu.Instance.SetVolume(volume, path);
         }
     }
 }
