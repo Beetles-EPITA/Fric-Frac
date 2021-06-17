@@ -17,6 +17,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private AudioSource greenCar;
     [SerializeField] private Image crosshair;
 
+    [SerializeField] private GameObject[] prefabsItems;
+    [SerializeField] private Vector3[] randomPositions;
+    
+    
+    public Dictionary<Item, int> ItemsFind = new Dictionary<Item, int>();
+    
     public static RoomManager Instance;
 
     private bool skipped;
@@ -57,6 +63,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         StartCoroutine(WaitAnimation(scene));
+        InitItems();
     }
 
     IEnumerator WaitAnimation(Scene scene)
@@ -124,6 +131,46 @@ public class RoomManager : MonoBehaviourPunCallbacks
             annimationCamera.GetComponent<AudioSource>().Stop();
             greenCar.Stop();
             CreatePlayer(SceneManager.GetActiveScene());
+        }
+    }
+
+    private void InitItems()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            for (int i = 0; i < (PhotonNetwork.CurrentRoom.Players.Count + 1) / 2; i++)
+            {
+                for (int j = 0; j < new Random().Next(3, 7); j++)
+                {
+                    int random = new Random().Next(prefabsItems.Length);
+                    int randPos = new Random().Next(randomPositions.Length);
+                    Item item = prefabsItems[random].GetComponent<Item>();
+                    PhotonNetwork.Instantiate(Path.Combine("Objects", "Items", prefabsItems[random].name), randomPositions[randPos],
+                        Quaternion.identity);
+                    photonView.RPC("AddItem", RpcTarget.All, item); 
+                }
+            }
+        }
+    }
+
+    [PunRPC]
+    private void AddItem(Item item)
+    {
+        if (ItemsFind.ContainsKey(item))
+            ItemsFind[item] += 1;
+        else
+            ItemsFind.Add(item, 1);
+    }
+
+    [PunRPC]
+    private void RemoveItem(Item item)
+    {
+        if (ItemsFind.ContainsKey(item))
+        {
+            if (ItemsFind[item] <= 1)
+                ItemsFind.Remove(item);
+            else
+                ItemsFind[item] -= 1;
         }
     }
 }
