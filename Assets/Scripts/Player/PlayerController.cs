@@ -277,7 +277,7 @@ public class PlayerController : MonoBehaviour
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-            Debug.DrawRay(cameraHolder.transform.position, cameraHolder.transform.forward);
+            
             
             if (Physics.Raycast(ray, out hit))
             {
