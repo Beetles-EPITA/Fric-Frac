@@ -66,7 +66,7 @@ public class GameManager : MonoBehaviour
         Right = KeyCode.D,
         Sprint = KeyCode.LeftShift,
         Jump = KeyCode.Space,
-        Interaction = KeyCode.Mouse0,
+        Interaction = KeyCode.Mouse1,
         Inventory = KeyCode.E
     }
 }

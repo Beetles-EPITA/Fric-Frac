@@ -11,6 +11,7 @@ namespace Menus
     {
         private Event keyEvent;
         private TMP_Text buttonText;
+        private Button button;
         private KeyCode newKey;
 
         private bool waitingForKey;
@@ -25,7 +26,7 @@ namespace Menus
                     TMP_Text tmpText = componentsInChild.GetComponentInChildren<TMP_Text>();
                     tmpText.text =
                         GameManager.Instance.inputs[type].ToString();
-                    componentsInChild.onClick.AddListener(() => SetButtonText(tmpText));
+                    componentsInChild.onClick.AddListener(() => SetButton(tmpText, componentsInChild));
                     componentsInChild.onClick.AddListener(() => StartAssignment(type));
                 }
             }
@@ -34,16 +35,21 @@ namespace Menus
         private void OnGUI()
         {
             keyEvent = Event.current;
-            if (keyEvent.isKey && waitingForKey)
+            if ((keyEvent.isKey || keyEvent.isMouse) && waitingForKey)
             {
                 waitingForKey = false;
-                newKey = keyEvent.keyCode;
+                if (keyEvent.isKey)
+                    newKey = keyEvent.keyCode;
+                else
+                    newKey = (KeyCode) 323 + keyEvent.button;
             }
         }
 
-        public void SetButtonText(TMP_Text text)
+        public void SetButton(TMP_Text text, Button buttonComponent)
         {
+            buttonComponent.interactable = false;
             buttonText = text;
+            button = buttonComponent;
         }
 
         public void StartAssignment(GameManager.KeyType keyType)
@@ -62,6 +68,7 @@ namespace Menus
                 GameManager.Instance.SetKey(keyType, newKey);
                 buttonText.text = newKey.ToString();
             }
+            button.interactable = true;
         }
         
     }
