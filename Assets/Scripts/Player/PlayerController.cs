@@ -279,7 +279,10 @@ public class PlayerController : MonoBehaviour
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-            
+            if (lastObject != null)
+            {
+                lastObject.enabled = false;
+            }
             
             if (Physics.Raycast(ray, out hit))
             {
@@ -297,12 +300,7 @@ public class PlayerController : MonoBehaviour
                     }
                     else
                     {
-                        if (lastObject != null)
-                        {
-                            lastObject = target.GetComponent<Outline>();
-                            lastObject.enabled = false;
-                        }
-                        Outline outline = target.GetComponent<Outline>();
+                        Outline outline = target.GetComponentInParent<Outline>();
                         if (outline != null)
                         {
                             outline.enabled = true;

@@ -32,7 +32,7 @@ namespace Menus
             {
                 GameObject gameObject = Instantiate(itemPrefab, transform);
                 TMP_Text text = gameObject.GetComponent<TMP_Text>();
-                text.text = "- " + (item.Value > 1 ? item.Value.ToString() + " " : "") + item.Key;
+                text.text = "- " + (item.Value > 1 ? item.Value + " " : "") + item.Key;
                 gameObject.name = item.Key;
                 gameObject.AddComponent<Item>();
             }
@@ -44,8 +44,8 @@ namespace Menus
             {
                 TMP_Text text = components.GetComponent<TMP_Text>();
                 string name = components.gameObject.name;
-                if (items.ContainsKey(components.gameObject.name))
-                    text.text = "- " + (items[name] > 1 ? items[name].ToString() : "") + name;
+                if (items.ContainsKey(name))
+                    text.text = "- " + (items[name] > 1 ? items[name] + " " : "") + name;
                 else
                     text.fontStyle = FontStyles.Strikethrough;
             }

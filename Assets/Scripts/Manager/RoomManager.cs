@@ -156,10 +156,16 @@ public class RoomManager : MonoBehaviourPunCallbacks
                     randomPositions.RemoveAt(randPos);
                 }
             }
-            ItemListMenu.Instance.CreateList(ItemsFind);
+            photonView.RPC("CreateListItems", RpcTarget.All);
         }
     }
 
+    [PunRPC]
+    private void CreateListItems()
+    {
+        ItemListMenu.Instance.CreateList(ItemsFind);
+    }
+    
     [PunRPC]
     private void AddItem(string itemName, bool update)
     {
