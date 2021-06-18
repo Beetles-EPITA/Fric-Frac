@@ -2984,19 +2984,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 668243527}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1178763694}
-        m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1734170227}
-          m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &668243527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4269,19 +4257,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 844080659}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1178763694}
-        m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1734170227}
-          m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &844080659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6123,19 +6099,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1072600684}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1178763694}
-        m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1734170227}
-          m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1072600684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7375,19 +7339,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1294383912}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1178763694}
-        m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1734170227}
-          m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1294383912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8884,19 +8836,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1584953673}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1178763694}
-        m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1734170227}
-          m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1584953673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9366,19 +9306,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1662175181}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1178763694}
-        m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1734170227}
-          m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1662175181
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10217,19 +10145,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1873937019}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1178763694}
-        m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1734170227}
-          m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1873937019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10483,19 +10399,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1920906017}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1178763694}
-        m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 1734170227}
-          m_ObjectArgumentAssemblyTypeName: Menus.Menu, Assembly-CSharp
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1920906017
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -51,6 +51,13 @@ public class GameManager : MonoBehaviour
     {
         return Input.GetKey(inputs[keyType]);
     }
+
+    public void SetKey(KeyType keyType, KeyCode keyCode)
+    {
+        inputs[keyType] = keyCode;
+        PlayerPrefs.SetString("inputs."+keyType, keyCode.ToString());
+    }
+    
     public enum  KeyType
     {
         Forward = KeyCode.W,
