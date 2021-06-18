@@ -150,8 +150,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
                     int random = new Random().Next(prefabsItems.Length);
                     int randPos = new Random().Next(randomPositions.Count);
                     Item item = prefabsItems[random].GetComponent<Item>();
-                    PhotonNetwork.Instantiate(Path.Combine("Objects", "Items", prefabsItems[random].name), randomPositions[randPos].position,
-                        Quaternion.identity);
+                    GameObject go = PhotonNetwork.Instantiate(Path.Combine("Objects", "Items", prefabsItems[random].name), randomPositions[randPos].position,
+                        randomPositions[randPos].rotation);
                     photonView.RPC("AddItem", RpcTarget.All, item.itemName, false);
                     randomPositions.RemoveAt(randPos);
                 }
