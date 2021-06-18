@@ -90,15 +90,15 @@ public class PlayerController : MonoBehaviour
      */
     private void Move()
     {
-        Vector3 moveDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+        Vector3 moveDirection = GameManager.Instance.getMoveDirection().normalized;
 
         _moveAmount = Vector3.SmoothDamp(_moveAmount,
-            moveDirection * (Input.GetKey(KeyCode.LeftShift) ? sprintSpeed : walkSpeed), ref _smoothMoveVelocity,
+            moveDirection * (GameManager.Instance.GetKey(GameManager.KeyType.Sprint) ? sprintSpeed : walkSpeed), ref _smoothMoveVelocity,
             smoothTime);
 
-        if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
+        if (moveDirection.x != 0 || moveDirection.z != 0)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (GameManager.Instance.GetKey(GameManager.KeyType.Sprint))
             {
                 anim.SetFloat("Speed", sprintSpeed);
             }
@@ -131,7 +131,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && _grounded)
+        if (GameManager.Instance.GetKey(GameManager.KeyType.Jump) && _grounded)
         {
             _rigidbody.AddForce(transform.up * jumpFoce);
             anim.SetTrigger(jumpHash);
@@ -257,7 +257,7 @@ public class PlayerController : MonoBehaviour
 
     private void ToggleInventory()
     {
-        if (Input.GetKeyUp(KeyCode.E))
+        if (Input.GetKeyUp(GameManager.Instance.inputs[GameManager.KeyType.Inventory]))
         {
             if (!Inventory.Instance.inInventory && Pause.isPause) return;
             if(!Inventory.Instance.inInventory)
@@ -273,7 +273,7 @@ public class PlayerController : MonoBehaviour
     
     private void PickItem()
     {
-        if (Input.GetMouseButtonDown(1) && !Pause.isPause)
+        if (Input.GetKeyUp(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) && !Pause.isPause)
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
