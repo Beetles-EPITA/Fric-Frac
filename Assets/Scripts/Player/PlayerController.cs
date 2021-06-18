@@ -270,14 +270,19 @@ public class PlayerController : MonoBehaviour
             Inventory.Instance.Close();
         }
     }
+
+    private Outline lastObject;
     
     private void PickItem()
     {
-        if (Input.GetKeyUp(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) && !Pause.isPause)
+        if ((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-            Debug.DrawRay(cameraHolder.transform.position, cameraHolder.transform.forward);
+            if (lastObject != null)
+            {
+                lastObject.enabled = false;
+            }
             
             if (Physics.Raycast(ray, out hit))
             {
@@ -286,13 +291,25 @@ public class PlayerController : MonoBehaviour
                 
                 if(target != null && target.GetComponentInParent<Item>() != null)
                 {
-                    Items.Add(target.GetComponentInParent<Item>());
-                    Destroy(target.GetComponentInParent<Item>().gameObject);
+                    
+                    if (Input.GetMouseButtonDown(1) && !Pause.isPause)
+                    {
+                        Items.Add(target.GetComponentInParent<Item>());
+                        RoomManager.Instance.photonView.RPC("RemoveItem", RpcTarget.All, target.GetComponentInParent<Item>().itemName, true);
+                        PhotonNetwork.Destroy(target.GetComponentInParent<Item>().gameObject);
+                    }
+                    else
+                    {
+                        Outline outline = target.GetComponentInParent<Outline>();
+                        if (outline != null)
+                        {
+                            outline.enabled = true;
+                            lastObject = outline; 
+                        }
+                    }
                 }
                 
             }
-        }    
-        //Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-        //Debug.DrawRay(cameraHolder.transform.position, cameraHolder.transform.forward, Color.red);
+        }
     }
 }

@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Menus;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Random = System.Random;
 
 public class RoomManager : MonoBehaviourPunCallbacks
@@ -14,6 +16,14 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private PlayableDirector _director;
     [SerializeField] private Camera annimationCamera;
     [SerializeField] private AudioSource greenCar;
+    [SerializeField] private Image crosshair;
+
+    [SerializeField] private GameObject[] prefabsItems;
+    [SerializeField] private Transform AllPositons;
+    private List<Transform> randomPositions;
+    
+    
+    public Dictionary<string, int> ItemsFind = new Dictionary<string, int>();
     
     public static RoomManager Instance;
 
@@ -22,6 +32,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
+        randomPositions = AllPositons.GetComponentsInChildren<Transform>().ToList();
     }
 
     public override void OnEnable()
@@ -55,6 +66,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         StartCoroutine(WaitAnimation(scene));
+        InitItems();
     }
 
     IEnumerator WaitAnimation(Scene scene)
@@ -73,6 +85,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
         if (scene.name.Equals("Multiplayer"))
         {
             annimationCamera.GetComponent<AudioListener>().enabled = false;
+            crosshair.gameObject.SetActive(true);
+            if((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
+                ItemListMenu.Instance.gameObject.SetActive(true);
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
         }
     }
@@ -123,6 +138,56 @@ public class RoomManager : MonoBehaviourPunCallbacks
             annimationCamera.GetComponent<AudioSource>().Stop();
             greenCar.Stop();
             CreatePlayer(SceneManager.GetActiveScene());
+        }
+    }
+
+    private void InitItems()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            for (int i = 0; i < (PhotonNetwork.CurrentRoom.Players.Count + 1) / 2; i++)
+            {
+                for (int j = 0; j < new Random().Next(3, 6); j++)
+                {
+                    int random = new Random().Next(prefabsItems.Length);
+                    int randPos = new Random().Next(randomPositions.Count);
+                    Item item = prefabsItems[random].GetComponent<Item>();
+                    GameObject go = PhotonNetwork.Instantiate(Path.Combine("Objects", "Items", prefabsItems[random].name), randomPositions[randPos].position,
+                        randomPositions[randPos].rotation);
+                    photonView.RPC("AddItem", RpcTarget.All, item.itemName, false);
+                    randomPositions.RemoveAt(randPos);
+                }
+            }
+            photonView.RPC("CreateListItems", RpcTarget.All);
+        }
+    }
+
+    [PunRPC]
+    private void CreateListItems()
+    {
+        ItemListMenu.Instance.CreateList(ItemsFind);
+    }
+    
+    [PunRPC]
+    private void AddItem(string itemName, bool update)
+    {
+        if (ItemsFind.ContainsKey(itemName))
+            ItemsFind[itemName] += 1;
+        else
+            ItemsFind.Add(itemName, 1);
+        if(update) ItemListMenu.Instance.UpdateList(ItemsFind);
+    }
+
+    [PunRPC]
+    private void RemoveItem(string itemName, bool update)
+    {
+        if (ItemsFind.ContainsKey(itemName))
+        {
+            if (ItemsFind[itemName] <= 1)
+                ItemsFind.Remove(itemName);
+            else
+                ItemsFind[itemName] -= 1;
+            if(update) ItemListMenu.Instance.UpdateList(ItemsFind);
         }
     }
 }
