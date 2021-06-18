@@ -25,6 +25,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
     
     public Dictionary<string, int> ItemsFind = new Dictionary<string, int>();
     
+    [SerializeField] public Camera spectatorCamera;
+    [SerializeField] public LoseScreenMenu LoseScreen;
+    
     public static RoomManager Instance;
 
     private bool skipped;
@@ -89,6 +92,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
             if((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
                 ItemListMenu.Instance.gameObject.SetActive(true);
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
+            spectatorCamera.gameObject.SetActive(true);
         }
     }
 

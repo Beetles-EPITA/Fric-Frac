@@ -12,8 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject cameraHolder;
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpFoce, smoothTime;
 
-    [SerializeField] private Item lamp;
-    
+    private Laucher.Team _team;
+
     private Rigidbody _rigidbody;
 
     private float _verticalLookRotation;
@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour
         if (!_photonView.IsMine) return;
         ToggleInventory();
         PickItem();
+        Hit();
         if (Pause.isPause)
         {
             anim.SetFloat("Speed", 0);
@@ -72,6 +73,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
+        _team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
         
         if (!_photonView.IsMine)
         {
@@ -272,6 +274,37 @@ public class PlayerController : MonoBehaviour
     }
 
     private Outline lastObject;
+    
+    private void Hit()
+    {
+        if (_team == Laucher.Team.Resident)
+        {
+            if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) && !Pause.isPause)
+            {
+                Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
+                if (Physics.Raycast(ray, out RaycastHit hit, 10f))
+                {
+                    PlayerController target = hit.transform.gameObject.GetComponentInParent<PlayerController>();
+                    if (target._team == Laucher.Team.Thief)
+                    {
+                        _photonView.RPC("Lose", _photonView.Controller, "Captured", "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
+                        LogMessage.SendMessage(_photonView.Controller.NickName + "has been found by " + PhotonNetwork.LocalPlayer.NickName);
+                        //TODO CHECK WIN
+                    }
+
+                }
+            }
+        }
+    }
+
+    [PunRPC]
+    private void Lose(string title, string message, bool endGame)
+    {
+        RoomManager.Instance.LoseScreen.SetUp(title, message, endGame);
+        Camera.SetupCurrent(RoomManager.Instance.spectatorCamera);
+        PhotonNetwork.Destroy(gameObject);
+    }
+
     
     private void PickItem()
     {

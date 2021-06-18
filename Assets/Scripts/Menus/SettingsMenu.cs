@@ -68,10 +68,14 @@ namespace Menus
 
         private void InitMute()
         {
-            string sourcePath = "volume.master";
-            float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -20f;
-            if (volume <= -80f)
-                muteImageButton.sprite = volumeOffSprite;
+            if (volumeOffSprite != null)
+            {
+                string sourcePath = "volume.master";
+                float volume = PlayerPrefs.HasKey(sourcePath) ? PlayerPrefs.GetFloat(sourcePath) : -20f;
+                if (volume <= -80f)
+                    muteImageButton.sprite = volumeOffSprite;
+            }
+            
         }
 
         public void ToggleMute()
