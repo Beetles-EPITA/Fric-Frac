@@ -273,8 +273,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private Outline lastObject;
-    
     private void Hit()
     {
         if (_team == Laucher.Team.Resident)
@@ -306,15 +304,17 @@ public class PlayerController : MonoBehaviour
     }
 
     
+    private Outline lastPickObject;
+    
     private void PickItem()
     {
         if ((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-            if (lastObject != null)
+            if (lastPickObject != null)
             {
-                lastObject.enabled = false;
+                lastPickObject.enabled = false;
             }
             
             if (Physics.Raycast(ray, out hit))
@@ -337,7 +337,7 @@ public class PlayerController : MonoBehaviour
                         if (outline != null)
                         {
                             outline.enabled = true;
-                            lastObject = outline; 
+                            lastPickObject = outline; 
                         }
                     }
                 }
