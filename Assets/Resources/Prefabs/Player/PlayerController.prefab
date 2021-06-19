@@ -472,7 +472,6 @@ MonoBehaviour:
   walkSpeed: 3
   jumpFoce: 250
   smoothTime: 0.15
-  lamp: {fileID: 7635691328426067411, guid: d3a06cc8c5a88a743be53ca82e0fc806, type: 3}
   _audioSource: {fileID: 64003899865091959}
   standByClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
   walkClip: {fileID: 8300000, guid: 8c05e37b841eb5c48b91b8c77e41ccfc, type: 3}

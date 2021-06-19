@@ -283,7 +283,7 @@ public class PlayerController : MonoBehaviour
                 if (Physics.Raycast(ray, out RaycastHit hit, 10f))
                 {
                     PlayerController target = hit.transform.gameObject.GetComponentInParent<PlayerController>();
-                    if (target._team == Laucher.Team.Thief)
+                    if (target != null && target._team == Laucher.Team.Thief)
                     {
                         _photonView.RPC("Lose", _photonView.Controller, "Captured", "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
                         LogMessage.SendMessage(_photonView.Controller.NickName + "has been found by " + PhotonNetwork.LocalPlayer.NickName);
