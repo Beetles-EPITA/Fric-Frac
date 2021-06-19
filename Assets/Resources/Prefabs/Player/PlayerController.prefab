@@ -470,7 +470,7 @@ MonoBehaviour:
   mouseSensitivity: 3
   sprintSpeed: 6
   walkSpeed: 3
-  jumpFoce: 250
+  jumpFoce: 125
   smoothTime: 0.15
   _audioSource: {fileID: 64003899865091959}
   standByClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
