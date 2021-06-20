@@ -147,7 +147,6 @@ public class Laucher : MonoBehaviourPunCallbacks
         Menu menu = MainMenuManager.Instance.OpenMenu("LobbyMenu");
         Text menuName = menu.GetComponentInChildren<Text>();
         menuName.text = PhotonNetwork.CurrentRoom.Name;
-        
         foreach (Transform transform in playerListContent)
         {
             Destroy(transform.gameObject);
@@ -158,9 +157,7 @@ public class Laucher : MonoBehaviourPunCallbacks
         }
         
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-        
-        //UPDATE RPC
-        
+        UpdateRPC();
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
