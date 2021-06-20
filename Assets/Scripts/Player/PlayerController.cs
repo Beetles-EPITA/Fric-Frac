@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Menus;
 using Photon.Pun;
 using UnityEngine;
@@ -273,23 +274,42 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private Outline lastHitObject;
+    
     private void Hit()
     {
         if (_team == Laucher.Team.Resident)
         {
-            if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) && !Pause.isPause)
+            if (lastHitObject != null)
             {
-                Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-                if (Physics.Raycast(ray, out RaycastHit hit, 10f))
+                lastHitObject.enabled = false;
+            }
+            Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
+
+            if (Physics.Raycast(ray, out RaycastHit hit, 5f))
+            {
+                PlayerController target = hit.transform.gameObject.GetComponentInParent<PlayerController>();
+                if (target != null && target._team == Laucher.Team.Thief)
                 {
-                    PlayerController target = hit.transform.gameObject.GetComponentInParent<PlayerController>();
-                    if (target != null && target._team == Laucher.Team.Thief)
+                    if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) &&
+                        !Pause.isPause)
                     {
-                        _photonView.RPC("Lose", _photonView.Controller, "Captured", "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
-                        LogMessage.SendMessage(_photonView.Controller.NickName + "has been found by " + PhotonNetwork.LocalPlayer.NickName);
+                        target.GetComponent<PhotonView>().RPC("Lose", target.GetComponent<PhotonView>().Controller, "Captured",
+                            "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
+                        LogMessage.Send(_photonView.Controller.NickName + " has been found by " +
+                                               PhotonNetwork.LocalPlayer.NickName);
+                        target.gameObject.SetActive(false);
                         //TODO CHECK WIN
                     }
-
+                    else
+                    {
+                        Outline outline = target.GetComponentInParent<Outline>();
+                        if (outline != null)
+                        {
+                            outline.enabled = true;
+                            lastHitObject = outline; 
+                        }
+                    }
                 }
             }
         }
@@ -300,6 +320,9 @@ public class PlayerController : MonoBehaviour
     {
         RoomManager.Instance.LoseScreen.SetUp(title, message, endGame);
         Camera.SetupCurrent(RoomManager.Instance.spectatorCamera);
+        Transform cameraTransform = RoomManager.Instance.spectatorCamera.transform;
+        cameraTransform.position = cameraHolder.transform.position;
+        cameraTransform.rotation = cameraHolder.transform.rotation;
         PhotonNetwork.Destroy(gameObject);
     }
 
@@ -308,7 +331,7 @@ public class PlayerController : MonoBehaviour
     
     private void PickItem()
     {
-        if ((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
+        if (_team == Laucher.Team.Thief)
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
@@ -331,6 +354,7 @@ public class PlayerController : MonoBehaviour
                         RoomManager.Instance.photonView.RPC("RemoveItem", RpcTarget.All, target.GetComponentInParent<Item>().itemName, true);
                         PhotonView view = target.GetComponentInParent<PhotonView>();
                         view.RPC("Delete", view.Controller);
+                        view.gameObject.SetActive(false);
                     }
                     else
                     {

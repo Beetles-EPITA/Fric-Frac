@@ -18,7 +18,7 @@ namespace Menus
         }
 
 
-        public static void SendMessage(string message)
+        public static void Send(string message)
         {
             Instance.photonView.RPC("ShowMessage", RpcTarget.All, message);
         }
@@ -33,7 +33,7 @@ namespace Menus
 
         IEnumerator HideMessage(GameObject messageObject)
         {
-            yield return new WaitForSeconds(3);
+            yield return new WaitForSeconds(6);
             Destroy(messageObject);
         }
         

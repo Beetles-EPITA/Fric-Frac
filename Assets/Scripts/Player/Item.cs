@@ -14,7 +14,11 @@ public class Item : MonoBehaviour
     [PunRPC]
     public void Delete()
     {
-        PhotonNetwork.Destroy(gameObject);
+        if (gameObject != null)
+        {
+            PhotonNetwork.Destroy(gameObject);
+        }
+        
     }
 
 }

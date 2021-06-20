@@ -18,6 +18,15 @@ namespace Menus
             this.title.text = title;
             this.message.text = message;
             backButton.gameObject.SetActive(!endGame);
+            Pause.isPause = true;
+        }
+
+        public void Exit()
+        {
+            GetComponent<Menu>().Close();
+            Transform transform = RoomManager.Instance.spectatorCamera.transform;
+            transform.position = new Vector3(5, 51, -333);
+            transform.rotation = Quaternion.Euler(new Vector3(31,58,0));
         }
         
     }
