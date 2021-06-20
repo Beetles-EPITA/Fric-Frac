@@ -329,7 +329,8 @@ public class PlayerController : MonoBehaviour
                     {
                         Items.Add(target.GetComponentInParent<Item>());
                         RoomManager.Instance.photonView.RPC("RemoveItem", RpcTarget.All, target.GetComponentInParent<Item>().itemName, true);
-                        PhotonNetwork.Destroy(target.GetComponentInParent<Item>().gameObject);
+                        PhotonView view = target.GetComponentInParent<PhotonView>();
+                        view.RPC("Delete", view.Controller);
                     }
                     else
                     {
