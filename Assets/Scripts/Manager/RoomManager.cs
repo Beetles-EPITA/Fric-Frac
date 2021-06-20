@@ -93,6 +93,13 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 ItemListMenu.Instance.gameObject.SetActive(true);
             PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
             spectatorCamera.gameObject.SetActive(true);
+
+            if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.Players.Count % 2 != 0)
+            {
+                Debug.Log("Instantiated IA");
+                PhotonNetwork.Instantiate(Path.Combine("Assets", "Scenes", "Solo", "PlayerControllerSolo.prefab"), Vector3.zero, Quaternion.identity);
+            }
+            
         }
     }
 
