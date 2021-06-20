@@ -166,6 +166,7 @@ GameObject:
   - component: {fileID: 6409368656631766802}
   - component: {fileID: 8621094858104740952}
   - component: {fileID: 109498467367190971}
+  - component: {fileID: 2060127897975533961}
   m_Layer: 0
   m_Name: IAController
   m_TagString: Untagged
@@ -252,6 +253,22 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2060127897975533961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336040957259752356}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e02e4a20d8830294784154ff13dc5d05, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  navMeshAgent: {fileID: 109498467367190971}
+  agentCamera: {fileID: 9060858013483349787}
+  minDistanceCloseToHear: 10
+  minDistanceCloseToSee: 10
 --- !u!1 &487514931595075406
 GameObject:
   m_ObjectHideFlags: 0
@@ -792,7 +809,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4976223866345650304}
   - component: {fileID: 9060858013483349787}
-  - component: {fileID: 7500193681956135312}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -857,14 +873,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &7500193681956135312
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2766309475382153494}
-  m_Enabled: 1
 --- !u!1 &2987019644883986675
 GameObject:
   m_ObjectHideFlags: 0

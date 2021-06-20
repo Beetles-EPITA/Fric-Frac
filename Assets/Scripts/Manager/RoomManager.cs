@@ -87,19 +87,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if (scene.name.Equals("Multiplayer"))
         {
-            annimationCamera.GetComponent<AudioListener>().enabled = false;
-            crosshair.gameObject.SetActive(true);
-            if((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
-                ItemListMenu.Instance.gameObject.SetActive(true);
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
-            spectatorCamera.gameObject.SetActive(true);
-
             if (PhotonNetwork.IsMasterClient && PhotonNetwork.CurrentRoom.Players.Count % 2 != 0)
             {
                 Debug.Log("Instantiated IA");
                 PhotonNetwork.Instantiate(Path.Combine("Prefabs", "IA", "IAManager"), Vector3.zero, Quaternion.identity);
             }
             
+            annimationCamera.GetComponent<AudioListener>().enabled = false;
+            crosshair.gameObject.SetActive(true);
+            if((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
+                ItemListMenu.Instance.gameObject.SetActive(true);
+            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerManager"), Vector3.zero, Quaternion.identity);
+            spectatorCamera.gameObject.SetActive(true);
         }
     }
 

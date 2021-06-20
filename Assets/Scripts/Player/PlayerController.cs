@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject cameraHolder;
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpFoce, smoothTime;
 
-    private Laucher.Team _team;
+    public Laucher.Team team;
 
     private Rigidbody _rigidbody;
 
@@ -73,7 +73,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
-        _team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
+        team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
         
         if (!_photonView.IsMine)
         {
@@ -275,7 +275,7 @@ public class PlayerController : MonoBehaviour
 
     private void Hit()
     {
-        if (_team == Laucher.Team.Resident)
+        if (team == Laucher.Team.Resident)
         {
             if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) && !Pause.isPause)
             {
@@ -283,7 +283,7 @@ public class PlayerController : MonoBehaviour
                 if (Physics.Raycast(ray, out RaycastHit hit, 10f))
                 {
                     PlayerController target = hit.transform.gameObject.GetComponentInParent<PlayerController>();
-                    if (target != null && target._team == Laucher.Team.Thief)
+                    if (target != null && target.team == Laucher.Team.Thief)
                     {
                         _photonView.RPC("Lose", _photonView.Controller, "Captured", "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
                         LogMessage.SendMessage(_photonView.Controller.NickName + "has been found by " + PhotonNetwork.LocalPlayer.NickName);

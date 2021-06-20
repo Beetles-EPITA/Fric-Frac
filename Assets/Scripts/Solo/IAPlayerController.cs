@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System;
+using System.Collections.Generic;
 using Menus;
 using Photon.Pun;
 using UnityEngine;
@@ -11,47 +12,59 @@ namespace Solo
 {
     public class IAPlayerController : MonoBehaviour
     {
-        [SerializeField]
-        public NavMeshAgent navMeshAgent;
-        [SerializeField]
-        public Camera agentCamera;
-
-
-        public PlayerController target;
-        [SerializeField]
-        public float minDistanceCloseToHear;
-        [SerializeField]
-        public float minDistanceCloseToSee;
+        [SerializeField] public NavMeshAgent navMeshAgent;
+        [SerializeField] public Camera agentCamera;
+        
+        [SerializeField] public float minDistanceCloseToHear;
+        [SerializeField] public float minDistanceCloseToSee;
         
         Random r = new Random();
     
         //Animation :
         private Animator anim;
         
+        //STATE
+        private PlayerController target;
+
         // Update is called once per frame
         void Update()
         {
             anim = GetComponent<Animator>();
-    
             if (!navMeshAgent.isOnNavMesh)
             {
                 print("Agent lost at:" + navMeshAgent.transform.position.x + ", " + navMeshAgent.transform.position.y + ", " + navMeshAgent.transform.position.z);
             }
-            
-           
+
+            print(GetTheCloserPlayer().name + "/" + Distance(navMeshAgent.transform, GetTheCloserPlayer().transform));
+            navMeshAgent.SetDestination(GetTheCloserPlayer().transform.position);
+
         }
-        
-        public static bool Distance(Component ia, Component player, float distanceMin)
+
+        public PlayerController GetTheCloserPlayer()
         {
-            Vector3 a = ia.transform.position;
-    
-            Vector3 b = player.transform.position;
-            return Vector3.Distance(a, b) < distanceMin;
+            PlayerController closer = null;
+            PlayerController[] players = (PlayerController[])GameObject.FindObjectsOfType(typeof(PlayerController));
+            foreach (var player in players)
+            {
+                if (players.Length != 0)
+                    closer = players[0];
+                if (player.team == Laucher.Team.Thief && Distance(navMeshAgent.transform, player.transform) <
+                    Distance(navMeshAgent.transform, closer.transform))
+                    closer = player;
+            }
+            return closer;
         }
+        
+        public float Distance(Transform ia, Transform player)
+        {
+            Vector3 a = ia.position;
     
+            Vector3 b = player.position;
+            return Vector3.Distance(a, b);
+        }
         
         
-        public static bool IsObjectBetween(Component ia, Component player)
+        public bool IsObjectBetween(Component ia, Component player)
         {
             Ray ray = new Ray(ia.transform.position, player.transform.localPosition);
             RaycastHit hit;
