@@ -27,7 +27,7 @@ namespace Menus
 
         public void setPause(bool pause)
         {
-            if (GetComponent<FinalScreen>() == null)
+            if (GetComponent<FinalScreen>() != null)
                 return;
             isPause = pause;
             if (!isPause)
