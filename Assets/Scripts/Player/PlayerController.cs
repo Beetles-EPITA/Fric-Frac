@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private GameObject cameraHolder;
+    [SerializeField] public GameObject cameraHolder;
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpFoce, smoothTime;
 
     public Laucher.Team team;

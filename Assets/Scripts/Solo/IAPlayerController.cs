@@ -38,13 +38,15 @@ namespace Solo
             {
                 print("Agent lost at:" + navMeshAgent.transform.position.x + ", " + navMeshAgent.transform.position.y + ", " + navMeshAgent.transform.position.z);
             }
-            print(Distance(navMeshAgent.transform, GetTheCloserPlayer().transform));
+
+            target = GetTheCloserPlayer();
+
+            print(Distance(navMeshAgent.transform, GetTheCloserPlayer().transform) + " see:" + CanSee(target)+ " hear:" + CanHear(target) + " object:" + IsAnObjectBehind(target));
             if (!navMeshAgent.hasPath)
             {
-                target = GetTheCloserPlayer();
                 if (Distance(target.transform, navMeshAgent.transform) < minDistanceCloseToHear)
                 {
-                    navMeshAgent.SetDestination(target.transform.position);
+                    //navMeshAgent.SetDestination(target.transform.position);
                 }
             }
 
@@ -72,19 +74,24 @@ namespace Solo
             Vector3 b = player.position;
             return Vector3.Distance(a, b);
         }
-        
-        
-        public bool IsObjectBetween(Component ia, Component player)
+
+
+        public bool CanSee(PlayerController player)
         {
-            Ray ray = new Ray(ia.transform.position, player.transform.localPosition);
-            RaycastHit hit;
-    
-            if (Physics.Raycast(ray, out hit))
-            {
-                return true;
-            }
-    
-            return false;
+            Vector3 screenPoint = agentCamera.WorldToViewportPoint(player.transform.position);
+            return (Distance(navMeshAgent.transform, player.transform) < minDistanceCloseToSee) && (screenPoint.z > 0 && screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1);
+        }
+
+        public bool CanHear(PlayerController player)
+        {
+            return Distance(navMeshAgent.transform, player.transform) < minDistanceCloseToHear;
+        }
+
+        public bool IsAnObjectBehind(PlayerController player)
+        {
+            Ray r = new Ray(agentCamera.transform.position,  player.cameraHolder.transform.position - agentCamera.transform.position);
+            RaycastHit raycastHit;
+            return Physics.Raycast(r, out raycastHit, Distance(agentCamera.transform, player.cameraHolder.transform)) && raycastHit.transform.GetComponentInParent<PlayerController>() == null;
         }
     }
 }
