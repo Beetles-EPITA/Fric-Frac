@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Menus;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
@@ -199,5 +200,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private void UpdateTab()
     {
         TabMenu.InstanceMenu.GetComponent<TabMenu>().UpdateTab();
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        LogMessage.Send(otherPlayer.NickName + " left the game");
+        UpdateTab();
     }
 }
