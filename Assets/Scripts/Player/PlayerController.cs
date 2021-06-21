@@ -43,6 +43,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip runClip;
     [SerializeField] private AudioClip JumpClip;
     
+    [SerializeField] private GameObject mains;
+    [SerializeField] private GameObject thief;
+    [SerializeField] private GameObject resident;
+    
     //Animation :
     private Animator anim;
     private int jumpHash = Animator.StringToHash("Jump");
@@ -83,13 +87,18 @@ public class PlayerController : MonoBehaviour
         if (!_photonView.IsMine)
         {
             Destroy(cameraHolder);
+            Destroy(Team == Laucher.Team.Resident ? thief.gameObject : resident.gameObject);
+            
         }
         else
         {
             Camera.SetupCurrent(cameraHolder.GetComponent<Camera>());
             myController = this;
+            mains.gameObject.SetActive(true);
+            Destroy(resident.gameObject);
+            Destroy(thief.gameObject);
         }
-            
+        
     }
 
 
