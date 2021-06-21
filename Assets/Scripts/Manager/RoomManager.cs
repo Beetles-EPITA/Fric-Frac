@@ -73,8 +73,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
         InitItems();
     }
 
+    private bool start = false;
+    private int count = 0;
+    
     IEnumerator WaitAnimation(Scene scene)
     {
+        LogMessage.Instance.ShowMessage("Waiting for players...", false);
+        photonView.RPC("AddPlayer", RpcTarget.MasterClient);
+        yield return new WaitUntil(() =>
+            PhotonNetwork.IsMasterClient && count == PhotonNetwork.CurrentRoom.PlayerCount || start);
+        if(PhotonNetwork.IsMasterClient) photonView.RPC("StartGame", RpcTarget.AllBuffered);
+        LogMessage.Instance.ClearMessages();
         _director.Play();
         yield return new WaitForSeconds(1);
         greenCar.Play();
@@ -82,6 +91,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds((int) _director.duration + 2);
         if(!skipped) CreatePlayer(scene);
         skipped = true;
+    }
+
+    [PunRPC]
+    public void StartGame()
+    {
+        start = true;
+    }
+
+    [PunRPC]
+    public void AddPlayer()
+    {
+        count++;
     }
 
     private void CreatePlayer(Scene scene)
