@@ -74,7 +74,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
         InitItems();
     }
 
-    private bool start = false;
+    public bool start = false;
     private int count = 0;
     
     IEnumerator WaitAnimation(Scene scene)

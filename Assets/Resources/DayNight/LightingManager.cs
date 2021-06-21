@@ -18,7 +18,7 @@ public class LightingManager : MonoBehaviour
         if (preset == null) 
             return;
 
-        if (Application.isPlaying)
+        if (Application.isPlaying && RoomManager.Instance.start)
         {
             if (startLight < 13f)
             {
