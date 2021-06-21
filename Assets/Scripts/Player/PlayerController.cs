@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rigidbody;
 
     private float _verticalLookRotation;
-    private bool _grounded;
+    //private bool _grounded;
+    private PlayerJumpAction _jumpAction;
     private Vector3 _smoothMoveVelocity;
     private Vector3 _moveAmount;
 
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
         audioState = soundState.standBy;
+        _jumpAction = GetComponentInChildren<PlayerJumpAction>();
     }
 
     private void Update()
@@ -133,7 +135,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (GameManager.Instance.GetKey(GameManager.KeyType.Jump) && _grounded)
+        if (GameManager.Instance.GetKey(GameManager.KeyType.Jump) && _jumpAction.isOnGround)
         {
             _rigidbody.AddForce(transform.up * jumpFoce);
             anim.SetTrigger(jumpHash);
@@ -156,7 +158,7 @@ public class PlayerController : MonoBehaviour
             audioState = soundState.run;
         }
 
-        if (!_grounded) //working
+        if (!_jumpAction.isOnGround) //working
         {
             audioState = soundState.jump;
         }
@@ -195,7 +197,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject != gameObject)
         {
@@ -241,7 +243,7 @@ public class PlayerController : MonoBehaviour
         {
             _grounded = true;
         }
-    }
+    }*/
 
     /**
      * Fix Movement
