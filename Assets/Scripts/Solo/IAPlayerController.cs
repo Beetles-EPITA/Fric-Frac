@@ -26,17 +26,27 @@ namespace Solo
         //STATE
         private PlayerController target;
 
+        private void Start()
+        {
+            anim = GetComponent<Animator>();
+        }
+
         // Update is called once per frame
         void Update()
         {
-            anim = GetComponent<Animator>();
             if (!navMeshAgent.isOnNavMesh)
             {
                 print("Agent lost at:" + navMeshAgent.transform.position.x + ", " + navMeshAgent.transform.position.y + ", " + navMeshAgent.transform.position.z);
             }
-
-            print(GetTheCloserPlayer().name + "/" + Distance(navMeshAgent.transform, GetTheCloserPlayer().transform));
-            navMeshAgent.SetDestination(GetTheCloserPlayer().transform.position);
+            print(Distance(navMeshAgent.transform, GetTheCloserPlayer().transform));
+            if (!navMeshAgent.hasPath)
+            {
+                target = GetTheCloserPlayer();
+                if (Distance(target.transform, navMeshAgent.transform) < minDistanceCloseToHear)
+                {
+                    navMeshAgent.SetDestination(target.transform.position);
+                }
+            }
 
         }
 
