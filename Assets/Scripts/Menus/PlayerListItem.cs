@@ -4,16 +4,18 @@ using Photon.Pun;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerListItem : MonoBehaviourPunCallbacks
 {
     [SerializeField] private TMP_Text text;
     private Player _player;
     
-    public void SetUp(Player player)
+    public void SetUp(Player player, bool death = false)
     {
         _player = player;
         text.text = player.NickName + (player == PhotonNetwork.LocalPlayer ? " (You)" : "");
+        if(death) text.fontStyle = FontStyles.Strikethrough;
     }
 
 

@@ -56,13 +56,12 @@ namespace Menus
             {
                 if ((int) player.Value.CustomProperties["team"] == (int) Laucher.Team.Resident)
                 {
-                    Instantiate(playerListItemPrefab, resident).GetComponent<PlayerListItem>().SetUp(player.Value);
+                    Instantiate(playerListItemPrefab, resident).GetComponent<PlayerListItem>().SetUp(player.Value, false);
                 }
                 else if ((int) player.Value.CustomProperties["team"] == (int) Laucher.Team.Thief)
                 {
                     PlayerListItem item = Instantiate(playerListItemPrefab, thief).GetComponent<PlayerListItem>();
-                    item.SetUp(player.Value);
-                    item.GetComponent<Image>().color = new Color(171, 9, 9, 168);
+                    item.SetUp(player.Value, (bool) player.Value.CustomProperties["death"]);
                 }else
                 {
                     print(player.Value.CustomProperties["team"]);
