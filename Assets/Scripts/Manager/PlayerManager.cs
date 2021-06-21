@@ -31,7 +31,7 @@ namespace Manager
                 Quaternion.identity);
         }
 
-        private Vector3 RandomPosition()
+        public Vector3 RandomPosition()
         {
             Random random = new Random();
             switch ((Laucher.Team) PhotonNetwork.LocalPlayer.CustomProperties["team"])

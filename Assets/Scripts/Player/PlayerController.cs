@@ -9,15 +9,16 @@ using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private GameObject cameraHolder;
+    [SerializeField] public GameObject cameraHolder;
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpFoce, smoothTime;
 
-    private Laucher.Team _team;
+    public Laucher.Team team;
 
     private Rigidbody _rigidbody;
 
     private float _verticalLookRotation;
-    private bool _grounded;
+    //private bool _grounded;
+    private PlayerJumpAction _jumpAction;
     private Vector3 _smoothMoveVelocity;
     private Vector3 _moveAmount;
 
@@ -50,6 +51,7 @@ public class PlayerController : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
         audioState = soundState.standBy;
+        _jumpAction = GetComponentInChildren<PlayerJumpAction>();
     }
 
     private void Update()
@@ -73,7 +75,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
-        _team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
+        team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
         
         if (!_photonView.IsMine)
         {
@@ -133,7 +135,7 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        if (GameManager.Instance.GetKey(GameManager.KeyType.Jump) && _grounded)
+        if (GameManager.Instance.GetKey(GameManager.KeyType.Jump) && _jumpAction.isOnGround)
         {
             _rigidbody.AddForce(transform.up * jumpFoce);
             anim.SetTrigger(jumpHash);
@@ -156,7 +158,7 @@ public class PlayerController : MonoBehaviour
             audioState = soundState.run;
         }
 
-        if (!_grounded) //working
+        if (!_jumpAction.isOnGround) //working
         {
             audioState = soundState.jump;
         }
@@ -195,7 +197,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    private void OnTriggerEnter(Collider other)
+    /*private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject != gameObject)
         {
@@ -241,7 +243,7 @@ public class PlayerController : MonoBehaviour
         {
             _grounded = true;
         }
-    }
+    }*/
 
     /**
      * Fix Movement
@@ -275,7 +277,7 @@ public class PlayerController : MonoBehaviour
 
     private void Hit()
     {
-        if (_team == Laucher.Team.Resident)
+        if (team == Laucher.Team.Resident)
         {
             if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) && !Pause.isPause)
             {
@@ -283,7 +285,7 @@ public class PlayerController : MonoBehaviour
                 if (Physics.Raycast(ray, out RaycastHit hit, 10f))
                 {
                     PlayerController target = hit.transform.gameObject.GetComponentInParent<PlayerController>();
-                    if (target != null && target._team == Laucher.Team.Thief)
+                    if (target != null && target.team == Laucher.Team.Thief)
                     {
                         _photonView.RPC("Lose", _photonView.Controller, "Captured", "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
                         LogMessage.SendMessage(_photonView.Controller.NickName + "has been found by " + PhotonNetwork.LocalPlayer.NickName);
