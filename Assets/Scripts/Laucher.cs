@@ -38,6 +38,8 @@ public class Laucher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 
