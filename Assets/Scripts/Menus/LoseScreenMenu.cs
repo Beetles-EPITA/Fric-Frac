@@ -29,6 +29,9 @@ namespace Menus
             Transform transform = RoomManager.Instance.spectatorCamera.transform;
             transform.position = new Vector3(5, 51, -333);
             transform.rotation = Quaternion.Euler(new Vector3(31,58,0));
+            Pause.isPause = false;
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
         
     }

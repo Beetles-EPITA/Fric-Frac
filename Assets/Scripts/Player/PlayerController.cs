@@ -7,6 +7,7 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerController : MonoBehaviour
 {
@@ -294,11 +295,16 @@ public class PlayerController : MonoBehaviour
                     if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) &&
                         !Pause.isPause)
                     {
-                        target.GetComponent<PhotonView>().RPC("Lose", target.GetComponent<PhotonView>().Controller, "Captured",
+                        PhotonView view = target.GetComponent<PhotonView>();
+                        view.RPC("Lose", view.Controller, "Captured",
                             "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
-                        LogMessage.Send(_photonView.Controller.NickName + " has been found by " +
-                                               PhotonNetwork.LocalPlayer.NickName);
+                        LogMessage.Send(view.Controller.NickName + " has been found by " +
+                                        PhotonNetwork.LocalPlayer.NickName);
                         target.gameObject.SetActive(false);
+                        Hashtable hashtable = view.Controller.CustomProperties;
+                        hashtable["death"] = true;
+                        view.Controller.SetCustomProperties(hashtable);
+                        RoomManager.Instance.photonView.RPC("UpdateTab", RpcTarget.All);
                         //TODO CHECK WIN
                     }
                     else
