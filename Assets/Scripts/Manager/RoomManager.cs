@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using Menus;
 using Photon.Pun;
+using Photon.Realtime;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
@@ -16,8 +17,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private PlayableDirector _director;
     [SerializeField] private Camera annimationCamera;
     [SerializeField] private AudioSource greenCar;
-    [SerializeField] private Image crosshair;
-
+    [SerializeField] public Image crosshair;
+    [SerializeField] public FinalScreen FinalScreen;
+    
     [SerializeField] private GameObject[] prefabsItems;
     [SerializeField] private Transform AllPositons;
     private List<Transform> randomPositions;
@@ -72,8 +74,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
         InitItems();
     }
 
+    private bool start = false;
+    private int count = 0;
+    
     IEnumerator WaitAnimation(Scene scene)
     {
+        LogMessage.Instance.ShowMessage("Waiting for players...", false);
+        photonView.RPC("AddPlayer", RpcTarget.MasterClient);
+        yield return new WaitUntil(() =>
+            PhotonNetwork.IsMasterClient && count == PhotonNetwork.CurrentRoom.PlayerCount || start);
+        if(PhotonNetwork.IsMasterClient) photonView.RPC("StartGame", RpcTarget.AllBuffered);
+        LogMessage.Instance.ClearMessages();
         _director.Play();
         yield return new WaitForSeconds(1);
         greenCar.Play();
@@ -81,6 +92,18 @@ public class RoomManager : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds((int) _director.duration + 2);
         if(!skipped) CreatePlayer(scene);
         skipped = true;
+    }
+
+    [PunRPC]
+    public void StartGame()
+    {
+        start = true;
+    }
+
+    [PunRPC]
+    public void AddPlayer()
+    {
+        count++;
     }
 
     private void CreatePlayer(Scene scene)
@@ -115,6 +138,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     
     private void TabList()
     {
+        if(TabMenu.InstanceMenu == null)
+            return;
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             TabMenu.InstanceMenu.Open();
@@ -198,6 +223,47 @@ public class RoomManager : MonoBehaviourPunCallbacks
             else
                 ItemsFind[itemName] -= 1;
             if(update) ItemListMenu.Instance.UpdateList(ItemsFind);
+        }
+    }
+
+    [PunRPC]
+    private void UpdateTab()
+    {
+        TabMenu.InstanceMenu.GetComponent<TabMenu>().UpdateTab();
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        LogMessage.Send(otherPlayer.NickName + " left the game");
+        UpdateTab();
+    }
+
+    [PunRPC]
+    private void CheckWin(int team)
+    {
+        if ((Laucher.Team) team == Laucher.Team.Resident)
+        {
+            //TODO TIMER
+            bool found = false;
+            foreach (var currentRoomPlayer in PhotonNetwork.CurrentRoom.Players)
+            {
+                if ((Laucher.Team) currentRoomPlayer.Value.CustomProperties["team"] == Laucher.Team.Thief &&
+                    !(bool) currentRoomPlayer.Value.CustomProperties["death"])
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                FinalScreen.SetUp("All the thieves have been caught", 
+                        PlayerController.myController.Team == Laucher.Team.Resident, PhotonNetwork.IsMasterClient);
+            }
+        }
+        else
+        {
+            //TODO WIN DES VOLEURS
         }
     }
 }

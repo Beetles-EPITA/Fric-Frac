@@ -1,18 +1,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using Menus;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] public GameObject cameraHolder;
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpFoce, smoothTime;
 
-    public Laucher.Team team;
+    public Laucher.Team Team;
+    public static PlayerController myController;
 
     private Rigidbody _rigidbody;
 
@@ -75,7 +78,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
-        team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
+        Team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
         
         if (!_photonView.IsMine)
         {
@@ -84,6 +87,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Camera.SetupCurrent(cameraHolder.GetComponent<Camera>());
+            myController = this;
         }
             
     }
@@ -275,23 +279,47 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private Outline lastHitObject;
+    
     private void Hit()
     {
-        if (team == Laucher.Team.Resident)
+        if (Team == Laucher.Team.Resident)
         {
-            if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) && !Pause.isPause)
+            if (lastHitObject != null)
             {
-                Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-                if (Physics.Raycast(ray, out RaycastHit hit, 10f))
-                {
-                    PlayerController target = hit.transform.gameObject.GetComponentInParent<PlayerController>();
-                    if (target != null && target.team == Laucher.Team.Thief)
-                    {
-                        _photonView.RPC("Lose", _photonView.Controller, "Captured", "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
-                        LogMessage.SendMessage(_photonView.Controller.NickName + "has been found by " + PhotonNetwork.LocalPlayer.NickName);
-                        //TODO CHECK WIN
-                    }
+                lastHitObject.enabled = false;
+            }
+            Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
 
+            if (Physics.Raycast(ray, out RaycastHit hit, 5f))
+            {
+                PlayerController target = hit.transform.gameObject.GetComponentInParent<PlayerController>();
+                if (target != null && target.Team == Laucher.Team.Thief)
+                {
+                    if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) &&
+                        !Pause.isPause)
+                    {
+                        PhotonView view = target.GetComponent<PhotonView>();
+                        view.RPC("Lose", view.Controller, "Captured",
+                            "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
+                        LogMessage.Send(view.Controller.NickName + " has been found by " +
+                                        PhotonNetwork.LocalPlayer.NickName);
+                        target.gameObject.SetActive(false);
+                        Hashtable hashtable = view.Controller.CustomProperties;
+                        hashtable["death"] = true;
+                        view.Controller.SetCustomProperties(hashtable);
+                        RoomManager.Instance.photonView.RPC("UpdateTab", RpcTarget.All);
+                        RoomManager.Instance.photonView.RPC("CheckWin", RpcTarget.All, (int) Laucher.Team.Resident);
+                    }
+                    else
+                    {
+                        Outline outline = target.GetComponentInParent<Outline>();
+                        if (outline != null)
+                        {
+                            outline.enabled = true;
+                            lastHitObject = outline; 
+                        }
+                    }
                 }
             }
         }
@@ -302,6 +330,9 @@ public class PlayerController : MonoBehaviour
     {
         RoomManager.Instance.LoseScreen.SetUp(title, message, endGame);
         Camera.SetupCurrent(RoomManager.Instance.spectatorCamera);
+        Transform cameraTransform = RoomManager.Instance.spectatorCamera.transform;
+        cameraTransform.position = cameraHolder.transform.position;
+        cameraTransform.rotation = cameraHolder.transform.rotation;
         PhotonNetwork.Destroy(gameObject);
     }
 
@@ -310,7 +341,7 @@ public class PlayerController : MonoBehaviour
     
     private void PickItem()
     {
-        if ((int) PhotonNetwork.LocalPlayer.CustomProperties["team"] == (int) Laucher.Team.Thief)
+        if (Team == Laucher.Team.Thief)
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
@@ -331,7 +362,9 @@ public class PlayerController : MonoBehaviour
                     {
                         Items.Add(target.GetComponentInParent<Item>());
                         RoomManager.Instance.photonView.RPC("RemoveItem", RpcTarget.All, target.GetComponentInParent<Item>().itemName, true);
-                        PhotonNetwork.Destroy(target.GetComponentInParent<Item>().gameObject);
+                        PhotonView view = target.GetComponentInParent<PhotonView>();
+                        view.RPC("Delete", view.Controller);
+                        view.gameObject.SetActive(false);
                     }
                     else
                     {

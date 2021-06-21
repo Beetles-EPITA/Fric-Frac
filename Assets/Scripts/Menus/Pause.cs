@@ -21,11 +21,14 @@ namespace Menus
 
         private void Start()
         {
-            gameObject.SetActive(false);
+            if(GetComponent<FinalScreen>() == null)
+                gameObject.SetActive(false);
         }
 
         public void setPause(bool pause)
         {
+            if (GetComponent<FinalScreen>() != null)
+                return;
             isPause = pause;
             if (!isPause)
             {
@@ -41,6 +44,11 @@ namespace Menus
         public void Exit()
         {
             SceneManager.LoadScene("MainMenu");
+        }
+
+        public static void Open()
+        {
+            Instance.GetComponent<Menu>().Open();
         }
     }
 }

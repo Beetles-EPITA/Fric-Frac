@@ -38,6 +38,8 @@ public class Laucher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
 
         Cursor.visible = true;
@@ -127,7 +129,7 @@ public class Laucher : MonoBehaviourPunCallbacks
                     placeThief--;
                 }
             }
-
+            hashtable["death"] = false;
             player.Value.SetCustomProperties(hashtable);
             if(placeThief == 0 && placeResident == 0) lastPlayerId = player.Key;
         }
@@ -150,7 +152,6 @@ public class Laucher : MonoBehaviourPunCallbacks
         Menu menu = MainMenuManager.Instance.OpenMenu("LobbyMenu");
         Text menuName = menu.GetComponentInChildren<Text>();
         menuName.text = PhotonNetwork.CurrentRoom.Name;
-        
         foreach (Transform transform in playerListContent)
         {
             Destroy(transform.gameObject);
@@ -161,9 +162,7 @@ public class Laucher : MonoBehaviourPunCallbacks
         }
         
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
-        
-        //UPDATE RPC
-        
+        UpdateRPC();
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
