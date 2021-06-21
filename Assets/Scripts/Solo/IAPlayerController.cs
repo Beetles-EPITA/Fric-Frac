@@ -60,7 +60,7 @@ namespace Solo
             {
                 if (players.Length != 0)
                     closer = players[0];
-                if (player.team == Laucher.Team.Thief && Distance(navMeshAgent.transform, player.transform) <
+                if (player.Team == Laucher.Team.Thief && Distance(navMeshAgent.transform, player.transform) <
                     Distance(navMeshAgent.transform, closer.transform))
                     closer = player;
             }
