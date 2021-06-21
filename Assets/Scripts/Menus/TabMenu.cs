@@ -26,7 +26,8 @@ namespace Menus
         private void Awake()
         {
             startTime = Time.time;
-            InstanceMenu = GetComponent<Menu>();
+            if(GetComponent<FinalScreen>() == null)
+                InstanceMenu = GetComponent<Menu>();
         }
 
         private void Start()
@@ -38,8 +39,10 @@ namespace Menus
 
         private void Update()
         {
-            timer.text = $"{Mathf.Floor((Time.time-startTime) / 60):0}:{(Time.time-startTime) % 60:00}";
-            ping.text = PhotonNetwork.GetPing() + "ms";
+            if(timer != null)
+                timer.text = $"{Mathf.Floor((Time.time-startTime) / 60):0}:{(Time.time-startTime) % 60:00}";
+            if(ping != null)
+                ping.text = PhotonNetwork.GetPing() + "ms";
         }
 
         public void UpdateTab()
@@ -56,7 +59,7 @@ namespace Menus
             {
                 if ((int) player.Value.CustomProperties["team"] == (int) Laucher.Team.Resident)
                 {
-                    Instantiate(playerListItemPrefab, resident).GetComponent<PlayerListItem>().SetUp(player.Value, false);
+                    Instantiate(playerListItemPrefab, resident).GetComponent<PlayerListItem>().SetUp(player.Value);
                 }
                 else if ((int) player.Value.CustomProperties["team"] == (int) Laucher.Team.Thief)
                 {

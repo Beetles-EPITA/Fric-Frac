@@ -18,7 +18,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private Camera annimationCamera;
     [SerializeField] private AudioSource greenCar;
     [SerializeField] public Image crosshair;
-
+    [SerializeField] public FinalScreen FinalScreen;
+    
     [SerializeField] private GameObject[] prefabsItems;
     [SerializeField] private Transform AllPositons;
     private List<Transform> randomPositions;
@@ -131,6 +132,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     
     private void TabList()
     {
+        if(TabMenu.InstanceMenu == null)
+            return;
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             TabMenu.InstanceMenu.Open();
@@ -227,5 +230,34 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         LogMessage.Send(otherPlayer.NickName + " left the game");
         UpdateTab();
+    }
+
+    [PunRPC]
+    private void CheckWin(int team)
+    {
+        if ((Laucher.Team) team == Laucher.Team.Resident)
+        {
+            //TODO TIMER
+            bool found = false;
+            foreach (var currentRoomPlayer in PhotonNetwork.CurrentRoom.Players)
+            {
+                if ((Laucher.Team) currentRoomPlayer.Value.CustomProperties["team"] == Laucher.Team.Thief &&
+                    !(bool) currentRoomPlayer.Value.CustomProperties["death"])
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                FinalScreen.SetUp("All the thieves have been caught", 
+                        PlayerController.myController.Team == Laucher.Team.Resident, PhotonNetwork.IsMasterClient);
+            }
+        }
+        else
+        {
+            //TODO WIN DES VOLEURS
+        }
     }
 }

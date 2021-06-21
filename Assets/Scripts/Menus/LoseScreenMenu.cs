@@ -14,7 +14,7 @@ namespace Menus
         
         public void SetUp(string title, string message, bool endGame)
         {
-            gameObject.SetActive(true);
+            GetComponent<Menu>().Open();
             this.title.text = title;
             this.message.text = message;
             backButton.gameObject.SetActive(!endGame);

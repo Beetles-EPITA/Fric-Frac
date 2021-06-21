@@ -11,10 +11,11 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private GameObject cameraHolder;
+    [SerializeField] public GameObject cameraHolder;
     [SerializeField] private float mouseSensitivity, sprintSpeed, walkSpeed, jumpFoce, smoothTime;
 
-    private Laucher.Team _team;
+    public Laucher.Team Team;
+    public static PlayerController myController;
 
     private Rigidbody _rigidbody;
 
@@ -75,7 +76,7 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         anim = GetComponent<Animator>();
-        _team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
+        Team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
         
         if (!_photonView.IsMine)
         {
@@ -84,6 +85,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             Camera.SetupCurrent(cameraHolder.GetComponent<Camera>());
+            myController = this;
         }
             
     }
@@ -279,7 +281,7 @@ public class PlayerController : MonoBehaviour
     
     private void Hit()
     {
-        if (_team == Laucher.Team.Resident)
+        if (Team == Laucher.Team.Resident)
         {
             if (lastHitObject != null)
             {
@@ -290,7 +292,7 @@ public class PlayerController : MonoBehaviour
             if (Physics.Raycast(ray, out RaycastHit hit, 5f))
             {
                 PlayerController target = hit.transform.gameObject.GetComponentInParent<PlayerController>();
-                if (target != null && target._team == Laucher.Team.Thief)
+                if (target != null && target.Team == Laucher.Team.Thief)
                 {
                     if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) &&
                         !Pause.isPause)
@@ -305,7 +307,7 @@ public class PlayerController : MonoBehaviour
                         hashtable["death"] = true;
                         view.Controller.SetCustomProperties(hashtable);
                         RoomManager.Instance.photonView.RPC("UpdateTab", RpcTarget.All);
-                        //TODO CHECK WIN
+                        RoomManager.Instance.photonView.RPC("CheckWin", RpcTarget.All, (int) Laucher.Team.Resident);
                     }
                     else
                     {
@@ -337,7 +339,7 @@ public class PlayerController : MonoBehaviour
     
     private void PickItem()
     {
-        if (_team == Laucher.Team.Thief)
+        if (Team == Laucher.Team.Thief)
         {
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
