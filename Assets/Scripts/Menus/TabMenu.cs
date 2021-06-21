@@ -42,7 +42,7 @@ namespace Menus
             ping.text = PhotonNetwork.GetPing() + "ms";
         }
 
-        private void UpdateTab()
+        public void UpdateTab()
         {
             foreach (Transform transform in resident)
             {
@@ -60,7 +60,9 @@ namespace Menus
                 }
                 else if ((int) player.Value.CustomProperties["team"] == (int) Laucher.Team.Thief)
                 {
-                    Instantiate(playerListItemPrefab, thief).GetComponent<PlayerListItem>().SetUp(player.Value);
+                    PlayerListItem item = Instantiate(playerListItemPrefab, thief).GetComponent<PlayerListItem>();
+                    item.SetUp(player.Value);
+                    item.GetComponent<Image>().color = new Color(171, 9, 9, 168);
                 }else
                 {
                     print(player.Value.CustomProperties["team"]);

@@ -124,7 +124,7 @@ public class Laucher : MonoBehaviourPunCallbacks
                     placeThief--;
                 }
             }
-
+            hashtable["death"] = false;
             player.Value.SetCustomProperties(hashtable);
             if(placeThief == 0 && placeResident == 0) lastPlayerId = player.Key;
         }

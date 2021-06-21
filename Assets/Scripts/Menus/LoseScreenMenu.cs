@@ -19,6 +19,8 @@ namespace Menus
             this.message.text = message;
             backButton.gameObject.SetActive(!endGame);
             Pause.isPause = true;
+            Cursor.visible = true;
+            RoomManager.Instance.crosshair.gameObject.SetActive(false);
         }
 
         public void Exit()

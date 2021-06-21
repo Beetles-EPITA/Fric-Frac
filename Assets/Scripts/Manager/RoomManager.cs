@@ -16,7 +16,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private PlayableDirector _director;
     [SerializeField] private Camera annimationCamera;
     [SerializeField] private AudioSource greenCar;
-    [SerializeField] private Image crosshair;
+    [SerializeField] public Image crosshair;
 
     [SerializeField] private GameObject[] prefabsItems;
     [SerializeField] private Transform AllPositons;
@@ -193,5 +193,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 ItemsFind[itemName] -= 1;
             if(update) ItemListMenu.Instance.UpdateList(ItemsFind);
         }
+    }
+
+    [PunRPC]
+    private void UpdateTab()
+    {
+        TabMenu.InstanceMenu.GetComponent<TabMenu>().UpdateTab();
     }
 }
