@@ -42,11 +42,12 @@ namespace Solo
             target = GetTheCloserPlayer();
 
             print(Distance(navMeshAgent.transform, GetTheCloserPlayer().transform) + " see:" + CanSee(target)+ " hear:" + CanHear(target));
+            navMeshAgent.SetDestination(target.transform.position);
             if (!navMeshAgent.hasPath)
             {
                 if (Distance(target.transform, navMeshAgent.transform) < minDistanceCloseToHear)
                 {
-                    //navMeshAgent.SetDestination(target.transform.position);
+                    
                 }
             }
 
