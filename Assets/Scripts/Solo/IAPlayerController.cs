@@ -41,7 +41,7 @@ namespace Solo
 
             target = GetTheCloserPlayer();
 
-            print(Distance(navMeshAgent.transform, GetTheCloserPlayer().transform) + " see:" + CanSee(target)+ " hear:" + CanHear(target) + " object:" + IsAnObjectBehind(target));
+            print(Distance(navMeshAgent.transform, GetTheCloserPlayer().transform) + " see:" + CanSee(target)+ " hear:" + CanHear(target));
             if (!navMeshAgent.hasPath)
             {
                 if (Distance(target.transform, navMeshAgent.transform) < minDistanceCloseToHear)
@@ -79,7 +79,7 @@ namespace Solo
         public bool CanSee(PlayerController player)
         {
             Vector3 screenPoint = agentCamera.WorldToViewportPoint(player.transform.position);
-            return (Distance(navMeshAgent.transform, player.transform) < minDistanceCloseToSee) && (screenPoint.z > 0 && screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1);
+            return (Distance(navMeshAgent.transform, player.transform) < minDistanceCloseToSee) && !IsAnObjectBetween(target) && (screenPoint.z > 0 && screenPoint.x > 0 && screenPoint.x < 1 && screenPoint.y > 0 && screenPoint.y < 1);
         }
 
         public bool CanHear(PlayerController player)
@@ -87,7 +87,7 @@ namespace Solo
             return Distance(navMeshAgent.transform, player.transform) < minDistanceCloseToHear;
         }
 
-        public bool IsAnObjectBehind(PlayerController player)
+        public bool IsAnObjectBetween(PlayerController player)
         {
             Ray r = new Ray(agentCamera.transform.position,  player.cameraHolder.transform.position - agentCamera.transform.position);
             RaycastHit raycastHit;
