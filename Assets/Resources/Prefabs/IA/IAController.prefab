@@ -167,6 +167,7 @@ GameObject:
   - component: {fileID: 8621094858104740952}
   - component: {fileID: 109498467367190971}
   - component: {fileID: 2060127897975533961}
+  - component: {fileID: 6977104349684773188}
   m_Layer: 0
   m_Name: IAController
   m_TagString: Untagged
@@ -269,6 +270,25 @@ MonoBehaviour:
   agentCamera: {fileID: 9060858013483349787}
   minDistanceCloseToHear: 10
   minDistanceCloseToSee: 10
+--- !u!95 &6977104349684773188
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336040957259752356}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ff8e3a533a25a924baa09b23903a880b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &487514931595075406
 GameObject:
   m_ObjectHideFlags: 0
