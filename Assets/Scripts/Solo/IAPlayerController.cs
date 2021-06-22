@@ -54,18 +54,17 @@ namespace Solo
                 print("Agent lost at:" + navMeshAgent.transform.position.x + ", " + navMeshAgent.transform.position.y + ", " + navMeshAgent.transform.position.z);
             }
             target = GetTheCloserPlayer();
-            if(target != null)
-                Hit();
+            if (target == null) return;
+            Hit();
             if (CanSee(target) || CanHear(target))
             {
                 navMeshAgent.SetDestination(target.transform.position);
             }
             else
             {
-                
                 if (!navMeshAgent.hasPath)
                 {
-                    
+
                 }
             }
         }
