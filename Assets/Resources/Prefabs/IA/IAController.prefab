@@ -2181,8 +2181,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: 6779569317881579086}
   agentCamera: {fileID: 4061815614464557596}
-  minDistanceCloseToHear: 10
-  minDistanceCloseToSee: 20
+  minDistanceCloseToHear: 5
+  minDistanceCloseToSee: 10
   resident: {fileID: 377507877504465794}
   _material: {fileID: 2100000, guid: 7720ab014be073047a5f72574adee979, type: 2}
 --- !u!1 &5377777425285310130

@@ -41,7 +41,7 @@ namespace Solo
         private void Start()
         {
             anim = GetComponent<Animator>();
-            resident.GetComponent<Renderer>().materials[3].SetColor("_Color", Color.red);
+            resident.GetComponent<Renderer>().materials[3] = _material;
         }
 
         // Update is called once per frame
