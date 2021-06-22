@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour
     
     //Animation :
     private Animator anim;
-    private int jumpHash = Animator.StringToHash("Jump");
 
     public List<Item> Items = new List<Item>();
     
@@ -63,7 +62,7 @@ public class PlayerController : MonoBehaviour
         Hit();
         if (Pause.isPause)
         {
-            anim.SetFloat("Speed", 0);
+            anim.SetInteger("Speed", 0);
             _moveAmount = Vector3.zero;
             return;
         }
@@ -104,16 +103,16 @@ public class PlayerController : MonoBehaviour
         {
             if (GameManager.Instance.GetKey(GameManager.KeyType.Sprint))
             {
-                anim.SetFloat("Speed", sprintSpeed);
+                anim.SetInteger("Speed", 2);
             }
             else
             {
-                anim.SetFloat("Speed", walkSpeed);
+                anim.SetInteger("Speed", 1);
             }
         }
         else
         {
-            anim.SetFloat("Speed", 0);
+            anim.SetInteger("Speed", 0);
         }
     }
     
@@ -138,10 +137,24 @@ public class PlayerController : MonoBehaviour
         if (GameManager.Instance.GetKey(GameManager.KeyType.Jump) && _jumpAction.isOnGround)
         {
             _rigidbody.AddForce(transform.up * jumpFoce);
-            anim.SetTrigger(jumpHash);
+            StartCoroutine(JumpAnim());
         }
     }
 
+    private IEnumerator JumpAnim()
+    {
+        anim.SetBool("isJumping", true);
+        yield return new WaitForEndOfFrame();
+        anim.SetBool("isJumping", false);
+    }
+    
+    private IEnumerator HitAnim()
+    {
+        anim.SetBool("isAttacking", true);
+        yield return new WaitForEndOfFrame();
+        anim.SetBool("isAttacking", false);
+    }
+    
     private void SoundManager()
     {
         soundState oldSoundState = audioState;
@@ -291,12 +304,12 @@ public class PlayerController : MonoBehaviour
                         LogMessage.SendMessage(_photonView.Controller.NickName + "has been found by " + PhotonNetwork.LocalPlayer.NickName);
                         //TODO CHECK WIN
                     }
-
                 }
+                StartCoroutine(HitAnim());
             }
         }
     }
-
+    
     [PunRPC]
     private void Lose(string title, string message, bool endGame)
     {
@@ -332,6 +345,7 @@ public class PlayerController : MonoBehaviour
                         Items.Add(target.GetComponentInParent<Item>());
                         RoomManager.Instance.photonView.RPC("RemoveItem", RpcTarget.All, target.GetComponentInParent<Item>().itemName, true);
                         PhotonNetwork.Destroy(target.GetComponentInParent<Item>().gameObject);
+                        StartCoroutine(HitAnim());
                     }
                     else
                     {
@@ -343,7 +357,6 @@ public class PlayerController : MonoBehaviour
                         }
                     }
                 }
-                
             }
         }
     }
