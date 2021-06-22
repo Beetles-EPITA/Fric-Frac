@@ -57,6 +57,9 @@ public class PlayerController : MonoBehaviour
         _photonView = GetComponent<PhotonView>();
         audioState = soundState.standBy;
         _jumpAction = GetComponentInChildren<PlayerJumpAction>();
+
+        stepRayUpper.transform.position = new Vector3(stepRayUpper.transform.position.x, stepHeight,
+            stepRayUpper.transform.position.z);
     }
 
     private void Update()
@@ -77,7 +80,7 @@ public class PlayerController : MonoBehaviour
         Look();
         Move();
         Jump();
-        
+        StepClimb();
     }
 
     private void Start()
@@ -94,7 +97,6 @@ public class PlayerController : MonoBehaviour
             Camera.SetupCurrent(cameraHolder.GetComponent<Camera>());
             myController = this;
         }
-
     }
 
 
@@ -149,6 +151,49 @@ public class PlayerController : MonoBehaviour
         {
             _rigidbody.AddForce(transform.up * jumpFoce);
             anim.SetTrigger(jumpHash);
+        }
+    }
+
+    /**
+     * StepClimb
+     */
+
+    [Header("Player Step Climb:")]
+    [SerializeField] private GameObject stepRayUpper;
+    [SerializeField] private GameObject stepRayLower;
+
+    [SerializeField] private float stepHeight = 0.3f;
+    [SerializeField] private float stepSmooth = 0.1f;
+
+    private void StepClimb()
+    {
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(Vector3.forward),
+            out _, 0.1f))
+        {
+            if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(Vector3.forward),
+                out _, 0.2f))
+            {
+                _rigidbody.position -= new Vector3(0f, -stepSmooth, 0f);
+            }
+        }
+        
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(1.5f, 0, 1), out _,
+            0.1f))
+        {
+            if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(1.5f, 0, 1),
+                out _, 0.2f))
+            {
+                _rigidbody.position -= new Vector3(0f, -stepSmooth, 0f);
+            }
+        }
+
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(-1.5f, 0, 1), out _, 0.1f))
+        {
+            if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(-1.5f, 0, 1), out _,
+                0.2f))
+            {
+                _rigidbody.position -= new Vector3(0f, -stepSmooth, 0f);
+            }
         }
     }
 
