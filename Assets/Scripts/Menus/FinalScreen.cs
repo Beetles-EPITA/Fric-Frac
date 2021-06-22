@@ -33,11 +33,17 @@ namespace Menus
             RoomManager.Instance.crosshair.gameObject.SetActive(false);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+
+            if (isOwner)
+            {
+                PhotonNetwork.CurrentRoom.IsOpen = true;
+                PhotonNetwork.CurrentRoom.IsVisible = true;
+            }
         }
 
         public void Relaunch()
         {
-            
+            PhotonNetwork.LoadLevel("Multiplayer");
         }
 
     }

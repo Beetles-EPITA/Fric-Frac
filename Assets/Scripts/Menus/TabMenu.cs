@@ -71,7 +71,12 @@ namespace Menus
                 }
             }
         }
-        
+
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            UpdateTab();
+        }
+
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
             UpdateTab();
