@@ -15,7 +15,7 @@ public class Item : MonoBehaviour
     {
         if (gameObject != null)
         {
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
         
     }

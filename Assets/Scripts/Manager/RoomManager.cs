@@ -19,7 +19,8 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private AudioSource greenCar;
     [SerializeField] public Image crosshair;
     [SerializeField] public FinalScreen FinalScreen;
-
+    [SerializeField] public Text infoText;
+    
     private List<Item> items;
 
 
@@ -174,8 +175,17 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private int viewID = 9200;
     private void InitItems()
     {
+        foreach (var item in items)
+        {
+            item.gameObject.AddComponent<PhotonView>().ViewID = viewID;
+            Outline outline = item.gameObject.AddComponent<Outline>();
+            outline.OutlineWidth = 6f;
+            outline.enabled = false;
+            viewID++;
+        }
         if (PhotonNetwork.IsMasterClient)
         {
             for (int i = 0; i < (PhotonNetwork.CurrentRoom.Players.Count + 1) / 2; i++)
@@ -184,10 +194,6 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 {
                     int random = new Random().Next(items.Count);
                     Item item = items[random];
-                    item.gameObject.AddComponent<PhotonView>();
-                    Outline outline = item.gameObject.AddComponent<Outline>();
-                    outline.OutlineWidth = 6f;
-                    outline.enabled = false;
                     photonView.RPC("AddItem", RpcTarget.All, item.itemName, false);
                     items.Remove(item);
                 }
@@ -262,7 +268,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            //TODO WIN DES VOLEURS
+            if(ItemsFind.Count == 0)
+                FinalScreen.SetUp("The thieves have recovered all the objects", 
+                    PlayerController.myController.Team == Laucher.Team.Thief, PhotonNetwork.IsMasterClient);
         }
     }
 }

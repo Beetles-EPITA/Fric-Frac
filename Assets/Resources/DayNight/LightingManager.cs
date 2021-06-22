@@ -20,10 +20,15 @@ public class LightingManager : MonoBehaviour
 
         if (Application.isPlaying && RoomManager.Instance.start)
         {
-            if (startLight < 13f)
+            if (startLight < 16f || startLight > 16.1f)
             {
-                startLight += 0.003f;
+                startLight -= 0.001f;
+                if (startLight < 0) startLight = 24f;
                 UpdateLighting(startLight / 24f);
+            }
+            else
+            {
+                Debug.LogError("END");
             }
         }
         else
