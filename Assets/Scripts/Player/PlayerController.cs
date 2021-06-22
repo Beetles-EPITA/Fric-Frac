@@ -354,8 +354,9 @@ public class PlayerController : MonoBehaviour
             {
                 
                 GameObject target = hit.transform.gameObject;
+                Item item;
                 
-                if(target != null && target.GetComponentInParent<Item>() != null)
+                if(target != null && (item = target.GetComponentInParent<Item>()) != null && RoomManager.Instance.ItemsFind.ContainsKey(item.itemName))
                 {
                     
                     if (Input.GetMouseButtonDown(1) && !Pause.isPause)
