@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using ExitGames.Client.Photon;
 using Menus;
 using Photon.Pun;
 using UnityEngine;
@@ -52,6 +54,8 @@ namespace Solo
                 print("Agent lost at:" + navMeshAgent.transform.position.x + ", " + navMeshAgent.transform.position.y + ", " + navMeshAgent.transform.position.z);
             }
             target = GetTheCloserPlayer();
+            if(target != null)
+                Hit();
             if (CanSee(target) || CanHear(target))
             {
                 navMeshAgent.SetDestination(target.transform.position);
@@ -70,10 +74,10 @@ namespace Solo
         {
             PlayerController closer = null;
             PlayerController[] players = (PlayerController[])GameObject.FindObjectsOfType(typeof(PlayerController));
+            if (players.Length != 0)
+                closer = players[0];
             foreach (var player in players)
             {
-                if (players.Length != 0)
-                    closer = players[0];
                 if (player.Team == Laucher.Team.Thief && Distance(navMeshAgent.transform, player.transform) <
                     Distance(navMeshAgent.transform, closer.transform))
                     closer = player;
@@ -90,6 +94,34 @@ namespace Solo
         }
 
 
+        public void Hit()
+        {
+            Vector3 agentMiddle = new Vector3(agentCamera.transform.position.x, agentCamera.transform.position.y-1,agentCamera.transform.position.z);
+            
+            Ray ray = new Ray(agentMiddle, agentCamera.transform.forward);
+            Debug.DrawRay(agentMiddle, agentCamera.transform.forward);
+            if (Physics.Raycast(ray, out RaycastHit hit, 5f))
+            {
+                if (target != null && target.Team == Laucher.Team.Thief)
+                {
+                    if (target == hit.transform.gameObject.GetComponentInParent<PlayerController>())
+                    {
+                        PhotonView view = target.GetComponent<PhotonView>();
+                        view.RPC("Lose", view.Controller, "Captured",
+                            "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
+                        LogMessage.Send(view.Controller.NickName + " has been found by " +
+                                        "the IA");
+                        target.gameObject.SetActive(false);
+                        Hashtable hashtable = view.Controller.CustomProperties;
+                        hashtable["death"] = true;
+                        view.Controller.SetCustomProperties(hashtable);
+                        RoomManager.Instance.photonView.RPC("UpdateTab", RpcTarget.All);
+                        RoomManager.Instance.photonView.RPC("CheckWin", RpcTarget.All, (int) Laucher.Team.Resident);
+                    }
+                }
+            }
+        }
+        
         public bool CanSee(PlayerController player)
         {
             Vector3 screenPoint = agentCamera.WorldToViewportPoint(player.transform.position);
