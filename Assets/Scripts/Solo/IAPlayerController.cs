@@ -99,8 +99,8 @@ namespace Solo
             Vector3 agentMiddle = new Vector3(agentCamera.transform.position.x, agentCamera.transform.position.y-1,agentCamera.transform.position.z);
             
             Ray ray = new Ray(agentMiddle, agentCamera.transform.forward);
-            Debug.DrawRay(agentMiddle, agentCamera.transform.forward);
-            if (Physics.Raycast(ray, out RaycastHit hit, 5f))
+            Debug.DrawRay(agentMiddle, agentCamera.transform.forward, Color.red);
+            if (Physics.Raycast(ray, out RaycastHit hit, 3f))
             {
                 if (target != null && target.Team == Laucher.Team.Thief)
                 {
