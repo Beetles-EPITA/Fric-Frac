@@ -25,10 +25,23 @@ namespace Solo
         
         //STATE
         private PlayerController target;
+        private Vector3[] listOfPosition = new[]
+        {
+            new Vector3(),
+            new Vector3(),
+            new Vector3(),
+            new Vector3(),
+            new Vector3(),
+            new Vector3(),
+        };
+
+        [SerializeField]private GameObject resident;
+        [SerializeField] private Material _material;
 
         private void Start()
         {
             anim = GetComponent<Animator>();
+            resident.GetComponent<Renderer>().materials[3].SetColor("_Color", Color.red);
         }
 
         // Update is called once per frame
@@ -38,18 +51,19 @@ namespace Solo
             {
                 print("Agent lost at:" + navMeshAgent.transform.position.x + ", " + navMeshAgent.transform.position.y + ", " + navMeshAgent.transform.position.z);
             }
-
             target = GetTheCloserPlayer();
-
-            print(Distance(navMeshAgent.transform, GetTheCloserPlayer().transform) + " see:" + CanSee(target)+ " hear:" + CanHear(target));
-            if (!navMeshAgent.hasPath)
+            if (CanSee(target) || CanHear(target))
             {
-                if (Distance(target.transform, navMeshAgent.transform) < minDistanceCloseToHear)
+                navMeshAgent.SetDestination(target.transform.position);
+            }
+            else
+            {
+                
+                if (!navMeshAgent.hasPath)
                 {
-                    //navMeshAgent.SetDestination(target.transform.position);
+                    
                 }
             }
-
         }
 
         public PlayerController GetTheCloserPlayer()
