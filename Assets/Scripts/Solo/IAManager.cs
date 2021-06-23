@@ -16,7 +16,7 @@ public class IAManager : MonoBehaviour
         new Vector3(81.8f, 27.7f, -292.2f),
     };
 
-    public IAManager Instance;
+    public static IAManager Instance;
 
     private void Awake()
     {

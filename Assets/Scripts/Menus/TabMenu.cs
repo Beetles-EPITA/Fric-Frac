@@ -70,7 +70,8 @@ namespace Menus
                     print(player.Value.CustomProperties["team"]);
                 }
             }
-            if(IAManager)
+            if(IAManager.Instance != null)
+                Instantiate(playerListItemPrefab, resident).GetComponent<PlayerListItem>().SetUpIA("IA");
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)

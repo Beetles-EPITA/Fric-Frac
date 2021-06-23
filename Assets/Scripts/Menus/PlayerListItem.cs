@@ -19,11 +19,18 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
         if(death) text.fontStyle = FontStyles.Strikethrough;
         image.gameObject.SetActive(player.IsMasterClient);
     }
+    
+    public void SetUpIA(string pseudo)
+    {
+        text.text = pseudo;
+        text.fontStyle = FontStyles.Italic;
+        image.gameObject.SetActive(false);
+    }
 
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (Equals(_player, otherPlayer))
+        if (_player != null && Equals(_player, otherPlayer))
         {
             Destroy(gameObject);
         }
@@ -31,7 +38,7 @@ public class PlayerListItem : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Player newMasterClient)
     {
-        if (Equals(_player, newMasterClient))
+        if (_player != null && Equals(_player, newMasterClient))
         {
             image.gameObject.SetActive(true);
         }
