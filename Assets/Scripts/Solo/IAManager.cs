@@ -18,7 +18,7 @@ public class IAManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("Instantiated IA");
+        Debug.Log("Instantiated IAManager");
         PhotonNetwork.Instantiate(Path.Combine("Prefabs", "IA", "IAController"), playerPosition[r.Next(playerPosition.Length)],Quaternion.identity);
     }
 

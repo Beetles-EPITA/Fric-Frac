@@ -19,14 +19,12 @@ public class DoorScript : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         nb++;
-        print(nb);
         anim.SetInteger("isOpen", nb);
     }
 
     private void OnTriggerExit(Collider other)
     {
         nb--;
-        print(nb);
         anim.SetInteger("isOpen", nb);
     }
 }

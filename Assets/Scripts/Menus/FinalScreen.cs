@@ -26,7 +26,6 @@ namespace Menus
         
         public void SetUp(string message, bool victory, bool isOwner)
         {
-            print("acces");
             title.text = victory ? "Victory" : "Defeat";
             _victory = victory;
             this.message.text = message;
