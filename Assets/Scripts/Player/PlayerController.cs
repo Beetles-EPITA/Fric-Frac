@@ -264,6 +264,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
+        if(other == null)
+            return;
         if(other.gameObject.GetComponentInParent<autoroute>() != null)
             _audioSource.PlayOneShot(autorouteInfo);
         if(other.gameObject.GetComponentInParent<ColliderScript>() != null)
