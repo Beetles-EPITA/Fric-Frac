@@ -1,4 +1,4 @@
-﻿using Photon.Pun;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,9 +14,26 @@ namespace Menus
 
         [SerializeField] private Menu pause;
         [SerializeField] private Menu tab;
+
+        private bool _victory;
+
+        private IEnumerator PlaySound()
+        {
+            PlayerController playerController = PlayerController.myController;
+            playerController._audioSource.Stop();
+            playerController._audioSource.clip = _victory ? playerController.winSound : playerController.looseSound;
+            playerController._audioSource.Play();
+            print(1);
+            yield return new WaitForSecondsRealtime(2);
+            print(2);
+        }
+        
         public void SetUp(string message, bool victory, bool isOwner)
         {
+            StartCoroutine(PlaySound());
+            print("acces");
             title.text = victory ? "Victory" : "Defeat";
+            _victory = victory;
             this.message.text = message;
             GetComponent<Image>().color = victory ? Color.green : Color.red;
             if (isOwner) waiting.gameObject.SetActive(false); else replay.gameObject.SetActive(false);

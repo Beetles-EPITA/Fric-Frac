@@ -28,7 +28,7 @@ public class PlayerController : MonoBehaviour
     private PhotonView _photonView;
 
     //Sound:
-    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] public AudioSource _audioSource;
     private soundState audioState;
     private enum soundState
     {
@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioClip runClip;
     [SerializeField] private AudioClip runInsideClip;
     [SerializeField] private AudioClip JumpClip;
+    
+    [SerializeField] public AudioClip winSound;
+    [SerializeField] public AudioClip looseSound;
     
     [SerializeField] private GameObject mains;
     [SerializeField] private GameObject thief;
@@ -208,31 +211,10 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isAttacking", false);
     }
 
-    
-    private void OnTriggerEnter(Collider other)
-    {
-        
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        
-    }
-
     private void OnCollisionEnter(Collision other)
     {
         if(other.gameObject.GetComponentInParent<autoroute>() != null)
             _audioSource.PlayOneShot(autorouteInfo);
-    }
-
-    private void OnCollisionExit(Collision other)
-    {
-        
     }
 
     private void OnCollisionStay(Collision other)
