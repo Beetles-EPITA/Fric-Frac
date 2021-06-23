@@ -1883,7 +1883,7 @@ MonoBehaviour:
   smoothTime: 0.15
   Team: 0
   _audioSource: {fileID: 64003899865091959}
-  standByClip: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
+  autorouteInfo: {fileID: 8300000, guid: 9b4894a9e827b89478d3c3e514ee9bb5, type: 3}
   walkClip: {fileID: 8300000, guid: 8c05e37b841eb5c48b91b8c77e41ccfc, type: 3}
   walkInsideClip: {fileID: 8300000, guid: 8b0f3824db6df2244b626a4d956ee532, type: 3}
   runClip: {fileID: 8300000, guid: 8c05e37b841eb5c48b91b8c77e41ccfc, type: 3}
@@ -2721,7 +2721,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isOnGround: 0
-  inHouse: 0
 --- !u!1 &7437804455693029773
 GameObject:
   m_ObjectHideFlags: 0

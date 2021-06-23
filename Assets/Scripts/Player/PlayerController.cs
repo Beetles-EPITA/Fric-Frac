@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
         jump
     }
 
-    [SerializeField] private AudioClip standByClip;
+    [SerializeField] private AudioClip autorouteInfo;
     [SerializeField] private AudioClip walkClip;
     [SerializeField] private AudioClip walkInsideClip;
     [SerializeField] private AudioClip runClip;
@@ -66,7 +66,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        print(inHouse);
         if (!_photonView.IsMine) return;
         ToggleInventory();
         PickItem();
@@ -227,7 +226,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        
+        if(other.gameObject.GetComponentInParent<autoroute>() != null)
+            _audioSource.PlayOneShot(autorouteInfo);
     }
 
     private void OnCollisionExit(Collision other)
@@ -251,6 +251,7 @@ public class PlayerController : MonoBehaviour
                 inHouse = false;
             }
         }
+        
     }
 
     /**
