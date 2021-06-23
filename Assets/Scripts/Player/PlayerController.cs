@@ -8,7 +8,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-using Random = System.Random;
 
 public class PlayerController : MonoBehaviour
 {
@@ -53,8 +52,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject mains;
     [SerializeField] private GameObject thief;
     [SerializeField] private GameObject resident;
-    
-    [SerializeField] private Material[] listMaterials;
 
     private bool inHouse;
 
@@ -95,7 +92,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        Random r = new Random();
         anim = GetComponent<Animator>();
         Team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
 
@@ -103,16 +99,6 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(cameraHolder);
             Destroy(Team == Laucher.Team.Resident ? thief.gameObject : resident.gameObject);
-            if (Team == Laucher.Team.Resident)
-            {
-                Destroy(thief.gameObject);
-                //resident.GetComponent<SkinnedMeshRenderer>().materials[2] = listMaterials[r.Next(listMaterials.Length)];
-            }
-            else
-            {
-                Destroy(resident.gameObject);
-                //thief.GetComponent<SkinnedMeshRenderer>().materials[2] = listMaterials[r.Next(listMaterials.Length)];
-            }
         }
         else
         {

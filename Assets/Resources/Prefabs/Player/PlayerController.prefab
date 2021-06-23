@@ -1955,13 +1955,6 @@ MonoBehaviour:
   mains: {fileID: 6355450301916213668}
   thief: {fileID: 82427139056723393}
   resident: {fileID: 14218762176760994}
-  listMaterials:
-  - {fileID: 2100000, guid: 7720ab014be073047a5f72574adee979, type: 2}
-  - {fileID: 2100000, guid: 5a82f167742145646a81cf97bfd18b0b, type: 2}
-  - {fileID: -2505642851634945670, guid: ecec73860ed5635448e5ea6e150e5479, type: 3}
-  - {fileID: 2100000, guid: 10f0973df28aa37408acf97ab4790748, type: 2}
-  - {fileID: 2100000, guid: b9a43f762e0efeb499ff936615697c37, type: 2}
-  - {fileID: 2100000, guid: ec0661532cd74604899538a8d51c65c7, type: 2}
   Items: []
   stepRayUpper: {fileID: 5527494286816118947}
   stepRayLower: {fileID: 5590795594913424572}
