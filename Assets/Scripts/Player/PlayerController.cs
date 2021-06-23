@@ -186,20 +186,18 @@ public class PlayerController : MonoBehaviour
             case PlayerController.soundState.standBy:
                 //already break
                 break;
-            case PlayerController.soundState.walk:
-                _audioSource.clip = _jumpAction.inHouse? walkClip: walkInsideClip;
-                _audioSource.Play();;
-                break;
+            
             case PlayerController.soundState.run:
-                _audioSource.clip = _jumpAction.inHouse? runClip: runInsideClip;
+                _audioSource.clip = (inHouse? runInsideClip: runClip);
                 _audioSource.Play();
                 break;
             case PlayerController.soundState.jump:
-                //_audioSource.clip = JumpClip;
+                //_audioSource.clip = JumpCli
+                //_audioSource.loop = false;
                 _audioSource.PlayOneShot(JumpClip);
                 break;
             default:
-                throw new Exception("sound manager goes brrr");
+                break;
                 
         }
     }
