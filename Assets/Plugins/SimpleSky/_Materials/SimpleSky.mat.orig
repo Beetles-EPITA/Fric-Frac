@@ -25,8 +25,8 @@ Material:
 <<<<<<< HEAD
         m_Offset: {x: 0.429, y: 0}
 =======
-        m_Offset: {x: 0.496, y: 0}
->>>>>>> win
+        m_Offset: {x: 0.485, y: 0}
+>>>>>>> Porte-gameplay
     m_Floats: []
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
