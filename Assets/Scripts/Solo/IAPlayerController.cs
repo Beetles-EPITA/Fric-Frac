@@ -65,6 +65,7 @@ namespace Solo
         {
             anim = GetComponent<Animator>();
             resident.GetComponent<Renderer>().materials[3] = _material;
+            anim.SetInteger("Speed", 1);
         }
 
         // Update is called once per frame
