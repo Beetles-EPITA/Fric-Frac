@@ -62,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        SoundManager();
+        //SoundManager();
         if (!_photonView.IsMine) return;
         ToggleInventory();
         PickItem();
@@ -115,17 +115,26 @@ public class PlayerController : MonoBehaviour
         if (moveDirection.x != 0 || moveDirection.z != 0)
         {
             if (GameManager.Instance.GetKey(GameManager.KeyType.Sprint))
-            {
+            {//sprint
+                int speed = anim.GetInteger("Speed");
                 anim.SetInteger("Speed", 2);
+                if(speed != 2)
+                    _photonView.RPC("PlaySound", RpcTarget.All, (int)soundState.run);
             }
             else
-            {
+            {//walk
+                int speed = anim.GetInteger("Speed");
                 anim.SetInteger("Speed", 1);
+                if(speed != 1)
+                    _photonView.RPC("PlaySound", RpcTarget.All, (int)soundState.walk);
             }
         }
         else
         {
+            int speed = anim.GetInteger("Speed");
             anim.SetInteger("Speed", 0);
+            if(speed != 0)
+                _photonView.RPC("PlaySound", RpcTarget.All, (int)soundState.standBy);
         }
     }
     
@@ -159,6 +168,36 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isJumping", true);
         yield return new WaitForEndOfFrame();
         anim.SetBool("isJumping", false);
+        _photonView.RPC("PlaySound", RpcTarget.All, (int)soundState.jump);
+    }
+
+    [PunRPC]
+    private void PlaySound(int soundState)
+    {
+        soundState state = ((soundState) soundState);
+        if(state != PlayerController.soundState.jump)
+            _audioSource.Stop();
+        switch (state)
+        {
+            case PlayerController.soundState.standBy:
+                //already break
+                break;
+            case PlayerController.soundState.walk:
+                _audioSource.clip = walkClip;
+                _audioSource.Play();;
+                break;
+            case PlayerController.soundState.run:
+                _audioSource.clip = runClip;
+                _audioSource.Play();
+                break;
+            case PlayerController.soundState.jump:
+                //_audioSource.clip = JumpClip;
+                _audioSource.PlayOneShot(JumpClip);
+                break;
+            default:
+                throw new Exception("sound manager goes brrr");
+                
+        }
     }
     
     private IEnumerator HitAnim()
