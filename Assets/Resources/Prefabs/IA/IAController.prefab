@@ -2079,7 +2079,7 @@ Transform:
   m_GameObject: {fileID: 5330301335721508725}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 4167280743394806330}
   - {fileID: 4980808966498520875}
@@ -2095,7 +2095,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5330301335721508725}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: ff8e3a533a25a924baa09b23903a880b, type: 2}
   m_CullingMode: 0
@@ -2181,8 +2181,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   navMeshAgent: {fileID: 6779569317881579086}
   agentCamera: {fileID: 4061815614464557596}
-  minDistanceCloseToHear: 5
-  minDistanceCloseToSee: 10
+  minDistanceCloseToHear: 7
+  minDistanceCloseToSee: 15
   resident: {fileID: 377507877504465794}
   _material: {fileID: 2100000, guid: 7720ab014be073047a5f72574adee979, type: 2}
 --- !u!1 &5377777425285310130
