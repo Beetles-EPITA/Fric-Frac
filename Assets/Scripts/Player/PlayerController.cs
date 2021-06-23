@@ -384,7 +384,7 @@ public class PlayerController : MonoBehaviour
                     RoomManager.Instance.ItemsFind.ContainsKey(item.itemName))
                 {
 
-                    if (Input.GetMouseButtonDown(1) && !Pause.isPause)
+                    if (Input.GetMouseButtonDown(1) && !Pause.isPause && Items.Count < 10)
                     {
                         Items.Add(target.GetComponentInParent<Item>());
                         RoomManager.Instance.photonView.RPC("RemoveItem", RpcTarget.All,
