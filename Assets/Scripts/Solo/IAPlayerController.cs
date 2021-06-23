@@ -41,7 +41,6 @@ namespace Solo
 
             target = GetTheCloserPlayer();
 
-            print(Distance(navMeshAgent.transform, GetTheCloserPlayer().transform) + " see:" + CanSee(target)+ " hear:" + CanHear(target));
             if (!navMeshAgent.hasPath)
             {
                 if (Distance(target.transform, navMeshAgent.transform) < minDistanceCloseToHear)
