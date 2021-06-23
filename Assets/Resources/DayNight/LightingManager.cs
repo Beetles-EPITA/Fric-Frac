@@ -11,8 +11,6 @@ public class LightingManager : MonoBehaviour
     // Variables :
     [SerializeField, Range(0, 24)] private float TimeOfDay;
 
-    private float startLight = 6f;
-
     public void UpdateLighting(float timePercent)
     {
         RenderSettings.ambientLight = preset.ambientColor.Evaluate(timePercent);
@@ -24,7 +22,12 @@ public class LightingManager : MonoBehaviour
             directionalLight.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360f)-90f, 170, 0));
         }
     }
-    
+
+    private void Update()
+    {
+        UpdateLighting(TimeOfDay/24f);
+    }
+
     private void OnValidate()
     {
         if (directionalLight != null)
