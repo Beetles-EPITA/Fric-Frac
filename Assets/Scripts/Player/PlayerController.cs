@@ -370,6 +370,7 @@ public class PlayerController : MonoBehaviour
                     if (Input.GetKeyDown(GameManager.Instance.inputs[GameManager.KeyType.Interaction]) &&
                         !Pause.isPause)
                     {
+                        StartCoroutine(HitAnim());
                         PhotonView view = target.GetComponent<PhotonView>();
                         view.RPC("Lose", view.Controller, "Captured",
                             "You have been found by " + PhotonNetwork.LocalPlayer.NickName, false);
@@ -383,7 +384,6 @@ public class PlayerController : MonoBehaviour
                         RoomManager.Instance.photonView.RPC("CheckWin", RpcTarget.All, (int) Laucher.Team.Resident);
                     }
                 }
-                StartCoroutine(HitAnim());
             }
         }
     }
@@ -455,7 +455,7 @@ public class PlayerController : MonoBehaviour
             RoomManager.Instance.infoText.text = "";
             RaycastHit hit;
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out hit, 10f))
             {
                 GameObject target = hit.transform.gameObject;
 
