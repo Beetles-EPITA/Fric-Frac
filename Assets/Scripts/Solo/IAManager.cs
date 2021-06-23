@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -14,7 +15,14 @@ public class IAManager : MonoBehaviour
         new Vector3(85.8f, 23.7f, -292.7f),
         new Vector3(81.8f, 27.7f, -292.2f),
     };
-    
+
+    public IAManager Instance;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {

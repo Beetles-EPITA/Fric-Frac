@@ -70,6 +70,7 @@ namespace Menus
                     print(player.Value.CustomProperties["team"]);
                 }
             }
+            if(IAManager)
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)

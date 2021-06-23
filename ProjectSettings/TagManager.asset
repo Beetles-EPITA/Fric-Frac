@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Car
   - houseCollider
+  - Stairs
   layers:
   - Default
   - TransparentFX

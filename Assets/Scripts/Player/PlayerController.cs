@@ -187,8 +187,9 @@ public class PlayerController : MonoBehaviour
 
     private void StepClimb()
     {
+        RaycastHit hit;
         if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(Vector3.forward),
-            out _, 0.1f))
+            out hit, 0.1f) && hit.transform.gameObject.CompareTag("Stairs"))
         {
             if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(Vector3.forward),
                 out _, 0.2f))
@@ -197,8 +198,8 @@ public class PlayerController : MonoBehaviour
             }
         }
         
-        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(1.5f, 0, 1), out _,
-            0.1f))
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(1.5f, 0, 1), out hit,
+            0.1f) && hit.transform.gameObject.CompareTag("Stairs"))
         {
             if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(1.5f, 0, 1),
                 out _, 0.2f))
@@ -207,7 +208,8 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(-1.5f, 0, 1), out _, 0.1f))
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(-1.5f, 0, 1), out hit, 0.1f)
+            && hit.transform.gameObject.CompareTag("Stairs"))
         {
             if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(-1.5f, 0, 1), out _,
                 0.2f))
