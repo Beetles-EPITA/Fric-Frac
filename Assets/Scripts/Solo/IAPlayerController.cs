@@ -56,7 +56,6 @@ namespace Solo
             new Vector3(79.5f, 27.7f, -272.1f), 
             new Vector3(81.0f, 27.7f, -285.1f), 
         };
-        private List<Vector3> listOfPosionTemp = new List<Vector3>(listOfPosition);
 
         [SerializeField]private GameObject resident;
         [SerializeField] private Material _material;
@@ -86,13 +85,8 @@ namespace Solo
             {
                 if (!navMeshAgent.hasPath)
                 {
-                    if (listOfPosionTemp.Count == 0)
-                    {
-                        listOfPosionTemp = new List<Vector3>(listOfPosition);
-                    }
-                    Vector3 move = listOfPosionTemp[r.Next(listOfPosition.Length)];
+                    Vector3 move = listOfPosition[r.Next(listOfPosition.Length)];
                     navMeshAgent.SetDestination(move);
-                    listOfPosionTemp.Remove(move);
                 }
             }
         }
