@@ -266,8 +266,16 @@ public class PlayerController : MonoBehaviour
     {
         if(other.gameObject.GetComponentInParent<autoroute>() != null)
             _audioSource.PlayOneShot(autorouteInfo);
+        if(other.gameObject.GetComponentInParent<ColliderScript>() != null)
+        {
+            if (!inHouse)
+            {
+                inHouse = true;
+                _photonView.RPC("PlaySound", RpcTarget.All, (int)anim.GetInteger("Speed"));
+            }
+        }
     }
-
+    
     private void OnCollisionStay(Collision other)
     {
         if(other.gameObject.GetComponentInParent<ColliderScript>() != null)
@@ -284,7 +292,6 @@ public class PlayerController : MonoBehaviour
                 inHouse = false;
             }
         }
-        
     }
 
     /**
