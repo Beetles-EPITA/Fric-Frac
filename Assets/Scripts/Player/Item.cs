@@ -8,7 +8,6 @@ public class Item : MonoBehaviour
 {
 
     [SerializeField] public string itemName;
-    [SerializeField] public GameObject objectPrefab;
     [SerializeField] public Sprite icon;
 
     [PunRPC]
@@ -16,7 +15,7 @@ public class Item : MonoBehaviour
     {
         if (gameObject != null)
         {
-            PhotonNetwork.Destroy(gameObject);
+            Destroy(gameObject);
         }
         
     }

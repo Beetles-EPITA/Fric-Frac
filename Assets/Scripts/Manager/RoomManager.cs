@@ -19,12 +19,11 @@ public class RoomManager : MonoBehaviourPunCallbacks
     [SerializeField] private AudioSource greenCar;
     [SerializeField] public Image crosshair;
     [SerializeField] public FinalScreen FinalScreen;
+    [SerializeField] public Text infoText;
     
-    [SerializeField] private GameObject[] prefabsItems;
-    [SerializeField] private Transform AllPositons;
-    private List<Transform> randomPositions;
-    
-    
+    private List<Item> items;
+
+
     public Dictionary<string, int> ItemsFind = new Dictionary<string, int>();
     
     [SerializeField] public Camera spectatorCamera;
@@ -37,7 +36,7 @@ public class RoomManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         Instance = this;
-        randomPositions = AllPositons.GetComponentsInChildren<Transform>().ToList();
+        items = ((Item[]) FindObjectsOfType(typeof(Item))).ToList();
     }
 
     public override void OnEnable()
@@ -176,21 +175,27 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
     }
 
+    private int viewID = 9200;
     private void InitItems()
     {
+        foreach (var item in items)
+        {
+            item.gameObject.AddComponent<PhotonView>().ViewID = viewID;
+            Outline outline = item.gameObject.AddComponent<Outline>();
+            outline.OutlineWidth = 6f;
+            outline.enabled = false;
+            viewID++;
+        }
         if (PhotonNetwork.IsMasterClient)
         {
             for (int i = 0; i < (PhotonNetwork.CurrentRoom.Players.Count + 1) / 2; i++)
             {
                 for (int j = 0; j < new Random().Next(3, 6); j++)
                 {
-                    int random = new Random().Next(prefabsItems.Length);
-                    int randPos = new Random().Next(randomPositions.Count);
-                    Item item = prefabsItems[random].GetComponent<Item>();
-                    GameObject go = PhotonNetwork.Instantiate(Path.Combine("Objects", "Items", prefabsItems[random].name), randomPositions[randPos].position,
-                        randomPositions[randPos].rotation);
+                    int random = new Random().Next(items.Count);
+                    Item item = items[random];
                     photonView.RPC("AddItem", RpcTarget.All, item.itemName, false);
-                    randomPositions.RemoveAt(randPos);
+                    items.Remove(item);
                 }
             }
             photonView.RPC("CreateListItems", RpcTarget.All);
@@ -263,7 +268,9 @@ public class RoomManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            //TODO WIN DES VOLEURS
+            if(ItemsFind.Count == 0)
+                FinalScreen.SetUp("The thieves have recovered all the objects", 
+                    PlayerController.myController.Team == Laucher.Team.Thief, PhotonNetwork.IsMasterClient);
         }
     }
 }

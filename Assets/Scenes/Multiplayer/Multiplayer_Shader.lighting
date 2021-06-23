@@ -10,7 +10,7 @@ LightingSettings:
   serializedVersion: 3
   m_GIWorkflowMode: 0
   m_EnableBakedLightmaps: 1
-  m_EnableRealtimeLightmaps: 0
+  m_EnableRealtimeLightmaps: 1
   m_RealtimeEnvironmentLighting: 1
   m_BounceScale: 1
   m_AlbedoBoost: 1
@@ -20,7 +20,7 @@ LightingSettings:
   m_LightmapMaxSize: 1024
   m_BakeResolution: 40
   m_Padding: 2
-  m_TextureCompression: 1
+  m_TextureCompression: 0
   m_AO: 1
   m_AOMaxDistance: 0.7
   m_CompAOExponent: 0.1

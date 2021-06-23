@@ -20,6 +20,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _rigidbody;
 
     private float _verticalLookRotation;
+
     //private bool _grounded;
     private PlayerJumpAction _jumpAction;
     private Vector3 _smoothMoveVelocity;
@@ -30,6 +31,7 @@ public class PlayerController : MonoBehaviour
     //Sound:
     [SerializeField] private AudioSource _audioSource;
     private soundState audioState;
+
     private enum soundState
     {
         standBy,
@@ -51,13 +53,16 @@ public class PlayerController : MonoBehaviour
     private Animator anim;
 
     public List<Item> Items = new List<Item>();
-    
+
     private void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
         audioState = soundState.standBy;
         _jumpAction = GetComponentInChildren<PlayerJumpAction>();
+
+        stepRayUpper.transform.position = new Vector3(stepRayUpper.transform.position.x, stepHeight,
+            stepRayUpper.transform.position.z);
     }
 
     private void Update()
@@ -67,22 +72,25 @@ public class PlayerController : MonoBehaviour
         ToggleInventory();
         PickItem();
         Hit();
+        DropCar();
         if (Pause.isPause)
         {
             anim.SetInteger("Speed", 0);
             _moveAmount = Vector3.zero;
             return;
         }
+
         Look();
         Move();
         Jump();
+        StepClimb();
     }
 
     private void Start()
     {
         anim = GetComponent<Animator>();
         Team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
-        
+
         if (!_photonView.IsMine)
         {
             Destroy(cameraHolder);
@@ -97,7 +105,6 @@ public class PlayerController : MonoBehaviour
             Destroy(resident.gameObject);
             Destroy(thief.gameObject);
         }
-        
     }
 
 
@@ -109,7 +116,8 @@ public class PlayerController : MonoBehaviour
         Vector3 moveDirection = GameManager.Instance.getMoveDirection().normalized;
 
         _moveAmount = Vector3.SmoothDamp(_moveAmount,
-            moveDirection * (GameManager.Instance.GetKey(GameManager.KeyType.Sprint) ? sprintSpeed : walkSpeed), ref _smoothMoveVelocity,
+            moveDirection * (GameManager.Instance.GetKey(GameManager.KeyType.Sprint) ? sprintSpeed : walkSpeed),
+            ref _smoothMoveVelocity,
             smoothTime);
 
         if (moveDirection.x != 0 || moveDirection.z != 0)
@@ -128,14 +136,14 @@ public class PlayerController : MonoBehaviour
             anim.SetInteger("Speed", 0);
         }
     }
-    
+
     /**
      * Look
      */
     private void Look()
     {
         transform.Rotate(Vector3.up * (Input.GetAxisRaw("Mouse X") * mouseSensitivity));
-            
+
         _verticalLookRotation += Input.GetAxisRaw("Mouse Y") * mouseSensitivity;
         _verticalLookRotation = Mathf.Clamp(_verticalLookRotation, -90f, 90f);
         cameraHolder.transform.localEulerAngles = Vector3.left * _verticalLookRotation;
@@ -151,6 +159,49 @@ public class PlayerController : MonoBehaviour
         {
             _rigidbody.AddForce(transform.up * jumpFoce);
             StartCoroutine(JumpAnim());
+        }
+    }
+
+    /**
+     * StepClimb
+     */
+
+    [Header("Player Step Climb:")]
+    [SerializeField] private GameObject stepRayUpper;
+    [SerializeField] private GameObject stepRayLower;
+
+    [SerializeField] private float stepHeight = 0.3f;
+    [SerializeField] private float stepSmooth = 0.1f;
+
+    private void StepClimb()
+    {
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(Vector3.forward),
+            out _, 0.1f))
+        {
+            if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(Vector3.forward),
+                out _, 0.2f))
+            {
+                _rigidbody.position -= new Vector3(0f, -stepSmooth, 0f);
+            }
+        }
+        
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(1.5f, 0, 1), out _,
+            0.1f))
+        {
+            if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(1.5f, 0, 1),
+                out _, 0.2f))
+            {
+                _rigidbody.position -= new Vector3(0f, -stepSmooth, 0f);
+            }
+        }
+
+        if (Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(-1.5f, 0, 1), out _, 0.1f))
+        {
+            if (!Physics.Raycast(stepRayUpper.transform.position, transform.TransformDirection(-1.5f, 0, 1), out _,
+                0.2f))
+            {
+                _rigidbody.position -= new Vector3(0f, -stepSmooth, 0f);
+            }
         }
     }
 
@@ -175,10 +226,12 @@ public class PlayerController : MonoBehaviour
         {
             audioState = soundState.standBy;
         }
-        if (_moveAmount.magnitude >=0.2 && anim.speed < 3.1)
+
+        if (_moveAmount.magnitude >= 0.2 && anim.speed < 3.1)
         {
             audioState = soundState.walk;
         }
+
         if (_moveAmount.magnitude >= 3.1)
         {
             audioState = soundState.run;
@@ -200,7 +253,8 @@ public class PlayerController : MonoBehaviour
                     break;
                 case soundState.walk:
                     _audioSource.clip = walkClip;
-                    _audioSource.Play();;
+                    _audioSource.Play();
+                    ;
                     break;
                 case soundState.run:
                     _audioSource.clip = runClip;
@@ -222,7 +276,7 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-    
+
     /*private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject != gameObject)
@@ -290,27 +344,22 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyUp(GameManager.Instance.inputs[GameManager.KeyType.Inventory]))
         {
             if (!Inventory.Instance.inInventory && Pause.isPause) return;
-            if(!Inventory.Instance.inInventory)
+            if (!Inventory.Instance.inInventory)
                 Inventory.Instance.Open(this);
-            else 
+            else
                 Inventory.Instance.Close();
         }
+
         if (Input.GetKeyUp(KeyCode.Escape) && Inventory.Instance.inInventory)
         {
             Inventory.Instance.Close();
         }
     }
 
-    private Outline lastHitObject;
-    
     private void Hit()
     {
         if (Team == Laucher.Team.Resident)
         {
-            if (lastHitObject != null)
-            {
-                lastHitObject.enabled = false;
-            }
             Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
 
             if (Physics.Raycast(ray, out RaycastHit hit, 5f))
@@ -350,9 +399,9 @@ public class PlayerController : MonoBehaviour
         PhotonNetwork.Destroy(gameObject);
     }
 
-    
+
     private Outline lastPickObject;
-    
+
     private void PickItem()
     {
         if (Team == Laucher.Team.Thief)
@@ -363,21 +412,24 @@ public class PlayerController : MonoBehaviour
             {
                 lastPickObject.enabled = false;
             }
-            
+
             if (Physics.Raycast(ray, out hit))
             {
-                
+
                 GameObject target = hit.transform.gameObject;
-                
-                if(target != null && target.GetComponentInParent<Item>() != null)
+                Item item;
+
+                if (target != null && (item = target.GetComponentInParent<Item>()) != null &&
+                    RoomManager.Instance.ItemsFind.ContainsKey(item.itemName))
                 {
-                    
+
                     if (Input.GetMouseButtonDown(1) && !Pause.isPause)
                     {
                         Items.Add(target.GetComponentInParent<Item>());
-                        RoomManager.Instance.photonView.RPC("RemoveItem", RpcTarget.All, target.GetComponentInParent<Item>().itemName, true);
+                        RoomManager.Instance.photonView.RPC("RemoveItem", RpcTarget.All,
+                            target.GetComponentInParent<Item>().itemName, true);
                         PhotonView view = target.GetComponentInParent<PhotonView>();
-                        view.RPC("Delete", view.Controller);
+                        view.RPC("Delete", RpcTarget.All);
                         view.gameObject.SetActive(false);
                         StartCoroutine(HitAnim());
                     }
@@ -387,10 +439,43 @@ public class PlayerController : MonoBehaviour
                         if (outline != null)
                         {
                             outline.enabled = true;
-                            lastPickObject = outline; 
+                            lastPickObject = outline;
                         }
                     }
                 }
+
+            }
+        }
+    }
+
+    private void DropCar()
+    {
+        if (Team == Laucher.Team.Thief)
+        {
+            RoomManager.Instance.infoText.text = "";
+            RaycastHit hit;
+            Ray ray = new Ray(cameraHolder.transform.position, cameraHolder.transform.forward);
+            if (Physics.Raycast(ray, out hit))
+            {
+                GameObject target = hit.transform.gameObject;
+
+                if (target != null && target.CompareTag("Car"))
+                {
+                    if (Input.GetMouseButtonDown(1) && !Pause.isPause)
+                    {
+                        if (RoomManager.Instance.ItemsFind.Count == 0)
+                        {
+                            RoomManager.Instance.photonView.RPC("CheckWin", RpcTarget.All, (int) Laucher.Team.Thief);
+                        }
+                        else
+                        {
+                            Items.Clear();
+                        }
+                    }
+                    RoomManager.Instance.infoText.text = RoomManager.Instance.ItemsFind.Count == 0 
+                        ? "Start the car and go" : (Items.Count > 0 ? "Drop off my items" : "");
+                }
+
             }
         }
     }

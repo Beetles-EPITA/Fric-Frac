@@ -13,26 +13,7 @@ public class LightingManager : MonoBehaviour
 
     private float startLight = 6f;
 
-    private void Update()
-    {
-        if (preset == null) 
-            return;
-
-        if (Application.isPlaying && RoomManager.Instance.start)
-        {
-            if (startLight < 13f)
-            {
-                startLight += 0.003f;
-                UpdateLighting(startLight / 24f);
-            }
-        }
-        else
-        {
-            UpdateLighting(TimeOfDay/24f);
-        }
-    }
-    
-    private void UpdateLighting(float timePercent)
+    public void UpdateLighting(float timePercent)
     {
         RenderSettings.ambientLight = preset.ambientColor.Evaluate(timePercent);
         RenderSettings.fogColor = preset.fogColor.Evaluate(timePercent);

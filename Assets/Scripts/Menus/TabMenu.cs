@@ -26,13 +26,13 @@ namespace Menus
         private void Awake()
         {
             startTime = Time.time;
-            if(GetComponent<FinalScreen>() == null)
-                InstanceMenu = GetComponent<Menu>();
+            InstanceMenu = GetComponent<Menu>();
         }
 
         private void Start()
         {
-            InstanceMenu.Close();
+            if(InstanceMenu.GetComponent<FinalScreen>() == null)
+                InstanceMenu.Close();
             serverName.text = "Server: " + PhotonNetwork.CurrentRoom.Name;
             UpdateTab();
         }
@@ -71,7 +71,12 @@ namespace Menus
                 }
             }
         }
-        
+
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            UpdateTab();
+        }
+
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
             UpdateTab();
