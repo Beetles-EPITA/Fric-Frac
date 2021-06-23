@@ -29,7 +29,6 @@ public class PlayerController : MonoBehaviour
 
     //Sound:
     [SerializeField] public AudioSource _audioSource;
-    private soundState audioState;
     private enum soundState
     {
         standBy,
@@ -63,7 +62,6 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
-        audioState = soundState.standBy;
         _jumpAction = GetComponentInChildren<PlayerJumpAction>();
     }
 

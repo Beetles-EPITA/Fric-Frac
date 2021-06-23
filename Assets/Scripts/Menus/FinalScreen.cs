@@ -15,6 +15,12 @@ namespace Menus
         [SerializeField] private Menu pause;
         [SerializeField] private Menu tab;
 
+        [Header("Sound Win and Lose")]
+        [SerializeField] private AudioSource _audioSource;
+
+        [SerializeField] private AudioClip loseClip;
+        [SerializeField] private AudioClip winClip;
+
         private bool _victory;
 
         private IEnumerator PlaySound()
@@ -44,7 +50,8 @@ namespace Menus
             Inventory.Instance.Close();
             if(PlayerController.myController != null)
                 Destroy(PlayerController.myController.gameObject);
-            
+            RoomManager.Instance.spectatorCamera.gameObject.AddComponent<AudioListener>();
+            _audioSource.PlayOneShot(victory ? winClip : loseClip);
             Pause.isPause = true;
             
             RoomManager.Instance.crosshair.gameObject.SetActive(false);
