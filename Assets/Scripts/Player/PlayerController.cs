@@ -29,8 +29,7 @@ public class PlayerController : MonoBehaviour
     private PhotonView _photonView;
 
     //Sound:
-    [SerializeField] private AudioSource _audioSource;
-    private soundState audioState;
+    [SerializeField] public AudioSource _audioSource;
 
     private enum soundState
     {
@@ -40,15 +39,22 @@ public class PlayerController : MonoBehaviour
         jump
     }
 
-    [SerializeField] private AudioClip standByClip;
+    [SerializeField] private AudioClip autorouteInfo;
     [SerializeField] private AudioClip walkClip;
+    [SerializeField] private AudioClip walkInsideClip;
     [SerializeField] private AudioClip runClip;
+    [SerializeField] private AudioClip runInsideClip;
     [SerializeField] private AudioClip JumpClip;
+    
+    [SerializeField] public AudioClip winSound;
+    [SerializeField] public AudioClip looseSound;
     
     [SerializeField] private GameObject mains;
     [SerializeField] private GameObject thief;
     [SerializeField] private GameObject resident;
-    
+
+    private bool inHouse;
+
     //Animation :
     private Animator anim;
 
@@ -58,7 +64,6 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody = GetComponent<Rigidbody>();
         _photonView = GetComponent<PhotonView>();
-        audioState = soundState.standBy;
         _jumpAction = GetComponentInChildren<PlayerJumpAction>();
 
         stepRayUpper.transform.position = new Vector3(stepRayUpper.transform.position.x, stepHeight,
@@ -67,7 +72,6 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        SoundManager();
         if (!_photonView.IsMine) return;
         ToggleInventory();
         PickItem();
@@ -123,17 +127,26 @@ public class PlayerController : MonoBehaviour
         if (moveDirection.x != 0 || moveDirection.z != 0)
         {
             if (GameManager.Instance.GetKey(GameManager.KeyType.Sprint))
-            {
+            {//sprint
+                int speed = anim.GetInteger("Speed");
                 anim.SetInteger("Speed", 2);
+                if(speed != 2)
+                    _photonView.RPC("PlaySound", RpcTarget.All, (int)soundState.run);
             }
             else
-            {
+            {//walk
+                int speed = anim.GetInteger("Speed");
                 anim.SetInteger("Speed", 1);
+                if(speed != 1)
+                    _photonView.RPC("PlaySound", RpcTarget.All, (int)soundState.walk);
             }
         }
         else
         {
+            int speed = anim.GetInteger("Speed");
             anim.SetInteger("Speed", 0);
+            if(speed != 0)
+                _photonView.RPC("PlaySound", RpcTarget.All, (int)soundState.standBy);
         }
     }
 
@@ -210,6 +223,35 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("isJumping", true);
         yield return new WaitForEndOfFrame();
         anim.SetBool("isJumping", false);
+        _photonView.RPC("PlaySound", RpcTarget.All, (int)soundState.jump);
+    }
+
+    [PunRPC]
+    private void PlaySound(int soundState)
+    {
+        //check if it is this
+        soundState state = ((soundState) soundState);
+        if(state != PlayerController.soundState.jump)
+            _audioSource.Stop();
+        switch (state)
+        {
+            case PlayerController.soundState.standBy:
+                //already break
+                break;
+            
+            case PlayerController.soundState.run:
+                _audioSource.clip = (inHouse? runInsideClip: runClip);
+                _audioSource.Play();
+                break;
+            case PlayerController.soundState.jump:
+                //_audioSource.clip = JumpCli
+                //_audioSource.loop = false;
+                _audioSource.PlayOneShot(JumpClip);
+                break;
+            default:
+                break;
+                
+        }
     }
     
     private IEnumerator HitAnim()
@@ -218,112 +260,31 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForEndOfFrame();
         anim.SetBool("isAttacking", false);
     }
-    
-    private void SoundManager()
-    {
-        soundState oldSoundState = audioState;
-        if (_moveAmount.magnitude <= 0.1)
-        {
-            audioState = soundState.standBy;
-        }
-
-        if (_moveAmount.magnitude >= 0.2 && anim.speed < 3.1)
-        {
-            audioState = soundState.walk;
-        }
-
-        if (_moveAmount.magnitude >= 3.1)
-        {
-            audioState = soundState.run;
-        }
-
-        if (!_jumpAction.isOnGround) //working
-        {
-            audioState = soundState.jump;
-        }
-
-        if (oldSoundState != audioState)
-        {
-            _audioSource.Stop();
-            switch (audioState)
-            {
-                case soundState.standBy:
-                    //_audioSource.clip = standByClip;
-                    //_audioSource.Play();
-                    break;
-                case soundState.walk:
-                    _audioSource.clip = walkClip;
-                    _audioSource.Play();
-                    ;
-                    break;
-                case soundState.run:
-                    _audioSource.clip = runClip;
-                    _audioSource.Play();
-                    break;
-                case soundState.jump:
-                    _audioSource.clip = JumpClip;
-                    _audioSource.Play();
-                    break;
-                default:
-                    throw new Exception("sound manager goes brrr");
-            }
-        }
-        else
-        {
-            if (!_audioSource.isPlaying && audioState != soundState.jump && audioState != soundState.standBy)
-            {
-                _audioSource.Play();
-            }
-        }
-    }
-
-    /*private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = true;
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = false;
-        }
-    }
-
-    private void OnTriggerStay(Collider other)
-    {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = true;
-        }
-    }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = true;
-        }
-    }
-
-    private void OnCollisionExit(Collision other)
-    {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = false;
-        }
+        if(other.gameObject.GetComponentInParent<autoroute>() != null)
+            _audioSource.PlayOneShot(autorouteInfo);
     }
 
     private void OnCollisionStay(Collision other)
     {
-        if (other.gameObject != gameObject)
+        if(other.gameObject.GetComponentInParent<ColliderScript>() != null)
         {
-            _grounded = true;
+            if (!inHouse)
+            {
+                inHouse = true;
+            }
         }
-    }*/
+        else
+        {
+            if (inHouse)
+            {
+                inHouse = false;
+            }
+        }
+        
+    }
 
     /**
      * Fix Movement

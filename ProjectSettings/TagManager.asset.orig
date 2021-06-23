@@ -4,8 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
   - Car
+=======
   - houseCollider
+>>>>>>> Sound
   layers:
   - Default
   - TransparentFX

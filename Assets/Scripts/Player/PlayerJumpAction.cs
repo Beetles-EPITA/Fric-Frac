@@ -53,5 +53,6 @@ public class PlayerJumpAction : MonoBehaviour
         {
             isOnGround = true;
         }
+        
     }
 }
