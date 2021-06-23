@@ -40,13 +40,17 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private AudioClip standByClip;
     [SerializeField] private AudioClip walkClip;
+    [SerializeField] private AudioClip walkInsideClip;
     [SerializeField] private AudioClip runClip;
+    [SerializeField] private AudioClip runInsideClip;
     [SerializeField] private AudioClip JumpClip;
     
     [SerializeField] private GameObject mains;
     [SerializeField] private GameObject thief;
     [SerializeField] private GameObject resident;
-    
+
+    private bool inHouse;
+
     //Animation :
     private Animator anim;
 
@@ -62,7 +66,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        //SoundManager();
+        print(inHouse);
         if (!_photonView.IsMine) return;
         ToggleInventory();
         PickItem();
@@ -82,7 +86,7 @@ public class PlayerController : MonoBehaviour
     {
         anim = GetComponent<Animator>();
         Team = (Laucher.Team) _photonView.Owner.CustomProperties["team"];
-        
+
         if (!_photonView.IsMine)
         {
             Destroy(cameraHolder);
@@ -97,7 +101,6 @@ public class PlayerController : MonoBehaviour
             Destroy(resident.gameObject);
             Destroy(thief.gameObject);
         }
-        
     }
 
 
@@ -184,11 +187,11 @@ public class PlayerController : MonoBehaviour
                 //already break
                 break;
             case PlayerController.soundState.walk:
-                _audioSource.clip = walkClip;
+                _audioSource.clip = _jumpAction.inHouse? walkClip: walkInsideClip;
                 _audioSource.Play();;
                 break;
             case PlayerController.soundState.run:
-                _audioSource.clip = runClip;
+                _audioSource.clip = _jumpAction.inHouse? runClip: runInsideClip;
                 _audioSource.Play();
                 break;
             case PlayerController.soundState.jump:
@@ -207,109 +210,50 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForEndOfFrame();
         anim.SetBool("isAttacking", false);
     }
-    
-    private void SoundManager()
-    {
-        soundState oldSoundState = audioState;
-        if (_moveAmount.magnitude <= 0.1)
-        {
-            audioState = soundState.standBy;
-        }
-        if (_moveAmount.magnitude >=0.2 && anim.speed < 3.1)
-        {
-            audioState = soundState.walk;
-        }
-        if (_moveAmount.magnitude >= 3.1)
-        {
-            audioState = soundState.run;
-        }
 
-        if (!_jumpAction.isOnGround) //working
-        {
-            audioState = soundState.jump;
-        }
-
-        if (oldSoundState != audioState)
-        {
-            _audioSource.Stop();
-            switch (audioState)
-            {
-                case soundState.standBy:
-                    //_audioSource.clip = standByClip;
-                    //_audioSource.Play();
-                    break;
-                case soundState.walk:
-                    _audioSource.clip = walkClip;
-                    _audioSource.Play();;
-                    break;
-                case soundState.run:
-                    _audioSource.clip = runClip;
-                    _audioSource.Play();
-                    break;
-                case soundState.jump:
-                    _audioSource.clip = JumpClip;
-                    _audioSource.Play();
-                    break;
-                default:
-                    throw new Exception("sound manager goes brrr");
-            }
-        }
-        else
-        {
-            if (!_audioSource.isPlaying && audioState != soundState.jump && audioState != soundState.standBy)
-            {
-                _audioSource.Play();
-            }
-        }
-    }
     
-    /*private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = true;
-        }
+        
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = false;
-        }
+        
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = true;
-        }
+        
     }
 
     private void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = true;
-        }
+        
     }
 
     private void OnCollisionExit(Collision other)
     {
-        if (other.gameObject != gameObject)
-        {
-            _grounded = false;
-        }
+        
     }
 
     private void OnCollisionStay(Collision other)
     {
-        if (other.gameObject != gameObject)
+        if(other.gameObject.GetComponentInParent<ColliderScript>() != null)
         {
-            _grounded = true;
+            if (!inHouse)
+            {
+                inHouse = true;
+            }
         }
-    }*/
+        else
+        {
+            if (inHouse)
+            {
+                inHouse = false;
+            }
+        }
+    }
 
     /**
      * Fix Movement

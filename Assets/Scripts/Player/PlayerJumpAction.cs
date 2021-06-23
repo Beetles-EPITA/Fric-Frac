@@ -6,6 +6,7 @@ public class PlayerJumpAction : MonoBehaviour
 {
 
     public bool isOnGround;
+    public bool inHouse;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -53,5 +54,6 @@ public class PlayerJumpAction : MonoBehaviour
         {
             isOnGround = true;
         }
+        
     }
 }
