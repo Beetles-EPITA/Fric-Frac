@@ -174,6 +174,7 @@ public class PlayerController : MonoBehaviour
     [PunRPC]
     private void PlaySound(int soundState)
     {
+        //check if it is this
         soundState state = ((soundState) soundState);
         if(state != PlayerController.soundState.jump)
             _audioSource.Stop();
