@@ -67,6 +67,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        print(_rigidbody.transform.position);
         SoundManager();
         if (!_photonView.IsMine) return;
         ToggleInventory();
