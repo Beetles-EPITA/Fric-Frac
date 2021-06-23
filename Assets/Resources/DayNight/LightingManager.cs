@@ -11,8 +11,6 @@ public class LightingManager : MonoBehaviour
     // Variables :
     [SerializeField, Range(0, 24)] private float TimeOfDay;
 
-    private float startLight = 6f;
-
     public void UpdateLighting(float timePercent)
     {
         RenderSettings.ambientLight = preset.ambientColor.Evaluate(timePercent);
