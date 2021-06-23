@@ -40,8 +40,21 @@ namespace Manager
         private void CreateController()
         {
             Debug.Log("Instantiated Player Controller");
-            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerController"), playerPosition[r.Next(playerPosition.Length)], 
+            PhotonNetwork.Instantiate(Path.Combine("Prefabs", "Player", "PlayerController"), RandomPosition(), 
                 Quaternion.identity);
+        }
+
+        public Vector3 RandomPosition()
+        {
+            Random random = new Random();
+            switch ((Laucher.Team) PhotonNetwork.LocalPlayer.CustomProperties["team"])
+            {
+                case Laucher.Team.Resident:
+                    return playerPosition[r.Next(playerPosition.Length)];
+                case Laucher.Team.Thief:
+                    return new Vector3(random.Next(17) + 45, 18, random.Next(20) - 300);
+            }
+            return new Vector3(62, 18, -281);
         }
     }
 }
