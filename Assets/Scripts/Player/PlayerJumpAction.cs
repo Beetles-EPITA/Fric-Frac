@@ -9,7 +9,8 @@ public class PlayerJumpAction : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject != GetComponentInParent<BoxCollider>().gameObject)
+        if (other.gameObject != GetComponentInParent<BoxCollider>().gameObject
+            && other.GetComponent<DoorScript>() == null)
         {
             isOnGround = true;
         }
@@ -17,7 +18,8 @@ public class PlayerJumpAction : MonoBehaviour
     
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject != GetComponentInParent<BoxCollider>().gameObject)
+        if (other.gameObject != GetComponentInParent<BoxCollider>().gameObject
+            && other.GetComponent<DoorScript>() == null)
         {
             isOnGround = false;
         }
@@ -25,7 +27,8 @@ public class PlayerJumpAction : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject != GetComponentInParent<BoxCollider>().gameObject)
+        if (other.gameObject != GetComponentInParent<BoxCollider>().gameObject
+            && other.GetComponent<DoorScript>() == null)
         {
             isOnGround = true;
         }

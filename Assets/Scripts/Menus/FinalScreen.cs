@@ -35,6 +35,7 @@ namespace Menus
             Destroy(RoomManager.Instance.LoseScreen.gameObject);
             Destroy(pause.gameObject);
             Destroy(tab.gameObject);
+            Destroy(RoomManager.Instance.infoText);
             Inventory.Instance.Close();
             if (PlayerController.myController != null)
             {
@@ -45,6 +46,7 @@ namespace Menus
                 Destroy(PlayerController.myController.gameObject);
             }
             RoomManager.Instance.spectatorCamera.gameObject.AddComponent<AudioListener>();
+            Camera.SetupCurrent(RoomManager.Instance.spectatorCamera);
             _audioSource.PlayOneShot(victory ? winClip : loseClip);
             Pause.isPause = true;
             

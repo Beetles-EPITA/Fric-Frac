@@ -28,6 +28,7 @@ public class IAManager : MonoBehaviour
     {
         Debug.Log("Instantiated IAManager");
         PhotonNetwork.Instantiate(Path.Combine("Prefabs", "IA", "IAController"), playerPosition[r.Next(playerPosition.Length)],Quaternion.identity);
+        RoomManager.Instance.photonView.RPC("UpdateTab", RpcTarget.All);
     }
 
     // Update is called once per frame
