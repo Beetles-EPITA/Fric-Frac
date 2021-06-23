@@ -11,7 +11,7 @@ using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-using Random = UnityEngine.Random;
+using Random = System.Random;
 
 public class Laucher : MonoBehaviourPunCallbacks
 {
@@ -59,6 +59,16 @@ public class Laucher : MonoBehaviourPunCallbacks
         MainMenuManager.Instance.OpenMenu("Main");
     }
 
+    private bool solo = false;
+    
+    public void CreateSoloGame()
+    {
+        solo = true;
+        int random = new Random().Next(99);
+        MainMenuManager.Instance.OpenMenu("Loading");
+        PhotonNetwork.CreateRoom(PhotonNetwork.LocalPlayer.NickName+random, new RoomOptions {MaxPlayers = 1, IsVisible = false});
+    }
+    
     public void CreateRoom(Text roomName)
     {
         MainMenuManager.Instance.OpenMenu("Loading");
@@ -149,6 +159,11 @@ public class Laucher : MonoBehaviourPunCallbacks
     
     public override void OnJoinedRoom()
     {
+        if (solo)
+        {
+            StartGame();
+            return;
+        }
         Menu menu = MainMenuManager.Instance.OpenMenu("LobbyMenu");
         Text menuName = menu.GetComponentInChildren<Text>();
         menuName.text = PhotonNetwork.CurrentRoom.Name;
@@ -172,6 +187,7 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
+        solo = false;
         Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
         Text text = menu.GetComponentInChildren<Text>();
         text.text = "Cannot connect to the server : " + message;
@@ -179,6 +195,7 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
+        solo = false;
         Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
         Text text = menu.GetComponentInChildren<Text>();
         text.text = "Cannot connect to the server : " + message;
