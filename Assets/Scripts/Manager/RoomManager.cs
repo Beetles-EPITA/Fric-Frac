@@ -248,7 +248,12 @@ public class RoomManager : MonoBehaviourPunCallbacks
     {
         if ((Laucher.Team) team == Laucher.Team.Resident)
         {
-            //TODO TIMER
+            if (SkyCycle.losed)
+            {
+                FinalScreen.SetUp("The day has dawned, the thieves have taken too long", 
+                    PlayerController.myController.Team == Laucher.Team.Resident, PhotonNetwork.IsMasterClient);
+                return;
+            }
             bool found = false;
             foreach (var currentRoomPlayer in PhotonNetwork.CurrentRoom.Players)
             {

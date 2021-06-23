@@ -22,7 +22,12 @@ public class LightingManager : MonoBehaviour
             directionalLight.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360f)-90f, 170, 0));
         }
     }
-    
+
+    private void Update()
+    {
+        UpdateLighting(TimeOfDay/24f);
+    }
+
     private void OnValidate()
     {
         if (directionalLight != null)

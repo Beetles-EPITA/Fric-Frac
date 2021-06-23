@@ -37,8 +37,14 @@ namespace Menus
             Destroy(pause.gameObject);
             Destroy(tab.gameObject);
             Inventory.Instance.Close();
-            if(PlayerController.myController != null)
+            if (PlayerController.myController != null)
+            {
+                Transform controllerTransform = PlayerController.myController.cameraHolder.transform;
+                Transform cameraTransform = RoomManager.Instance.spectatorCamera.transform;
+                cameraTransform.position = controllerTransform.position;
+                cameraTransform.rotation = controllerTransform.rotation;
                 Destroy(PlayerController.myController.gameObject);
+            }
             RoomManager.Instance.spectatorCamera.gameObject.AddComponent<AudioListener>();
             _audioSource.PlayOneShot(victory ? winClip : loseClip);
             Pause.isPause = true;
