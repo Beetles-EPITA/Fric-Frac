@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Xml;
 using ExitGames.Client.Photon;
 using Menus;
 using Photon.Pun;
@@ -27,15 +28,35 @@ namespace Solo
         
         //STATE
         private PlayerController target;
-        private Vector3[] listOfPosition = new[]
+        private static Vector3[] listOfPosition = new[]
         {
-            new Vector3(),
-            new Vector3(),
-            new Vector3(),
-            new Vector3(),
-            new Vector3(),
-            new Vector3(),
+            //rdc
+            new Vector3(74.9f, 18.3f, -272.1f),
+            new Vector3(75.8f, 18.3f, -287.4f),
+            new Vector3(74.2f, 18.3f, -306.1f),
+            new Vector3(86.3f, 18.3f, -304.6f),
+            new Vector3(87.9f, 18.3f, 291.8f),
+            new Vector3(91.0f, 18.3f, 283.8f),
+            //1er
+            new Vector3(80.1f, 23.1f, -285.5f),
+            new Vector3(82.0f, 23.1f, -287.0f),
+            new Vector3(95.0f, 23.1f, -285.3f),
+            new Vector3(92.0f, 23.1f, -290.7f),
+            new Vector3(76.0f, 23.1f, -290.6f),
+            new Vector3(75.0f, 23.1f, -308.9f),
+            new Vector3(90.7f, 23.1f, -300.9f),
+            new Vector3(89.1f, 23.1f, -310.3f),
+            //2eme
+            new Vector3(80.8f, 27.7f, -308.2f), 
+            new Vector3(75.4f, 27.7f, -300.5f), 
+            new Vector3(82.0f, 27.7f, -300.8f), 
+            new Vector3(93.7f, 27.7f, -289.4f), 
+            new Vector3(92.2f, 27.7f, -280.8f), 
+            new Vector3(86.6f, 27.7f, -280.3f), 
+            new Vector3(79.5f, 27.7f, -272.1f), 
+            new Vector3(81.0f, 27.7f, -285.1f), 
         };
+        private List<Vector3> listOfPosionTemp = new List<Vector3>(listOfPosition);
 
         [SerializeField]private GameObject resident;
         [SerializeField] private Material _material;
@@ -64,7 +85,13 @@ namespace Solo
             {
                 if (!navMeshAgent.hasPath)
                 {
-
+                    if (listOfPosionTemp.Count == 0)
+                    {
+                        listOfPosionTemp = new List<Vector3>(listOfPosition);
+                    }
+                    Vector3 move = listOfPosionTemp[r.Next(listOfPosition.Length)];
+                    navMeshAgent.SetDestination(move);
+                    listOfPosionTemp.Remove(move);
                 }
             }
         }
