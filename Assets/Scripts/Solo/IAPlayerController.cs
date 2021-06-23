@@ -21,6 +21,9 @@ namespace Solo
         [SerializeField] public float minDistanceCloseToHear;
         [SerializeField] public float minDistanceCloseToSee;
         
+        [SerializeField] public AudioSource _audioSource;
+        [SerializeField] public AudioClip walkInside;
+        
         Random r = new Random();
     
         //Animation :
@@ -62,6 +65,8 @@ namespace Solo
 
         private void Start()
         {
+            _audioSource.loop = true;
+            _audioSource.Play();
             anim = GetComponent<Animator>();
             resident.GetComponent<Renderer>().materials[3] = _material;
             anim.SetInteger("Speed", 1);
