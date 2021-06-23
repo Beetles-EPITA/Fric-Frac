@@ -38,7 +38,6 @@ public class SkyCycle : MonoBehaviour
         {
             if(RoomManager.Instance.FinalScreen.gameObject.activeSelf)
                 return;
-            print(sunOrbit.rotation.y);
             if (sunOrbit.rotation.y > 0.85f && PhotonNetwork.IsMasterClient)
             {
                 losed = true;
