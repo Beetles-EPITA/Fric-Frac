@@ -1740,16 +1740,16 @@ MonoBehaviour:
   ShowParameterInspector: 1
   m_SynchronizeParameters:
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: isClimbing
   - Type: 3
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: Speed
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: isAttacking
   - Type: 4
-    SynchronizeType: 0
+    SynchronizeType: 2
     Name: isJumping
   m_SynchronizeLayers:
   - SynchronizeType: 1
