@@ -99,7 +99,6 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(cameraHolder);
             Destroy(Team == Laucher.Team.Resident ? thief.gameObject : resident.gameObject);
-            
         }
         else
         {
