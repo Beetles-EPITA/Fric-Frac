@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Hashtable = ExitGames.Client.Photon.Hashtable;
 using Random = System.Random;
 
 public class RoomManager : MonoBehaviourPunCallbacks
@@ -277,5 +278,56 @@ public class RoomManager : MonoBehaviourPunCallbacks
                 FinalScreen.SetUp("The thieves have recovered all the objects", 
                     PlayerController.myController.Team == Laucher.Team.Thief, PhotonNetwork.IsMasterClient);
         }
+    }
+
+    private int lastPlayerId = -1;
+    
+    [PunRPC]
+    public void Replay()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+            Room room = PhotonNetwork.CurrentRoom;
+            int placeThief = room.Players.Count / 2 + (room.Players.Count % 2 == 0 ? 0 : 1);
+            int placeResident = room.Players.Count / 2;
+            foreach (KeyValuePair<int, Player> player in room.Players)
+            {
+                int random = new System.Random().Next(Enum.GetValues(typeof(Laucher.Team)).Length);
+                Hashtable hashtable = player.Value.CustomProperties;
+                if (random == 0)
+                {
+                    if (placeThief > 0)
+                    {
+                        hashtable["team"] = Laucher.Team.Thief;
+                        placeThief--;
+                    }
+                    else
+                    {
+                        hashtable["team"] = Laucher.Team.Resident;
+                        placeResident--;
+                    }
+                }
+                else
+                {
+                    if (placeResident > 0)
+                    {
+                        hashtable["team"] = Laucher.Team.Resident;
+                        placeResident--;
+                    }
+                    else
+                    {
+                        hashtable["team"] = Laucher.Team.Thief;
+                        placeThief--;
+                    }
+                }
+
+                hashtable["death"] = false;
+                player.Value.SetCustomProperties(hashtable);
+                if (placeThief == 0 && placeResident == 0) lastPlayerId = player.Key;
+            }
+        }
+        PhotonNetwork.LoadLevel("Multiplayer");
     }
 }

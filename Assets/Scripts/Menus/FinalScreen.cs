@@ -59,11 +59,20 @@ namespace Menus
                 PhotonNetwork.CurrentRoom.IsOpen = true;
                 PhotonNetwork.CurrentRoom.IsVisible = true;
             }
+            
+            DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence
+            {
+                largeImageKey = "icon", largeImageText = Application.version, details = "In Waiting Room", 
+                state = PhotonNetwork.CurrentRoom.Name + " server", 
+                partySize = PhotonNetwork.CurrentRoom.PlayerCount,
+                partyMax = PhotonNetwork.CurrentRoom.MaxPlayers
+            };
+            DiscordRpc.UpdatePresence(presence);
         }
 
         public void Relaunch()
         {
-            PhotonNetwork.LoadLevel("Multiplayer");
+            RoomManager.Instance.photonView.RPC("Replay", RpcTarget.All);
         }
 
     }
