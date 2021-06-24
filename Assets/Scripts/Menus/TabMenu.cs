@@ -31,18 +31,21 @@ namespace Menus
 
         private void Start()
         {
-            InstanceMenu.Close();
+            if(InstanceMenu.GetComponent<FinalScreen>() == null)
+                InstanceMenu.Close();
             serverName.text = "Server: " + PhotonNetwork.CurrentRoom.Name;
             UpdateTab();
         }
 
         private void Update()
         {
-            timer.text = $"{Mathf.Floor((Time.time-startTime) / 60):0}:{(Time.time-startTime) % 60:00}";
-            ping.text = PhotonNetwork.GetPing() + "ms";
+            if(timer != null)
+                timer.text = $"{Mathf.Floor((Time.time-startTime) / 60):0}:{(Time.time-startTime) % 60:00}";
+            if(ping != null)
+                ping.text = PhotonNetwork.GetPing() + "ms";
         }
 
-        private void UpdateTab()
+        public void UpdateTab()
         {
             foreach (Transform transform in resident)
             {
@@ -60,14 +63,22 @@ namespace Menus
                 }
                 else if ((int) player.Value.CustomProperties["team"] == (int) Laucher.Team.Thief)
                 {
-                    Instantiate(playerListItemPrefab, thief).GetComponent<PlayerListItem>().SetUp(player.Value);
+                    PlayerListItem item = Instantiate(playerListItemPrefab, thief).GetComponent<PlayerListItem>();
+                    item.SetUp(player.Value, (bool) player.Value.CustomProperties["death"]);
                 }else
                 {
                     print(player.Value.CustomProperties["team"]);
                 }
             }
+            if(IAManager.Instance != null)
+                Instantiate(playerListItemPrefab, resident).GetComponent<PlayerListItem>().SetUpIA("IA");
         }
-        
+
+        public override void OnPlayerEnteredRoom(Player newPlayer)
+        {
+            UpdateTab();
+        }
+
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
             UpdateTab();

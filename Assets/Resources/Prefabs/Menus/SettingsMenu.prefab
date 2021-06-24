@@ -562,9 +562,9 @@ RectTransform:
   m_Father: {fileID: 5381152756152925346}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -482.19067, y: 335.279}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 492.80933, y: 335.279}
   m_SizeDelta: {x: 642.2322, y: 19.4417}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &5381152755008403416
@@ -1982,10 +1982,10 @@ RectTransform:
   m_Father: {fileID: 5381152756152925346}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: -975, y: 0}
+  m_SizeDelta: {x: 1950, y: 1096}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &5381152755949746319
 GameObject:
@@ -3136,9 +3136,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 11500000, guid: ce479465a1678534e89fe184f77e3598, type: 3}
         m_TargetAssemblyTypeName: Menus.MainMenuManager, Assembly-CSharp
-        m_MethodName: OpenMenu
+        m_MethodName: 
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

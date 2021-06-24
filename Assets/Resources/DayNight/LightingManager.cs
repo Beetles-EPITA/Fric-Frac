@@ -11,28 +11,7 @@ public class LightingManager : MonoBehaviour
     // Variables :
     [SerializeField, Range(0, 24)] private float TimeOfDay;
 
-    private float startLight = 6f;
-
-    private void Update()
-    {
-        if (preset == null) 
-            return;
-
-        if (Application.isPlaying)
-        {
-            if (startLight < 13f)
-            {
-                startLight += 0.003f;
-                UpdateLighting(startLight / 24f);
-            }
-        }
-        else
-        {
-            UpdateLighting(TimeOfDay/24f);
-        }
-    }
-    
-    private void UpdateLighting(float timePercent)
+    public void UpdateLighting(float timePercent)
     {
         RenderSettings.ambientLight = preset.ambientColor.Evaluate(timePercent);
         RenderSettings.fogColor = preset.fogColor.Evaluate(timePercent);
@@ -43,7 +22,12 @@ public class LightingManager : MonoBehaviour
             directionalLight.transform.localRotation = Quaternion.Euler(new Vector3((timePercent * 360f)-90f, 170, 0));
         }
     }
-    
+
+    private void Update()
+    {
+        UpdateLighting(TimeOfDay/24f);
+    }
+
     private void OnValidate()
     {
         if (directionalLight != null)

@@ -11,7 +11,7 @@ using Photon.Realtime;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
-using Random = UnityEngine.Random;
+using Random = System.Random;
 
 public class Laucher : MonoBehaviourPunCallbacks
 {
@@ -38,7 +38,12 @@ public class Laucher : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsConnected)
         {
             if (PhotonNetwork.InRoom) PhotonNetwork.LeaveRoom();
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     public override void OnConnectedToMaster()
@@ -54,6 +59,16 @@ public class Laucher : MonoBehaviourPunCallbacks
         MainMenuManager.Instance.OpenMenu("Main");
     }
 
+    private bool solo = false;
+    
+    public void CreateSoloGame()
+    {
+        solo = true;
+        int random = new Random().Next(99);
+        MainMenuManager.Instance.OpenMenu("Loading");
+        PhotonNetwork.CreateRoom(PhotonNetwork.LocalPlayer.NickName+random, new RoomOptions {MaxPlayers = 1, IsVisible = false});
+    }
+    
     public void CreateRoom(Text roomName)
     {
         MainMenuManager.Instance.OpenMenu("Loading");
@@ -124,7 +139,7 @@ public class Laucher : MonoBehaviourPunCallbacks
                     placeThief--;
                 }
             }
-
+            hashtable["death"] = false;
             player.Value.SetCustomProperties(hashtable);
             if(placeThief == 0 && placeResident == 0) lastPlayerId = player.Key;
         }
@@ -144,10 +159,14 @@ public class Laucher : MonoBehaviourPunCallbacks
     
     public override void OnJoinedRoom()
     {
+        if (solo)
+        {
+            StartGame();
+            return;
+        }
         Menu menu = MainMenuManager.Instance.OpenMenu("LobbyMenu");
         Text menuName = menu.GetComponentInChildren<Text>();
         menuName.text = PhotonNetwork.CurrentRoom.Name;
-        
         foreach (Transform transform in playerListContent)
         {
             Destroy(transform.gameObject);
@@ -158,6 +177,7 @@ public class Laucher : MonoBehaviourPunCallbacks
         }
         
         startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+        UpdateRPC();
     }
 
     public override void OnMasterClientSwitched(Player newMasterClient)
@@ -167,6 +187,7 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
+        solo = false;
         Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
         Text text = menu.GetComponentInChildren<Text>();
         text.text = "Cannot connect to the server : " + message;
@@ -174,6 +195,7 @@ public class Laucher : MonoBehaviourPunCallbacks
 
     public override void OnJoinRoomFailed(short returnCode, string message)
     {
+        solo = false;
         Menu menu = MainMenuManager.Instance.OpenMenu("ErrorMenu");
         Text text = menu.GetComponentInChildren<Text>();
         text.text = "Cannot connect to the server : " + message;
@@ -182,6 +204,13 @@ public class Laucher : MonoBehaviourPunCallbacks
     public override void OnLeftRoom()
     {
         MainMenuManager.Instance.OpenMenu("Main");
+        
+        //UPDATE RPC
+        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence
+        {
+            largeImageKey = "icon", largeImageText = Application.version, details = "In Menu"
+        };
+        DiscordRpc.UpdatePresence(presence);
     }
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
@@ -208,10 +237,26 @@ public class Laucher : MonoBehaviourPunCallbacks
         }
     }
 
+    private void UpdateRPC()
+    {
+        DiscordRpc.RichPresence presence = new DiscordRpc.RichPresence
+        {
+            largeImageKey = "icon", largeImageText = Application.version, details = "In Waiting Room", 
+            state = PhotonNetwork.CurrentRoom.Name + " server", 
+            partySize = PhotonNetwork.CurrentRoom.PlayerCount,
+            partyMax = PhotonNetwork.CurrentRoom.MaxPlayers
+        };
+        DiscordRpc.UpdatePresence(presence);
+    }
+
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         Instantiate(playerListItemPrefab, playerListContent).GetComponent<PlayerListItem>().SetUp(newPlayer);
+        UpdateRPC();
     }
 
-
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        UpdateRPC();
+    }
 }
